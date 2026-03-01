@@ -255,6 +255,14 @@ export const mealPlanAPI = {
     return response.data;
   },
 
+  replaceMeal: async (planId: number, mealId: string, replacementMeal: Record<string, any>): Promise<MealPlan> => {
+    const response = await api.post(`/meal-plans/${planId}/replace`, {
+      meal_id: mealId,
+      replacement_meal: replacementMeal,
+    });
+    return response.data;
+  },
+
   getAlternatives: async (planId: number, mealId: string): Promise<{ meal_id: string; alternatives: any[] }> => {
     const response = await api.get(`/meal-plans/${planId}/alternatives`, { params: { meal_id: mealId } });
     return response.data;

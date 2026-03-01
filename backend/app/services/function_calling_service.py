@@ -83,7 +83,7 @@ class FunctionCallingService:
 
         try:
             response = self.client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model=settings.OPENAI_RECIPE_MODEL,
                 messages=[
                     {"role": "system", "content": "You must call calculate_nutrition to compute nutrition."},
                     {

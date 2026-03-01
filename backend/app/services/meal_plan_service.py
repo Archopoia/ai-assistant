@@ -31,6 +31,8 @@ class MealPlanService:
             "STEP 1 - Analyze user profile and propose a meal strategy in JSON.\n"
             f"Profile: {json.dumps(request_data['user_preferences'], default=str)}\n"
             f"Request: {json.dumps(request_data['meal_plan_request'], default=str)}\n"
+            "Few-shot example:\n"
+            '{"calorie_distribution":"30/35/25 + 10 snack","macro_focus":{"protein":130,"carbs":210,"fats":70},"meal_frequency_notes":"3 meals + 1 snack, protein-forward breakfast"}\n'
             "Return JSON with keys: calorie_distribution, macro_focus, meal_frequency_notes."
         )
 
@@ -39,6 +41,8 @@ class MealPlanService:
             "STEP 2 - Based on strategy, create meal structure in JSON.\n"
             f"Strategy: {json.dumps(strategy)}\n"
             f"Request: {json.dumps(request_data['meal_plan_request'], default=str)}\n"
+            "Few-shot example:\n"
+            '{"day_templates":[[{"meal_type":"breakfast","goal":"high protein start"},{"meal_type":"lunch","goal":"balanced fiber + protein"},{"meal_type":"dinner","goal":"lower sodium whole foods"}]]}\n'
             "Return JSON with keys: day_templates (array), each day has meals with meal_type and goal."
         )
 
@@ -47,15 +51,64 @@ class MealPlanService:
             "STEP 3 - Generate concrete meal suggestions in JSON using retrieved recipe context.\n"
             f"Structure: {json.dumps(structure)}\n"
             f"RAG context: {augmented_prompt}\n"
+            "Few-shot example:\n"
+            '{"meals":[{"meal_type":"breakfast","name":"Greek yogurt berry bowl","recipe_id":"r0007"}],"alternatives":{"d1-m1":[{"name":"Veggie omelet","recipe_id":"r0144"}]}}\n'
             "Return JSON with keys: meals (array), alternatives (object)."
         )
+
+    def _derive_targets_from_profile(self, profile: HealthProfile, request_data: Dict[str, Any]) -> None:
+        """
+        Use BMI/weight goals/activity level to tune calorie and macro targets.
+        Keeps existing values as fallback when profile is incomplete.
+        """
+        prefs = request_data.get("user_preferences", {})
+        try:
+            weight = float(profile.weight_kg or 0)
+            height_cm = float(profile.height_cm or 0)
+            age = float(profile.age or 30)
+            if weight <= 0 or height_cm <= 0:
+                return
+            height_m = height_cm / 100.0
+            bmi = weight / max(height_m * height_m, 0.01)
+            gender = str(profile.gender or "other").lower()
+            # Mifflin-St Jeor BMR estimate.
+            s = 5 if gender == "male" else (-161 if gender == "female" else -80)
+            bmr = (10 * weight) + (6.25 * height_cm) - (5 * age) + s
+            activity = str(profile.activity_level or "moderate").lower()
+            activity_multiplier = {
+                "sedentary": 1.2,
+                "moderate": 1.45,
+                "active": 1.65,
+                "very_active": 1.8,
+            }.get(activity, 1.45)
+            tdee = bmr * activity_multiplier
+            goal_weight = float((profile.fitness_goals or {}).get("target_weight") or weight)
+            weight_delta = goal_weight - weight
+            goal_adjustment = max(-500.0, min(500.0, weight_delta * 60.0))
+            bmi_adjustment = -120.0 if bmi >= 25 else (120.0 if bmi < 18.5 else 0.0)
+            derived_calories = round(max(1200.0, tdee + goal_adjustment + bmi_adjustment), 2)
+            prefs["calorie_target"] = derived_calories
+
+            macro_targets = dict(prefs.get("macronutrient_targets") or {})
+            # Activity-informed macro profile (grams/day).
+            if activity in {"active", "very_active"}:
+                macro_targets.setdefault("protein", round(weight * 1.8, 2))
+                macro_targets.setdefault("carbs", round(weight * 3.0, 2))
+                macro_targets.setdefault("fats", round(weight * 0.9, 2))
+            else:
+                macro_targets.setdefault("protein", round(weight * 1.5, 2))
+                macro_targets.setdefault("carbs", round(weight * 2.2, 2))
+                macro_targets.setdefault("fats", round(weight * 0.8, 2))
+            prefs["macronutrient_targets"] = macro_targets
+        except (TypeError, ValueError):
+            return
 
     def _model_json(self, prompt: str, temperature: float = 0.2) -> Optional[Dict[str, Any]]:
         if not self.client:
             return None
         try:
             response = self.client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model=settings.OPENAI_RECIPE_MODEL,
                 messages=[
                     {"role": "system", "content": "Return strict JSON only."},
                     {"role": "user", "content": prompt},
@@ -117,6 +170,7 @@ class MealPlanService:
         request_data: Dict[str, Any],
     ) -> Dict[str, Any]:
         rag_service.ensure_seed_data(db)
+        self._derive_targets_from_profile(profile, request_data)
 
         # Sequential prompting step 1: strategy
         step1_prompt = self._build_step1_prompt(profile, request_data)
@@ -183,16 +237,18 @@ class MealPlanService:
                     servings=float(selected.servings),
                     user_prompt=f"Calculate nutrition for meal {selected.title}",
                 )
+                if not nutrition_result.get("ok"):
+                    nutrition_result = function_calling_service.safe_execute(
+                        db=db,
+                        function_name="calculate_nutrition",
+                        arguments={"ingredients": ingredient_payload, "servings": float(selected.servings)},
+                    )
                 if nutrition_result.get("ok"):
                     nutrition = nutrition_result["result"]["per_serving"]
                 else:
-                    nutrition = {
-                        "calories": round(per_meal_calories, 2),
-                        "protein": 25.0,
-                        "carbs": 30.0,
-                        "fats": 12.0,
-                        "micronutrients": {"vitamin_d_mcg": 1.0, "vitamin_b12_mcg": 0.6, "iron_mg": 2.1},
-                    }
+                    raise RuntimeError(
+                        f"Nutrition calculation failed for meal '{selected.title}': {nutrition_result.get('message')}"
+                    )
 
                 meal_id = f"d{day_idx + 1}-m{meal_idx + 1}"
                 assembled_meals.append(

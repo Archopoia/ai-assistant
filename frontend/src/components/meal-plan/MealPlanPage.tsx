@@ -19,6 +19,14 @@ export const MealPlanPage: React.FC = () => {
   const [regeneratingId, setRegeneratingId] = useState<string | 'all' | null>(null);
   const [swappingMealId, setSwappingMealId] = useState<string | null>(null);
   const [restoring, setRestoring] = useState(false);
+  const [loadingAlternativesFor, setLoadingAlternativesFor] = useState<string | null>(null);
+  const [alternativesByMeal, setAlternativesByMeal] = useState<Record<string, any[]>>({});
+  const [manualMealName, setManualMealName] = useState('');
+  const [manualMealType, setManualMealType] = useState('snack');
+  const [manualCalories, setManualCalories] = useState(250);
+  const [manualProtein, setManualProtein] = useState(20);
+  const [manualCarbs, setManualCarbs] = useState(20);
+  const [manualFats, setManualFats] = useState(10);
 
   const prefilledPreferences = useMemo(() => ({
     dietary_restrictions: (Array.isArray(profile?.dietary_restrictions) ? profile?.dietary_restrictions : []) || [],
@@ -116,6 +124,65 @@ export const MealPlanPage: React.FC = () => {
     }
   };
 
+  const loadAlternatives = async (mealId: string) => {
+    if (!selectedPlan) return;
+    try {
+      setLoadingAlternativesFor(mealId);
+      setError(null);
+      const result = await mealPlanAPI.getAlternatives(selectedPlan.id, mealId);
+      setAlternativesByMeal((prev) => ({ ...prev, [mealId]: result.alternatives || [] }));
+    } catch (err: any) {
+      setError(err.response?.data?.detail || err.message || 'Failed to load alternatives');
+    } finally {
+      setLoadingAlternativesFor(null);
+    }
+  };
+
+  const replaceWithAlternative = async (mealId: string, replacement: any) => {
+    if (!selectedPlan) return;
+    try {
+      setError(null);
+      setSuccess(null);
+      const updated = await mealPlanAPI.replaceMeal(selectedPlan.id, mealId, replacement);
+      setSelectedPlan(updated);
+      await refresh();
+      setSuccess('Meal replaced with selected alternative.');
+    } catch (err: any) {
+      setError(err.response?.data?.detail || err.message || 'Failed to replace meal');
+    }
+  };
+
+  const addManualMeal = async () => {
+    if (!selectedPlan || !manualMealName.trim()) return;
+    try {
+      setError(null);
+      setSuccess(null);
+      const payload = {
+        day_iso: `${selectedPlan.target_date}T00:00:00Z`,
+        meal: {
+          id: `manual-${Date.now()}`,
+          name: manualMealName.trim(),
+          meal_type: manualMealType,
+          scheduled_at: new Date().toISOString(),
+          nutrition: {
+            calories: Number(manualCalories || 0),
+            protein: Number(manualProtein || 0),
+            carbs: Number(manualCarbs || 0),
+            fats: Number(manualFats || 0),
+          },
+          ingredients: [],
+        },
+      };
+      const updated = await mealPlanAPI.manualAdd(selectedPlan.id, payload);
+      setSelectedPlan(updated);
+      await refresh();
+      setManualMealName('');
+      setSuccess('Manual meal added.');
+    } catch (err: any) {
+      setError(err.response?.data?.detail || err.message || 'Failed to add manual meal');
+    }
+  };
+
   if (profileLoading || plansLoading) {
     return <LoadingSpinner />;
   }
@@ -191,6 +258,32 @@ export const MealPlanPage: React.FC = () => {
           <h2 className="text-xl font-semibold text-gray-900">
             Selected Plan #{selectedPlan.id} - v{selectedPlan.version}
           </h2>
+          <div className="border rounded p-3 space-y-2">
+            <p className="text-sm font-medium text-gray-900">Add Custom Meal</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+              <input
+                value={manualMealName}
+                onChange={(e) => setManualMealName(e.target.value)}
+                placeholder="Meal name"
+                className="border rounded p-2 text-sm"
+              />
+              <select value={manualMealType} onChange={(e) => setManualMealType(e.target.value)} className="border rounded p-2 text-sm">
+                <option value="breakfast">Breakfast</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
+                <option value="snack">Snack</option>
+              </select>
+              <button onClick={addManualMeal} className="px-3 py-2 rounded bg-slate-700 text-white text-sm">
+                Add Meal
+              </button>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              <input type="number" value={manualCalories} onChange={(e) => setManualCalories(Number(e.target.value))} className="border rounded p-2 text-sm" placeholder="kcal" />
+              <input type="number" value={manualProtein} onChange={(e) => setManualProtein(Number(e.target.value))} className="border rounded p-2 text-sm" placeholder="Protein" />
+              <input type="number" value={manualCarbs} onChange={(e) => setManualCarbs(Number(e.target.value))} className="border rounded p-2 text-sm" placeholder="Carbs" />
+              <input type="number" value={manualFats} onChange={(e) => setManualFats(Number(e.target.value))} className="border rounded p-2 text-sm" placeholder="Fats" />
+            </div>
+          </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {selectedPlan.meals.map((meal) => (
               <div key={meal.id} className="border rounded p-4 space-y-2">
@@ -247,7 +340,28 @@ export const MealPlanPage: React.FC = () => {
                   >
                     Log Nutrition
                   </button>
+                  <button
+                    onClick={() => loadAlternatives(meal.id)}
+                    disabled={loadingAlternativesFor === meal.id}
+                    className="text-xs px-2 py-1 rounded bg-amber-50 text-amber-700 disabled:opacity-70"
+                  >
+                    {loadingAlternativesFor === meal.id ? 'Loading...' : 'Show Alternatives'}
+                  </button>
                 </div>
+                {(alternativesByMeal[meal.id] || []).length > 0 && (
+                  <div className="text-xs space-y-1 bg-gray-50 border rounded p-2">
+                    <div className="font-medium text-gray-700">Pick Replacement:</div>
+                    {(alternativesByMeal[meal.id] || []).map((alt: any) => (
+                      <button
+                        key={alt.id}
+                        onClick={() => replaceWithAlternative(meal.id, alt)}
+                        className="block w-full text-left border rounded px-2 py-1 hover:bg-white"
+                      >
+                        {alt.name} ({alt.nutrition?.calories ?? 0} kcal)
+                      </button>
+                    ))}
+                  </div>
+                )}
                 <p className="text-xs text-gray-500">Replace This Meal picks a new recipe for this slot. Swap only changes meal order.</p>
               </div>
             ))}

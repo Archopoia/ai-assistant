@@ -59,6 +59,11 @@ class RecipeSearchFilters(BaseModel):
     allergies: Optional[List[str]] = None
     max_calories: Optional[float] = Field(default=None, gt=0)
     min_protein: Optional[float] = Field(default=None, ge=0)
+    max_protein: Optional[float] = Field(default=None, ge=0)
+    min_carbs: Optional[float] = Field(default=None, ge=0)
+    max_carbs: Optional[float] = Field(default=None, ge=0)
+    min_fats: Optional[float] = Field(default=None, ge=0)
+    max_fats: Optional[float] = Field(default=None, ge=0)
     max_prep_time: Optional[int] = Field(default=None, ge=1)
 
     @field_validator("allergies")

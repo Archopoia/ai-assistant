@@ -1,8 +1,13 @@
 from datetime import date, datetime, timedelta, timezone
-from typing import Dict, List
+import json
+from typing import Any, Dict, List
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from openai import OpenAI
+from openai import APIConnectionError, APIError, RateLimitError
+from pydantic import BaseModel, Field, ValidationError
 from sqlalchemy.orm import Session
 from ..api import get_current_user
+from ..config import settings
 from ..database import get_db
 from ..models.health_profile import HealthProfile
 from ..models.nutrition_log import NutritionLog
@@ -26,6 +31,101 @@ def _daily_totals(logs: List[NutritionLog]) -> Dict[str, float]:
         totals["carbs_g"] += float(log.carbs_g or 0.0)
         totals["fats_g"] += float(log.fats_g or 0.0)
     return totals
+
+
+class NutritionImprovementSuggestions(BaseModel):
+    food_recommendations: List[str] = Field(default_factory=list)
+    meal_timing_adjustments: List[str] = Field(default_factory=list)
+    portion_size_modifications: List[str] = Field(default_factory=list)
+    alternative_ingredients: List[str] = Field(default_factory=list)
+    weekly_meal_plan_optimizations: List[str] = Field(default_factory=list)
+
+
+class NutritionInsightsPayload(BaseModel):
+    highlights: List[str] = Field(default_factory=list)
+    concerns: List[str] = Field(default_factory=list)
+    macronutrient_balance_analysis: str = ""
+    improvement_suggestions: NutritionImprovementSuggestions
+
+
+def _deterministic_nutrition_insight(weekly: Dict[str, Any]) -> Dict[str, Any]:
+    deficits = [point["deficit_surplus_kcal"] for point in weekly["daily_points"]]
+    stayed_in_deficit_days = len([d for d in deficits if d < 0])
+    severe_deficit_days = len([d for d in deficits if d < -500])
+    concern = (
+        f"Caloric deficit was more than 500 kcal on {severe_deficit_days} days."
+        if severe_deficit_days
+        else "No severe caloric deficit days detected."
+    )
+    return {
+        "highlights": [f"Remained in caloric deficit for {stayed_in_deficit_days} days this week."],
+        "concerns": [concern],
+        "macronutrient_balance_analysis": "Protein, carbs, and fats are tracked against daily targets.",
+        "improvement_suggestions": {
+            "food_recommendations": ["Add legumes and leafy greens to improve iron and fiber."],
+            "meal_timing_adjustments": ["Keep dinner at least 2 hours before sleep for better consistency."],
+            "portion_size_modifications": ["Reduce high-calorie snacks on surplus days."],
+            "alternative_ingredients": ["Swap cream sauces for yogurt-based alternatives."],
+            "weekly_meal_plan_optimizations": ["Use higher-protein lunches on active days."],
+        },
+    }
+
+
+def _validated_nutrition_insight(payload: Dict[str, Any], weekly: Dict[str, Any]) -> Dict[str, Any]:
+    try:
+        validated = NutritionInsightsPayload.model_validate(payload)
+        return validated.model_dump()
+    except ValidationError:
+        return _deterministic_nutrition_insight(weekly)
+
+
+def _ai_nutrition_insight(weekly: Dict[str, Any]) -> Dict[str, Any]:
+    if not settings.OPENAI_API_KEY:
+        return _deterministic_nutrition_insight(weekly)
+
+    client = OpenAI(api_key=settings.OPENAI_API_KEY)
+    prompt = (
+        "You are a nutrition analyst. Return strict JSON only.\n"
+        "Given weekly daily deficit/surplus values, provide concise nutrition insight with this exact shape:\n"
+        "{"
+        '"highlights":["..."],'
+        '"concerns":["..."],'
+        '"macronutrient_balance_analysis":"...",'
+        '"improvement_suggestions":{'
+        '"food_recommendations":["..."],'
+        '"meal_timing_adjustments":["..."],'
+        '"portion_size_modifications":["..."],'
+        '"alternative_ingredients":["..."],'
+        '"weekly_meal_plan_optimizations":["..."]'
+        "}"
+        "}\n"
+        f"Weekly data: {json.dumps(weekly)}"
+    )
+    attempts = max(1, int(settings.AI_RETRY_ATTEMPTS))
+    for _ in range(attempts):
+        try:
+            response = client.chat.completions.create(
+                model=settings.OPENAI_ANALYSIS_MODEL,
+                messages=[
+                    {"role": "system", "content": "Return only valid JSON."},
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.3,
+                top_p=0.9,
+                max_tokens=700,
+            )
+            content = response.choices[0].message.content or "{}"
+            if "```json" in content:
+                content = content.split("```json", 1)[1].split("```", 1)[0].strip()
+            elif "```" in content:
+                content = content.split("```", 1)[1].split("```", 1)[0].strip()
+            parsed = json.loads(content)
+            if not isinstance(parsed, dict):
+                continue
+            return _validated_nutrition_insight(parsed, weekly)
+        except (json.JSONDecodeError, APIConnectionError, APIError, RateLimitError):
+            continue
+    return _deterministic_nutrition_insight(weekly)
 
 
 @router.post("/logs", response_model=NutritionLogResponse, status_code=status.HTTP_201_CREATED)
@@ -174,23 +274,4 @@ async def nutrition_insights(
     db: Session = Depends(get_db),
 ):
     weekly = await weekly_summary(date.today(), current_user, db)
-    deficits = [point["deficit_surplus_kcal"] for point in weekly["daily_points"]]
-    stayed_in_deficit_days = len([d for d in deficits if d < 0])
-    severe_deficit_days = len([d for d in deficits if d < -500])
-    concern = (
-        f"Caloric deficit was more than 500 kcal on {severe_deficit_days} days."
-        if severe_deficit_days
-        else "No severe caloric deficit days detected."
-    )
-    return {
-        "highlights": [f"Remained in caloric deficit for {stayed_in_deficit_days} days this week."],
-        "concerns": [concern],
-        "macronutrient_balance_analysis": "Protein, carbs, and fats are tracked against daily targets.",
-        "improvement_suggestions": {
-            "food_recommendations": ["Add legumes and leafy greens to improve iron and fiber."],
-            "meal_timing_adjustments": ["Keep dinner at least 2 hours before sleep for better consistency."],
-            "portion_size_modifications": ["Reduce high-calorie snacks on surplus days."],
-            "alternative_ingredients": ["Swap cream sauces for yogurt-based alternatives."],
-            "weekly_meal_plan_optimizations": ["Use higher-protein lunches on active days."],
-        },
-    }
+    return _ai_nutrition_insight(weekly)

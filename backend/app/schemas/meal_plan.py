@@ -88,6 +88,11 @@ class MealManualAddRequest(BaseModel):
     meal: MealEntry
 
 
+class MealReplaceRequest(BaseModel):
+    meal_id: str
+    replacement_meal: MealEntry
+
+
 class MealPlanVersionResponse(BaseModel):
     id: int
     meal_plan_id: int

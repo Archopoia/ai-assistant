@@ -11,6 +11,12 @@ const getStatusColor = (deficitSurplus: number) => {
   return 'bg-green-100 text-green-700';
 };
 
+const getProgressBarColor = (deficitSurplus: number) => {
+  if (deficitSurplus > 200) return 'bg-yellow-500';
+  if (deficitSurplus < -500) return 'bg-red-500';
+  return 'bg-green-600';
+};
+
 export const NutritionSummaryCard: React.FC<NutritionSummaryCardProps> = ({ summary }) => {
   if (!summary) {
     return (
@@ -23,6 +29,7 @@ export const NutritionSummaryCard: React.FC<NutritionSummaryCardProps> = ({ summ
 
   const progress = Math.min(100, Math.max(0, (summary.calories_kcal / summary.calorie_target_kcal) * 100));
   const statusClass = getStatusColor(summary.deficit_surplus_kcal);
+  const progressBarClass = getProgressBarColor(summary.deficit_surplus_kcal);
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
@@ -35,7 +42,7 @@ export const NutritionSummaryCard: React.FC<NutritionSummaryCardProps> = ({ summ
       </div>
       <div className="mt-4">
         <div className="h-3 bg-gray-200 rounded">
-          <div className="h-3 bg-blue-600 rounded" style={{ width: `${progress}%` }} />
+          <div className={`h-3 rounded ${progressBarClass}`} style={{ width: `${progress}%` }} />
         </div>
       </div>
       <div className={`mt-3 px-2 py-1 rounded text-xs inline-block ${statusClass}`}>

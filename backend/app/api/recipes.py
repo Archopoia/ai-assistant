@@ -115,6 +115,11 @@ async def search_recipes(
     allergies: Optional[List[str]] = Query(default=None),
     max_calories: Optional[float] = Query(default=None),
     min_protein: Optional[float] = Query(default=None),
+    max_protein: Optional[float] = Query(default=None),
+    min_carbs: Optional[float] = Query(default=None),
+    max_carbs: Optional[float] = Query(default=None),
+    min_fats: Optional[float] = Query(default=None),
+    max_fats: Optional[float] = Query(default=None),
     max_prep_time: Optional[int] = Query(default=None),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -146,6 +151,26 @@ async def search_recipes(
     if min_protein is not None:
         recipes = [
             recipe for recipe in recipes if float((recipe.nutrition or {}).get("protein", 0.0)) >= float(min_protein)
+        ]
+    if max_protein is not None:
+        recipes = [
+            recipe for recipe in recipes if float((recipe.nutrition or {}).get("protein", 0.0)) <= float(max_protein)
+        ]
+    if min_carbs is not None:
+        recipes = [
+            recipe for recipe in recipes if float((recipe.nutrition or {}).get("carbs", 0.0)) >= float(min_carbs)
+        ]
+    if max_carbs is not None:
+        recipes = [
+            recipe for recipe in recipes if float((recipe.nutrition or {}).get("carbs", 0.0)) <= float(max_carbs)
+        ]
+    if min_fats is not None:
+        recipes = [
+            recipe for recipe in recipes if float((recipe.nutrition or {}).get("fats", 0.0)) >= float(min_fats)
+        ]
+    if max_fats is not None:
+        recipes = [
+            recipe for recipe in recipes if float((recipe.nutrition or {}).get("fats", 0.0)) <= float(max_fats)
         ]
 
     deduped: List[Recipe] = []
@@ -217,11 +242,18 @@ async def generate_recipe(
         servings=float(payload.servings),
         user_prompt=payload.prompt,
     )
-    nutrition = (
-        nutrition_result.get("result", {}).get("per_serving", {})
-        if nutrition_result.get("ok")
-        else base_recipe.nutrition or {}
-    )
+    if not nutrition_result.get("ok"):
+        nutrition_result = function_calling_service.safe_execute(
+            db=db,
+            function_name="calculate_nutrition",
+            arguments={"ingredients": ingredients, "servings": float(payload.servings)},
+        )
+    if not nutrition_result.get("ok"):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=nutrition_result.get("message") or "Unable to calculate recipe nutrition",
+        )
+    nutrition = nutrition_result.get("result", {}).get("per_serving", {})
     style_words = ["Zesty", "Herbed", "Smoky", "Rustic", "Bright", "Savory"]
     style = style_words[generated_count % len(style_words)]
     main_for_title = str(ingredients[0].get("name", "Signature")).split(" ")[0].title() if ingredients else "Signature"

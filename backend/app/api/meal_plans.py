@@ -13,6 +13,7 @@ from ..schemas.meal_plan import (
     MealSwapRequest,
     MealRegenerateRequest,
     MealManualAddRequest,
+    MealReplaceRequest,
     MealPlanVersionResponse,
 )
 from ..services.meal_plan_service import meal_plan_service
@@ -156,6 +157,30 @@ async def manual_add_meal(
 
     meals = list(plan.meals or [])
     meals.append(payload.meal.model_dump(mode="json"))
+    plan.meals = meals
+    plan.version = f"{float(plan.version) + 0.1:.1f}" if plan.version.replace(".", "", 1).isdigit() else "1.1"
+    _save_version(db, plan)
+    db.commit()
+    db.refresh(plan)
+    return _to_response(plan)
+
+
+@router.post("/{plan_id}/replace", response_model=MealPlanResponse)
+async def replace_meal(
+    plan_id: int,
+    payload: MealReplaceRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    plan = db.query(MealPlan).filter(MealPlan.id == plan_id, MealPlan.user_id == current_user.id).first()
+    if not plan:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Meal plan not found")
+
+    meals = list(plan.meals or [])
+    target_idx = next((idx for idx, meal in enumerate(meals) if meal.get("id") == payload.meal_id), -1)
+    if target_idx < 0:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Meal to replace not found")
+    meals[target_idx] = payload.replacement_meal.model_dump(mode="json")
     plan.meals = meals
     plan.version = f"{float(plan.version) + 0.1:.1f}" if plan.version.replace(".", "", 1).isdigit() else "1.1"
     _save_version(db, plan)

@@ -137,7 +137,7 @@ Format your response as JSON with the following structure:
             prompt = builder(ai_data)
             
             response = self.client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model=settings.OPENAI_ANALYSIS_MODEL,
                 messages=[
                     {"role": "system", "content": "You are a helpful health and wellness advisor. Always respond with valid JSON."},
                     {"role": "user", "content": prompt}
