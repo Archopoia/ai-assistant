@@ -27,6 +27,8 @@ export const MealPlanPage: React.FC = () => {
   const [manualProtein, setManualProtein] = useState(20);
   const [manualCarbs, setManualCarbs] = useState(20);
   const [manualFats, setManualFats] = useState(10);
+  const [swapSourceId, setSwapSourceId] = useState('');
+  const [swapTargetId, setSwapTargetId] = useState('');
 
   const prefilledPreferences = useMemo(() => ({
     dietary_restrictions: (Array.isArray(profile?.dietary_restrictions) ? profile?.dietary_restrictions : []) || [],
@@ -258,6 +260,39 @@ export const MealPlanPage: React.FC = () => {
           <h2 className="text-xl font-semibold text-gray-900">
             Selected Plan #{selectedPlan.id} - v{selectedPlan.version}
           </h2>
+          <div className="border rounded p-3 space-y-2">
+            <p className="text-sm font-medium text-gray-900">Swap Any Two Meals</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+              <select value={swapSourceId} onChange={(e) => setSwapSourceId(e.target.value)} className="border rounded p-2 text-sm">
+                <option value="">Select source meal</option>
+                {selectedPlan.meals.map((meal) => (
+                  <option key={`src-${meal.id}`} value={meal.id}>
+                    {meal.name} ({meal.meal_type}) - {meal.scheduled_at}
+                  </option>
+                ))}
+              </select>
+              <select value={swapTargetId} onChange={(e) => setSwapTargetId(e.target.value)} className="border rounded p-2 text-sm">
+                <option value="">Select target meal</option>
+                {selectedPlan.meals.map((meal) => (
+                  <option key={`tgt-${meal.id}`} value={meal.id}>
+                    {meal.name} ({meal.meal_type}) - {meal.scheduled_at}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={() => {
+                  if (!swapSourceId || !swapTargetId || swapSourceId === swapTargetId) {
+                    setError('Choose two different meals to swap.');
+                    return;
+                  }
+                  swap(swapSourceId, swapTargetId);
+                }}
+                className="px-3 py-2 rounded bg-emerald-700 text-white text-sm"
+              >
+                Swap Selected Meals
+              </button>
+            </div>
+          </div>
           <div className="border rounded p-3 space-y-2">
             <p className="text-sm font-medium text-gray-900">Add Custom Meal</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">

@@ -56,12 +56,13 @@ export const useShoppingList = (planId?: number, mealId?: string) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const generate = async () => {
+  const generate = async (mealIdOverride?: string) => {
     if (!planId) return;
     try {
       setLoading(true);
       setError(null);
-      const data = await shoppingListAPI.generate(planId, mealId);
+      const effectiveMealId = mealIdOverride !== undefined ? mealIdOverride : mealId;
+      const data = await shoppingListAPI.generate(planId, effectiveMealId);
       setList(data);
     } catch (err: any) {
       setError(err.response?.data?.detail || err.message || 'Failed to generate shopping list');

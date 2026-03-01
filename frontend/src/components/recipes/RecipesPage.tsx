@@ -3,6 +3,7 @@ import { useRecipes } from '../../hooks/useMealPlanning';
 import { nutritionAPI, recipesAPI } from '../../services/api';
 import { MacroBreakdownChart } from '../charts/MacroBreakdownChart';
 import type { Recipe } from '../../types';
+import { ALLERGIES_INTOLERANCES, DIETARY_PREFERENCES } from '../../utils/constants';
 
 export const RecipesPage: React.FC = () => {
   const [query, setQuery] = useState('high-protein vegetarian dinner');
@@ -15,7 +16,40 @@ export const RecipesPage: React.FC = () => {
   const [recalculating, setRecalculating] = useState(false);
   const [logging, setLogging] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState<string>('');
-  const { recipes, loading } = useRecipes({ q: query });
+  const [filterCuisine, setFilterCuisine] = useState('');
+  const [filterDietary, setFilterDietary] = useState('');
+  const [filterAllergy, setFilterAllergy] = useState('');
+  const [filterIngredient, setFilterIngredient] = useState('');
+  const [maxCalories, setMaxCalories] = useState<number | ''>('');
+  const [minProtein, setMinProtein] = useState<number | ''>('');
+  const [maxProtein, setMaxProtein] = useState<number | ''>('');
+  const [minCarbs, setMinCarbs] = useState<number | ''>('');
+  const [maxCarbs, setMaxCarbs] = useState<number | ''>('');
+  const [minFats, setMinFats] = useState<number | ''>('');
+  const [maxFats, setMaxFats] = useState<number | ''>('');
+  const [maxPrepTime, setMaxPrepTime] = useState<number | ''>('');
+  const [availableIngredientsInput, setAvailableIngredientsInput] = useState('tofu, chickpeas, lentils, quinoa');
+
+  const recipeQuery = useMemo(
+    () => ({
+      q: query || undefined,
+      cuisine: filterCuisine || undefined,
+      dietary_restrictions: filterDietary ? [filterDietary] : undefined,
+      allergies: filterAllergy ? [filterAllergy] : undefined,
+      ingredients: filterIngredient ? [filterIngredient] : undefined,
+      max_calories: maxCalories === '' ? undefined : Number(maxCalories),
+      min_protein: minProtein === '' ? undefined : Number(minProtein),
+      max_protein: maxProtein === '' ? undefined : Number(maxProtein),
+      min_carbs: minCarbs === '' ? undefined : Number(minCarbs),
+      max_carbs: maxCarbs === '' ? undefined : Number(maxCarbs),
+      min_fats: minFats === '' ? undefined : Number(minFats),
+      max_fats: maxFats === '' ? undefined : Number(maxFats),
+      max_prep_time: maxPrepTime === '' ? undefined : Number(maxPrepTime),
+    }),
+    [query, filterCuisine, filterDietary, filterAllergy, filterIngredient, maxCalories, minProtein, maxProtein, minCarbs, maxCarbs, minFats, maxFats, maxPrepTime]
+  );
+
+  const { recipes, loading } = useRecipes(recipeQuery);
 
   const selectedNutrition = useMemo(() => ({
     protein: Number(selected?.nutrition?.protein || 0),
@@ -48,7 +82,10 @@ export const RecipesPage: React.FC = () => {
     const data = await recipesAPI.substitute({
       recipe_id: selected.id,
       ingredient_name: ingredientName,
-      available_ingredients: ['tofu', 'chickpeas', 'lentils', 'quinoa'],
+      available_ingredients: availableIngredientsInput
+        .split(',')
+        .map((item) => item.trim().toLowerCase())
+        .filter(Boolean),
     });
     setSubstitutions(data.substitutions || []);
   };
@@ -86,9 +123,30 @@ export const RecipesPage: React.FC = () => {
             {generating ? 'Generating...' : 'Generate Custom Recipe'}
           </button>
         </div>
-        <p className="text-sm text-gray-600">
-          Filters are available via query parameters for dietary restrictions, allergies, calories/macros, and prep time.
-        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+          <input value={filterCuisine} onChange={(e) => setFilterCuisine(e.target.value)} placeholder="Cuisine filter" className="border rounded p-2" />
+          <input value={filterIngredient} onChange={(e) => setFilterIngredient(e.target.value)} placeholder="Ingredient filter" className="border rounded p-2" />
+          <input type="number" value={maxCalories} onChange={(e) => setMaxCalories(e.target.value === '' ? '' : Number(e.target.value))} placeholder="Max calories" className="border rounded p-2" />
+          <select value={filterDietary} onChange={(e) => setFilterDietary(e.target.value)} className="border rounded p-2">
+            <option value="">Dietary restriction</option>
+            {DIETARY_PREFERENCES.map((pref) => (
+              <option key={pref} value={pref}>{pref.replace(/_/g, ' ')}</option>
+            ))}
+          </select>
+          <select value={filterAllergy} onChange={(e) => setFilterAllergy(e.target.value)} className="border rounded p-2">
+            <option value="">Allergy/intolerance</option>
+            {ALLERGIES_INTOLERANCES.map((item) => (
+              <option key={item} value={item}>{item.replace(/_/g, ' ')}</option>
+            ))}
+          </select>
+          <input type="number" value={maxPrepTime} onChange={(e) => setMaxPrepTime(e.target.value === '' ? '' : Number(e.target.value))} placeholder="Max prep time (min)" className="border rounded p-2" />
+          <input type="number" value={minProtein} onChange={(e) => setMinProtein(e.target.value === '' ? '' : Number(e.target.value))} placeholder="Min protein (g)" className="border rounded p-2" />
+          <input type="number" value={maxProtein} onChange={(e) => setMaxProtein(e.target.value === '' ? '' : Number(e.target.value))} placeholder="Max protein (g)" className="border rounded p-2" />
+          <input type="number" value={minCarbs} onChange={(e) => setMinCarbs(e.target.value === '' ? '' : Number(e.target.value))} placeholder="Min carbs (g)" className="border rounded p-2" />
+          <input type="number" value={maxCarbs} onChange={(e) => setMaxCarbs(e.target.value === '' ? '' : Number(e.target.value))} placeholder="Max carbs (g)" className="border rounded p-2" />
+          <input type="number" value={minFats} onChange={(e) => setMinFats(e.target.value === '' ? '' : Number(e.target.value))} placeholder="Min fats (g)" className="border rounded p-2" />
+          <input type="number" value={maxFats} onChange={(e) => setMaxFats(e.target.value === '' ? '' : Number(e.target.value))} placeholder="Max fats (g)" className="border rounded p-2" />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -205,6 +263,15 @@ export const RecipesPage: React.FC = () => {
                     <strong>AI substitutions for {selectedIngredient}:</strong> {substitutions.join(', ')}
                   </div>
                 )}
+                <div>
+                  <label className="text-sm text-gray-700 block mb-1">Available ingredients for substitution</label>
+                  <input
+                    value={availableIngredientsInput}
+                    onChange={(e) => setAvailableIngredientsInput(e.target.value)}
+                    className="border rounded p-2 w-full text-sm"
+                    placeholder="comma separated, e.g. tofu, lentils, quinoa"
+                  />
+                </div>
                 <div>
                   <h3 className="font-medium text-gray-900 mb-2">Instructions</h3>
                   <ol className="list-decimal ml-5 text-sm text-gray-700 space-y-1">

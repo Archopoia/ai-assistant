@@ -5,6 +5,7 @@ import { SHOPPING_CATEGORIES } from '../../utils/constants';
 export const ShoppingListPage: React.FC = () => {
   const { plans, loading: plansLoading } = useMealPlans();
   const [selectedPlanId, setSelectedPlanId] = useState<number | undefined>(undefined);
+  const [selectedMealId, setSelectedMealId] = useState<string>('');
   const [updatingItem, setUpdatingItem] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -18,9 +19,9 @@ export const ShoppingListPage: React.FC = () => {
 
   useEffect(() => {
     if (selectedPlanId) {
-      generate();
+      generate(selectedMealId || undefined);
     }
-  }, [selectedPlanId]);
+  }, [selectedPlanId, selectedMealId]);
 
   const categoryLabelMap = useMemo(
     () =>
@@ -60,11 +61,24 @@ export const ShoppingListPage: React.FC = () => {
               </option>
             ))}
           </select>
+          <label className="text-sm text-gray-700">Specific meal (optional)</label>
+          <select
+            className="border rounded p-2"
+            value={selectedMealId}
+            onChange={(e) => setSelectedMealId(e.target.value)}
+          >
+            <option value="">Entire plan</option>
+            {(selectedPlan?.meals || []).map((meal) => (
+              <option key={meal.id} value={meal.id}>
+                {meal.name} ({meal.meal_type})
+              </option>
+            ))}
+          </select>
         </div>
         <button
           onClick={async () => {
-            await generate();
-            setMessage('Shopping list refreshed.');
+            await generate(selectedMealId || undefined);
+            setMessage(selectedMealId ? 'Shopping list refreshed for selected meal.' : 'Shopping list refreshed for full plan.');
           }}
           className="px-3 py-2 rounded bg-indigo-600 text-white text-sm"
         >
@@ -75,7 +89,7 @@ export const ShoppingListPage: React.FC = () => {
         </p>
         {selectedPlan && (
           <p className="text-sm text-gray-700">
-            Showing {list?.items.length || 0} items for plan #{selectedPlan.id} on {selectedPlan.target_date} ({selectedPlan.duration}).
+            Showing {list?.items.length || 0} items for {selectedMealId ? 'selected meal' : `plan #${selectedPlan.id}`} on {selectedPlan.target_date} ({selectedPlan.duration}).
           </p>
         )}
         {message && <p className="text-sm text-green-700">{message}</p>}
