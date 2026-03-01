@@ -195,3 +195,91 @@ docker compose up --build
 ## Notes
 
 - OAuth/email flows still require proper credentials in `.env`.
+
+## Prerequisites
+
+- Docker Desktop (with Docker Compose support)
+- OpenAI API key (for AI-powered generation/insights)
+- OAuth provider credentials (Google/GitHub) if testing social login
+- SMTP credentials if testing email verification and password reset
+
+## Environment Variables
+
+Use `.env.example` as the source of truth. Key values:
+
+- `DATABASE_URL`, `SECRET_KEY`, `OPENAI_API_KEY`
+- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
+- `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM_EMAIL`, `SMTP_USE_TLS`
+- `FRONTEND_URL`, `APP_URL`
+- `ENFORCE_HTTPS`, `ENCRYPTION_KEY` (optional override)
+
+## Core Platform Features (Also Included)
+
+- Authentication: register/login, email verification, password reset, optional 2FA
+- Profile and health data management with privacy controls
+- Analytics: BMI, wellness score, weekly/monthly progress, goal proximity
+- AI insights for status, recommendations, and periodic summaries
+- Security and privacy controls aligned to practical GDPR expectations
+
+## Core API Surface (Existing + New)
+
+Authentication:
+
+- `POST /auth/register`, `POST /auth/login`, `POST /auth/refresh`
+- `GET /auth/verify-email`
+- `POST /auth/request-password-reset`, `POST /auth/reset-password`
+- `GET /auth/oauth/{provider}/login`, `GET /auth/oauth/{provider}/callback`
+- `POST /auth/2fa/enable`, `POST /auth/2fa/verify`, `POST /auth/2fa/disable`, `POST /auth/2fa/verify-login`
+
+Users/Profile/Analytics:
+
+- `GET /users/me`, `PUT /users/me`, `GET /users/me/export`
+- `GET /health-profile`, `POST /health-profile`, `PUT /health-profile`, `DELETE /health-profile`, `GET /health-profile/history`
+- `POST /analytics/metrics`, `GET /analytics/metrics`
+- `GET /analytics/bmi`, `GET /analytics/wellness-score`
+- `GET /analytics/progress/weekly`, `GET /analytics/progress/monthly`
+- `GET /analytics/goals/proximity`
+- `POST /ai-insights/generate/{insight_type}`, `GET /ai-insights`, `GET /ai-insights/latest`
+
+Meal planning/recipes/shopping/nutrition endpoints are listed in `API Surface Added` above.
+
+## Project Structure
+
+```text
+.
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   ├── models/
+│   │   ├── schemas/
+│   │   ├── services/
+│   │   ├── utils/
+│   │   └── migrations/
+│   └── requirements.txt
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   └── types/
+│   └── package.json
+├── docker-compose.yml
+└── README.md
+```
+
+## Security and Privacy
+
+- Password hashing via bcrypt
+- JWT access + refresh tokens
+- Verification checks before protected flows
+- Input validation with Pydantic and ORM-safe DB access
+- Privacy-aware AI normalization and encrypted health snapshots
+- HTTPS support in production via `ENFORCE_HTTPS=true`
+
+## Limitations
+
+- API quotas/rate limits can affect AI responsiveness
+- OAuth features require provider app setup and callback URL correctness
+- Email flows require valid SMTP credentials
+- AI output quality may vary; fallbacks are implemented for resilience
