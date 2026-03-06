@@ -33,6 +33,9 @@ class NutritionDailySummary(BaseModel):
     protein_target_pct: float
     carbs_target_pct: float
     fats_target_pct: float
+    micronutrients: Dict[str, float]
+    micronutrient_recommended: Dict[str, float]
+    micronutrient_target_pct: Dict[str, float]
 
 
 class NutritionTrendPoint(BaseModel):

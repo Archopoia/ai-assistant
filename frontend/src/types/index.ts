@@ -91,7 +91,11 @@ export interface Recipe {
   source: string;
   img?: string;
   preparation: Array<{ step: string; description: string; ingredients: string[] }>;
-  nutrition?: Record<string, number>;
+  nutrition?: Record<string, any>;
+  rating_avg?: number;
+  rating_count?: number;
+  moderation_status?: string;
+  is_verified?: boolean;
 }
 
 export interface Meal {
@@ -143,4 +147,7 @@ export interface NutritionDailySummary {
   protein_target_pct: number;
   carbs_target_pct: number;
   fats_target_pct: number;
+  micronutrients: Record<string, number>;
+  micronutrient_recommended: Record<string, number>;
+  micronutrient_target_pct: Record<string, number>;
 }

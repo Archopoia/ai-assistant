@@ -30,6 +30,7 @@ export const NutritionSummaryCard: React.FC<NutritionSummaryCardProps> = ({ summ
   const progress = Math.min(100, Math.max(0, (summary.calories_kcal / summary.calorie_target_kcal) * 100));
   const statusClass = getStatusColor(summary.deficit_surplus_kcal);
   const progressBarClass = getProgressBarColor(summary.deficit_surplus_kcal);
+  const micronutrientEntries = Object.entries(summary.micronutrient_target_pct || {});
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
@@ -48,6 +49,29 @@ export const NutritionSummaryCard: React.FC<NutritionSummaryCardProps> = ({ summ
       <div className={`mt-3 px-2 py-1 rounded text-xs inline-block ${statusClass}`}>
         Deficit/Surplus: {summary.deficit_surplus_kcal.toFixed(1)} kcal
       </div>
+      {micronutrientEntries.length > 0 && (
+        <div className="mt-4">
+          <h4 className="text-sm font-semibold text-gray-900 mb-2">Micronutrients vs recommended</h4>
+          <div className="space-y-2">
+            {micronutrientEntries.map(([key, pct]) => {
+              const intake = Number(summary.micronutrients?.[key] || 0);
+              const recommended = Number(summary.micronutrient_recommended?.[key] || 0);
+              const width = Math.max(0, Math.min(100, Number(pct)));
+              return (
+                <div key={key} className="text-xs text-gray-700">
+                  <div className="flex justify-between">
+                    <span>{key.replace(/_/g, ' ')}</span>
+                    <span>{intake.toFixed(2)} / {recommended.toFixed(2)}</span>
+                  </div>
+                  <div className="h-2 bg-gray-200 rounded mt-1">
+                    <div className="h-2 rounded bg-blue-500" style={{ width: `${width}%` }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

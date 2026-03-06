@@ -310,6 +310,21 @@ export const recipesAPI = {
     const response = await api.post(`/recipes/${recipeId}/rate`, null, { params: { rating } });
     return response.data;
   },
+
+  getVerifiedRecommendations: async (limit = 6): Promise<Recipe[]> => {
+    const response = await api.get('/recipes/recommendations/verified', { params: { limit } });
+    return response.data;
+  },
+
+  getModerationQueue: async (limit = 10): Promise<Recipe[]> => {
+    const response = await api.get('/recipes/moderation/queue', { params: { limit } });
+    return response.data;
+  },
+
+  moderate: async (recipeId: string, action: 'approve' | 'reject' | 'flag', note?: string): Promise<any> => {
+    const response = await api.post(`/recipes/${recipeId}/moderate`, null, { params: { action, note } });
+    return response.data;
+  },
 };
 
 // Shopping List API

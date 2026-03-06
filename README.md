@@ -11,7 +11,7 @@ This project keeps the original health profile, analytics, auth, and dashboard f
 - Versioned meal plans with restore support
 - Recipe search/filter/details and AI custom recipe generation
 - Shopping list generation with categorization, quantity updates, and exclusions
-- Nutrition tracking (calories/macros/micronutrients), progress bars, trend lines, and AI summaries
+- Nutrition tracking (calories/macros/micronutrients), progress bars, trend lines, micronutrient target comparison, and AI summaries
 - Retrieval-Augmented Generation pipeline with >=500 ingredients and >=500 recipes
 - Function-calling based nutrition calculations
 
@@ -65,8 +65,9 @@ That command starts PostgreSQL, backend, runs migrations, seeds RAG data, and se
    - Update quantities or exclude items.
 6. Open **Dashboard** and **Progress Charts**:
    - Daily calories/macros and target progress bars.
+   - Micronutrient intake vs recommended daily values (Vitamin D, B12, Iron).
    - Weekly/monthly deficit-surplus trend lines.
-   - AI nutrition highlights and suggestions.
+   - AI nutrition highlights, deficiency recommendations, and food suggestions for specific micronutrients.
 
 ## Prompt Engineering Strategy
 
@@ -99,6 +100,8 @@ Pipeline:
 Community-driven improvement support:
 
 - Recipe rating endpoint (`/recipes/{id}/rate`) boosts higher-rated recipes in retrieval ranking.
+- Verified recommendation feed (`/recipes/recommendations/verified`) highlights highly-rated approved recipes.
+- Moderation workflow (`/recipes/moderation/queue`, `/recipes/{id}/moderate`) supports approve/reject/flag quality control.
 
 ## Data Model Decisions
 
@@ -114,6 +117,7 @@ Community-driven improvement support:
 
 - `ingredients`: includes `id`/`label`/`unit`/`quantity`/`nutrition`
 - `recipes`: includes all required fields (`id`, `title`, `cuisine`, `meal`, `servings`, `ingredients`, `summary`, `time`, `difficulty_level`, `dietary_tags`, `source`, `img`, `preparation`)
+- `recipes.nutrition`: extended with `fiber_g`, `sugar_g`, `sodium_mg` in addition to calories/macros/micronutrients
 - `meal_plans` + `meal_plan_versions`: plan content + restorable history
 - `nutrition_logs`: per-meal/per-day nutrition intake
 
@@ -165,6 +169,9 @@ It is used for:
 - `POST /recipes/substitute`
 - `POST /recipes/portion`
 - `POST /recipes/{id}/rate`
+- `GET /recipes/recommendations/verified`
+- `GET /recipes/moderation/queue`
+- `POST /recipes/{id}/moderate`
 - `GET /shopping-list`, `PUT /shopping-list`
 - `POST /nutrition/logs`, `GET /nutrition/logs`
 - `GET /nutrition/summary/daily`

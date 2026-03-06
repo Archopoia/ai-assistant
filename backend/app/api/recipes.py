@@ -19,6 +19,13 @@ from ..services.nutrition_functions import nutrition_functions
 
 router = APIRouter(prefix="/recipes", tags=["recipes"])
 
+VERIFIED_MIN_RATING = 4.5
+VERIFIED_MIN_COUNT = 5
+MODERATION_PENDING = "pending"
+MODERATION_APPROVED = "approved"
+MODERATION_FLAGGED = "flagged"
+MODERATION_REJECTED = "rejected"
+
 
 def _normalized_ingredient(db: Session, item: Dict[str, Any]) -> Dict[str, Any]:
     normalized = dict(item)
@@ -35,6 +42,36 @@ def _normalized_ingredient(db: Session, item: Dict[str, Any]) -> Dict[str, Any]:
             resolved_name = fallback.label
     normalized["name"] = resolved_name
     return normalized
+
+
+def _normalized_nutrition(recipe: Recipe) -> Dict[str, Any]:
+    nutrition = dict(recipe.nutrition or {})
+    nutrition.setdefault("calories", 0.0)
+    nutrition.setdefault("protein", 0.0)
+    nutrition.setdefault("carbs", 0.0)
+    nutrition.setdefault("fats", 0.0)
+    nutrition.setdefault("fiber_g", 0.0)
+    nutrition.setdefault("sugar_g", 0.0)
+    nutrition.setdefault("sodium_mg", 0.0)
+    micros = dict(nutrition.get("micronutrients") or {})
+    micros.setdefault("vitamin_d_mcg", 0.0)
+    micros.setdefault("vitamin_b12_mcg", 0.0)
+    micros.setdefault("iron_mg", 0.0)
+    nutrition["micronutrients"] = micros
+    feedback = dict(nutrition.get("community_feedback") or {})
+    if "moderation_status" not in feedback:
+        feedback["moderation_status"] = MODERATION_PENDING if recipe.source == "rag-custom-generation" else MODERATION_APPROVED
+    feedback.setdefault("moderation_note", None)
+    feedback.setdefault("verified_recommendation", False)
+    nutrition["community_feedback"] = feedback
+    return nutrition
+
+
+def _is_verified_recipe(recipe: Recipe, nutrition: Dict[str, Any]) -> bool:
+    status = str((nutrition.get("community_feedback") or {}).get("moderation_status", MODERATION_APPROVED)).lower()
+    if status in {MODERATION_REJECTED, MODERATION_FLAGGED, MODERATION_PENDING}:
+        return False
+    return float(recipe.rating_avg or 0.0) >= VERIFIED_MIN_RATING and int(recipe.rating_count or 0) >= VERIFIED_MIN_COUNT
 
 
 def _build_instructions(meal_type: str, ingredients: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -80,6 +117,12 @@ def _to_recipe_response(recipe: Recipe, db: Optional[Session] = None) -> Dict[st
     ingredients = recipe.ingredients or []
     if db is not None:
         ingredients = [_normalized_ingredient(db, item) for item in ingredients]
+    nutrition = _normalized_nutrition(recipe)
+    is_verified = _is_verified_recipe(recipe, nutrition)
+    feedback = nutrition.get("community_feedback") or {}
+    feedback["verified_recommendation"] = is_verified
+    nutrition["community_feedback"] = feedback
+    recipe.nutrition = nutrition
     preparation = recipe.preparation or []
     repetitive_steps = [
         step for step in preparation if "layer flavors for a" in str(step.get("description", "")).lower()
@@ -100,7 +143,11 @@ def _to_recipe_response(recipe: Recipe, db: Optional[Session] = None) -> Dict[st
         "source": recipe.source,
         "img": recipe.img,
         "preparation": preparation,
-        "nutrition": recipe.nutrition or {},
+        "nutrition": nutrition,
+        "rating_avg": float(recipe.rating_avg or 0.0),
+        "rating_count": int(recipe.rating_count or 0),
+        "moderation_status": str((nutrition.get("community_feedback") or {}).get("moderation_status", MODERATION_APPROVED)),
+        "is_verified": is_verified,
         "created_at": recipe.created_at,
         "updated_at": recipe.updated_at,
     }
@@ -121,6 +168,12 @@ async def search_recipes(
     min_fats: Optional[float] = Query(default=None),
     max_fats: Optional[float] = Query(default=None),
     max_prep_time: Optional[int] = Query(default=None),
+    min_vitamin_d_mcg: Optional[float] = Query(default=None),
+    max_vitamin_d_mcg: Optional[float] = Query(default=None),
+    min_vitamin_b12_mcg: Optional[float] = Query(default=None),
+    max_vitamin_b12_mcg: Optional[float] = Query(default=None),
+    min_iron_mg: Optional[float] = Query(default=None),
+    max_iron_mg: Optional[float] = Query(default=None),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -147,6 +200,12 @@ async def search_recipes(
     if allergies:
         allergy_tokens = {x.lower().replace(" ", "_") for x in allergies}
         recipes = [recipe for recipe in recipes if allergy_tokens.isdisjoint(set(recipe.dietary_tags or []))]
+    recipes = [
+        recipe
+        for recipe in recipes
+        if str((_normalized_nutrition(recipe).get("community_feedback") or {}).get("moderation_status", MODERATION_APPROVED)).lower()
+        != MODERATION_REJECTED
+    ]
 
     if min_protein is not None:
         recipes = [
@@ -172,6 +231,48 @@ async def search_recipes(
         recipes = [
             recipe for recipe in recipes if float((recipe.nutrition or {}).get("fats", 0.0)) <= float(max_fats)
         ]
+    if min_vitamin_d_mcg is not None:
+        recipes = [
+            recipe
+            for recipe in recipes
+            if float(((recipe.nutrition or {}).get("micronutrients") or {}).get("vitamin_d_mcg", 0.0))
+            >= float(min_vitamin_d_mcg)
+        ]
+    if max_vitamin_d_mcg is not None:
+        recipes = [
+            recipe
+            for recipe in recipes
+            if float(((recipe.nutrition or {}).get("micronutrients") or {}).get("vitamin_d_mcg", 0.0))
+            <= float(max_vitamin_d_mcg)
+        ]
+    if min_vitamin_b12_mcg is not None:
+        recipes = [
+            recipe
+            for recipe in recipes
+            if float(((recipe.nutrition or {}).get("micronutrients") or {}).get("vitamin_b12_mcg", 0.0))
+            >= float(min_vitamin_b12_mcg)
+        ]
+    if max_vitamin_b12_mcg is not None:
+        recipes = [
+            recipe
+            for recipe in recipes
+            if float(((recipe.nutrition or {}).get("micronutrients") or {}).get("vitamin_b12_mcg", 0.0))
+            <= float(max_vitamin_b12_mcg)
+        ]
+    if min_iron_mg is not None:
+        recipes = [
+            recipe
+            for recipe in recipes
+            if float(((recipe.nutrition or {}).get("micronutrients") or {}).get("iron_mg", 0.0))
+            >= float(min_iron_mg)
+        ]
+    if max_iron_mg is not None:
+        recipes = [
+            recipe
+            for recipe in recipes
+            if float(((recipe.nutrition or {}).get("micronutrients") or {}).get("iron_mg", 0.0))
+            <= float(max_iron_mg)
+        ]
 
     deduped: List[Recipe] = []
     seen_titles: set[str] = set()
@@ -183,6 +284,89 @@ async def search_recipes(
         deduped.append(recipe)
 
     return [_to_recipe_response(recipe, db) for recipe in deduped]
+
+
+@router.get("/recommendations/verified", response_model=List[RecipeResponse])
+async def verified_recommendations(
+    limit: int = Query(default=10, ge=1, le=50),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    del current_user
+    rag_service.ensure_seed_data(db)
+    recipes = (
+        db.query(Recipe)
+        .filter(Recipe.rating_avg.isnot(None))
+        .order_by(Recipe.rating_avg.desc(), Recipe.rating_count.desc())
+        .limit(max(limit * 3, limit))
+        .all()
+    )
+    verified = []
+    for recipe in recipes:
+        nutrition = _normalized_nutrition(recipe)
+        if _is_verified_recipe(recipe, nutrition):
+            verified.append(recipe)
+        if len(verified) >= limit:
+            break
+    return [_to_recipe_response(recipe, db) for recipe in verified]
+
+
+@router.get("/moderation/queue", response_model=List[RecipeResponse])
+async def moderation_queue(
+    limit: int = Query(default=25, ge=1, le=100),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    del current_user
+    rag_service.ensure_seed_data(db)
+    candidates = (
+        db.query(Recipe)
+        .filter(Recipe.source == "rag-custom-generation")
+        .order_by(Recipe.updated_at.desc(), Recipe.created_at.desc())
+        .limit(max(limit * 4, limit))
+        .all()
+    )
+    queued: List[Recipe] = []
+    for recipe in candidates:
+        status = str((_normalized_nutrition(recipe).get("community_feedback") or {}).get("moderation_status", "")).lower()
+        if status in {MODERATION_PENDING, MODERATION_FLAGGED}:
+            queued.append(recipe)
+        if len(queued) >= limit:
+            break
+    return [_to_recipe_response(recipe, db) for recipe in queued]
+
+
+@router.post("/{recipe_id}/moderate")
+async def moderate_recipe(
+    recipe_id: str,
+    action: str = Query(pattern="^(approve|reject|flag)$"),
+    note: Optional[str] = Query(default=None),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    del current_user
+    recipe = db.query(Recipe).filter(Recipe.external_id == recipe_id).first()
+    if not recipe:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Recipe not found")
+    nutrition = _normalized_nutrition(recipe)
+    feedback = dict(nutrition.get("community_feedback") or {})
+    normalized_action = action.lower().strip()
+    status_map = {
+        "approve": MODERATION_APPROVED,
+        "reject": MODERATION_REJECTED,
+        "flag": MODERATION_FLAGGED,
+    }
+    feedback["moderation_status"] = status_map[normalized_action]
+    feedback["moderation_note"] = note
+    nutrition["community_feedback"] = feedback
+    recipe.nutrition = nutrition
+    db.commit()
+    db.refresh(recipe)
+    return {
+        "recipe_id": recipe.external_id,
+        "moderation_status": feedback["moderation_status"],
+        "moderation_note": feedback.get("moderation_note"),
+    }
 
 
 @router.get("/{recipe_id}", response_model=RecipeResponse)
@@ -254,6 +438,15 @@ async def generate_recipe(
             detail=nutrition_result.get("message") or "Unable to calculate recipe nutrition",
         )
     nutrition = nutrition_result.get("result", {}).get("per_serving", {})
+    nutrition.setdefault("fiber_g", 0.0)
+    nutrition.setdefault("sugar_g", 0.0)
+    nutrition.setdefault("sodium_mg", 0.0)
+    nutrition.setdefault("micronutrients", {"vitamin_d_mcg": 0.0, "vitamin_b12_mcg": 0.0, "iron_mg": 0.0})
+    nutrition["community_feedback"] = {
+        "moderation_status": MODERATION_PENDING,
+        "moderation_note": "Awaiting moderation review.",
+        "verified_recommendation": False,
+    }
     style_words = ["Zesty", "Herbed", "Smoky", "Rustic", "Bright", "Savory"]
     style = style_words[generated_count % len(style_words)]
     main_for_title = str(ingredients[0].get("name", "Signature")).split(" ")[0].title() if ingredients else "Signature"
@@ -369,5 +562,22 @@ async def rate_recipe(
     new_count = current_count + 1
     recipe.rating_avg = round(((current_avg * current_count) + rating) / new_count, 2)
     recipe.rating_count = new_count
+    nutrition = _normalized_nutrition(recipe)
+    feedback = dict(nutrition.get("community_feedback") or {})
+    if rating <= 2 and new_count >= 3:
+        feedback["moderation_status"] = MODERATION_FLAGGED
+        feedback["moderation_note"] = "Auto-flagged due to repeated low ratings."
+    if feedback.get("moderation_status") == MODERATION_APPROVED:
+        feedback["verified_recommendation"] = _is_verified_recipe(recipe, nutrition)
+    else:
+        feedback["verified_recommendation"] = False
+    nutrition["community_feedback"] = feedback
+    recipe.nutrition = nutrition
     db.commit()
-    return {"recipe_id": recipe_id, "rating_avg": recipe.rating_avg, "rating_count": recipe.rating_count}
+    return {
+        "recipe_id": recipe_id,
+        "rating_avg": recipe.rating_avg,
+        "rating_count": recipe.rating_count,
+        "moderation_status": feedback.get("moderation_status", MODERATION_APPROVED),
+        "verified_recommendation": feedback.get("verified_recommendation", False),
+    }

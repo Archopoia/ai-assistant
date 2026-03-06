@@ -22,6 +22,18 @@ from ..schemas.nutrition import (
 
 router = APIRouter(prefix="/nutrition", tags=["nutrition"])
 
+MICRONUTRIENT_RECOMMENDED_DAILY = {
+    "vitamin_d_mcg": 15.0,
+    "vitamin_b12_mcg": 2.4,
+    "iron_mg": 18.0,
+}
+
+MICRONUTRIENT_FOOD_SUGGESTIONS = {
+    "vitamin_d_mcg": ["salmon", "sardines", "egg yolks", "fortified milk alternatives"],
+    "vitamin_b12_mcg": ["eggs", "dairy", "fish", "fortified nutritional yeast"],
+    "iron_mg": ["lentils", "spinach", "beans", "lean red meat"],
+}
+
 
 def _daily_totals(logs: List[NutritionLog]) -> Dict[str, float]:
     totals = {"calories_kcal": 0.0, "protein_g": 0.0, "carbs_g": 0.0, "fats_g": 0.0}
@@ -39,6 +51,8 @@ class NutritionImprovementSuggestions(BaseModel):
     portion_size_modifications: List[str] = Field(default_factory=list)
     alternative_ingredients: List[str] = Field(default_factory=list)
     weekly_meal_plan_optimizations: List[str] = Field(default_factory=list)
+    deficiency_recommendations: List[str] = Field(default_factory=list)
+    micronutrient_food_suggestions: Dict[str, List[str]] = Field(default_factory=dict)
 
 
 class NutritionInsightsPayload(BaseModel):
@@ -57,6 +71,17 @@ def _deterministic_nutrition_insight(weekly: Dict[str, Any]) -> Dict[str, Any]:
         if severe_deficit_days
         else "No severe caloric deficit days detected."
     )
+    latest_micronutrients = weekly.get("latest_micronutrients") or {}
+    deficiency_recommendations: List[str] = []
+    micronutrient_food_suggestions: Dict[str, List[str]] = {}
+    for nutrient, recommended in MICRONUTRIENT_RECOMMENDED_DAILY.items():
+        intake = float(latest_micronutrients.get(nutrient, 0.0))
+        if intake < recommended:
+            nutrient_label = nutrient.replace("_", " ").replace("mcg", "(mcg)").replace("mg", "(mg)")
+            deficiency_recommendations.append(
+                f"Low {nutrient_label}: {round(intake, 2)} vs {recommended} daily target."
+            )
+            micronutrient_food_suggestions[nutrient] = MICRONUTRIENT_FOOD_SUGGESTIONS.get(nutrient, [])
     return {
         "highlights": [f"Remained in caloric deficit for {stayed_in_deficit_days} days this week."],
         "concerns": [concern],
@@ -67,6 +92,8 @@ def _deterministic_nutrition_insight(weekly: Dict[str, Any]) -> Dict[str, Any]:
             "portion_size_modifications": ["Reduce high-calorie snacks on surplus days."],
             "alternative_ingredients": ["Swap cream sauces for yogurt-based alternatives."],
             "weekly_meal_plan_optimizations": ["Use higher-protein lunches on active days."],
+            "deficiency_recommendations": deficiency_recommendations or ["No micronutrient deficiencies detected today."],
+            "micronutrient_food_suggestions": micronutrient_food_suggestions,
         },
     }
 
@@ -96,7 +123,9 @@ def _ai_nutrition_insight(weekly: Dict[str, Any]) -> Dict[str, Any]:
         '"meal_timing_adjustments":["..."],'
         '"portion_size_modifications":["..."],'
         '"alternative_ingredients":["..."],'
-        '"weekly_meal_plan_optimizations":["..."]'
+        '"weekly_meal_plan_optimizations":["..."],'
+        '"deficiency_recommendations":["..."],'
+        '"micronutrient_food_suggestions":{"vitamin_d_mcg":["..."],"vitamin_b12_mcg":["..."],"iron_mg":["..."]}'
         "}"
         "}\n"
         f"Weekly data: {json.dumps(weekly)}"
@@ -204,9 +233,21 @@ async def daily_summary(
         .all()
     )
     totals = _daily_totals(logs)
+    micronutrient_totals = {key: 0.0 for key in MICRONUTRIENT_RECOMMENDED_DAILY}
+    for log in logs:
+        values = log.micronutrients or {}
+        for nutrient in micronutrient_totals:
+            micronutrient_totals[nutrient] += float(values.get(nutrient, 0.0))
     calorie_target = float(profile.calorie_target_kcal or 2000.0)
     macro_targets = profile.macronutrient_targets or {"protein": 120, "carbs": 220, "fats": 70}
     deficit_surplus = round(totals["calories_kcal"] - calorie_target, 2)
+    micronutrient_target_pct = {
+        nutrient: round(
+            (micronutrient_totals[nutrient] / max(MICRONUTRIENT_RECOMMENDED_DAILY[nutrient], 0.0001)) * 100,
+            2,
+        )
+        for nutrient in MICRONUTRIENT_RECOMMENDED_DAILY
+    }
 
     return {
         "date": target_date,
@@ -219,6 +260,9 @@ async def daily_summary(
         "protein_target_pct": round((totals["protein_g"] / max(float(macro_targets.get("protein", 1)), 1)) * 100, 2),
         "carbs_target_pct": round((totals["carbs_g"] / max(float(macro_targets.get("carbs", 1)), 1)) * 100, 2),
         "fats_target_pct": round((totals["fats_g"] / max(float(macro_targets.get("fats", 1)), 1)) * 100, 2),
+        "micronutrients": {key: round(value, 2) for key, value in micronutrient_totals.items()},
+        "micronutrient_recommended": MICRONUTRIENT_RECOMMENDED_DAILY,
+        "micronutrient_target_pct": micronutrient_target_pct,
     }
 
 
@@ -243,12 +287,15 @@ async def weekly_summary(
         points.append({"date": day.isoformat(), "deficit_surplus_kcal": summary["deficit_surplus_kcal"]})
 
     avg_calories = round((sum((p["deficit_surplus_kcal"] + calorie_target) for p in points) / 7), 2)
+    latest_summary = await daily_summary(end_date, current_user, db)
     return {
         "start_date": start_date.isoformat(),
         "end_date": end_date.isoformat(),
         "daily_points": points,
         "weekly_average_calories": avg_calories,
         "weekly_average_deficit_surplus": round(sum(deficits) / len(deficits), 2),
+        "latest_micronutrients": latest_summary.get("micronutrients", {}),
+        "micronutrient_recommended": MICRONUTRIENT_RECOMMENDED_DAILY,
     }
 
 

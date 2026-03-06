@@ -99,6 +99,7 @@ class RAGService:
         """Upgrade old generic seed labels/titles to human-friendly content."""
         realistic_names = self._build_realistic_ingredient_names(max(min_items, db.query(Ingredient).count()))
         ingredients = db.query(Ingredient).order_by(Ingredient.id.asc()).all()
+        ingredient_lookup: Dict[str, Ingredient] = {ing.external_id: ing for ing in ingredients if ing.external_id}
         rename_map: Dict[str, str] = {}
         for idx, ingredient in enumerate(ingredients):
             if idx >= len(realistic_names):
@@ -119,6 +120,25 @@ class RAGService:
                 if ing_id in rename_map:
                     item["name"] = rename_map[ing_id]
             recipe.ingredients = ingredient_list
+            nutrition_payload = dict(recipe.nutrition or {})
+            micronutrients = dict(nutrition_payload.get("micronutrients") or {})
+            if not all(key in micronutrients for key in ("vitamin_d_mcg", "vitamin_b12_mcg", "iron_mg")):
+                totals = {"vitamin_d_mcg": 0.0, "vitamin_b12_mcg": 0.0, "iron_mg": 0.0}
+                for item in ingredient_list:
+                    ingredient = ingredient_lookup.get(str(item.get("id", "")))
+                    if not ingredient or not ingredient.nutrition:
+                        continue
+                    base_quantity = max(float(ingredient.quantity or 100.0), 1.0)
+                    quantity = float(item.get("quantity", 0.0))
+                    scale = quantity / base_quantity
+                    totals["vitamin_d_mcg"] += float(ingredient.nutrition.get("vitamin_d_mcg", 0.0)) * scale
+                    totals["vitamin_b12_mcg"] += float(ingredient.nutrition.get("vitamin_b12_mcg", 0.0)) * scale
+                    totals["iron_mg"] += float(ingredient.nutrition.get("iron_mg", 0.0)) * scale
+                nutrition_payload["micronutrients"] = {key: round(value, 2) for key, value in totals.items()}
+            nutrition_payload.setdefault("fiber_g", 0.0)
+            nutrition_payload.setdefault("sugar_g", 0.0)
+            nutrition_payload.setdefault("sodium_mg", 0.0)
+            recipe.nutrition = nutrition_payload
             if "Bowl" in recipe.title or recipe.title.lower().startswith(("italian", "korean", "mexican", "american")):
                 main = ingredient_list[0]["name"] if ingredient_list else "seasonal ingredients"
                 recipe.title = self._recipe_title(recipe.cuisine, recipe.meal, main, idx)
@@ -180,6 +200,9 @@ class RAGService:
                         "protein": float(protein),
                         "carbs": float(carbs),
                         "fats": float(fats),
+                        "fiber_g": round((index % 10) * 0.9, 2),
+                        "sugar_g": round((index % 12) * 0.7, 2),
+                        "sodium_mg": round(40 + (index % 25) * 12, 2),
                         "vitamin_d_mcg": round((index % 8) * 0.3, 2),
                         "vitamin_b12_mcg": round((index % 6) * 0.2, 2),
                         "iron_mg": round((index % 12) * 0.7, 2),
@@ -202,7 +225,18 @@ class RAGService:
 
                 recipe_ingredients = []
                 prep = []
-                nutrition_totals = {"calories": 0.0, "protein": 0.0, "carbs": 0.0, "fats": 0.0}
+                nutrition_totals = {
+                    "calories": 0.0,
+                    "protein": 0.0,
+                    "carbs": 0.0,
+                    "fats": 0.0,
+                    "fiber_g": 0.0,
+                    "sugar_g": 0.0,
+                    "sodium_mg": 0.0,
+                    "vitamin_d_mcg": 0.0,
+                    "vitamin_b12_mcg": 0.0,
+                    "iron_mg": 0.0,
+                }
                 for step_idx, ing in enumerate(selected, start=1):
                     qty = float(70 + ((index + step_idx) % 90))
                     recipe_ingredients.append(
@@ -241,7 +275,20 @@ class RAGService:
                     source="seed-rag-database",
                     img=f"/images/recipe-{index:04d}.jpg",
                     preparation=prep,
-                    nutrition={k: round(v, 2) for k, v in nutrition_totals.items()},
+                    nutrition={
+                        "calories": round(nutrition_totals["calories"], 2),
+                        "protein": round(nutrition_totals["protein"], 2),
+                        "carbs": round(nutrition_totals["carbs"], 2),
+                        "fats": round(nutrition_totals["fats"], 2),
+                        "fiber_g": round(nutrition_totals["fiber_g"], 2),
+                        "sugar_g": round(nutrition_totals["sugar_g"], 2),
+                        "sodium_mg": round(nutrition_totals["sodium_mg"], 2),
+                        "micronutrients": {
+                            "vitamin_d_mcg": round(nutrition_totals["vitamin_d_mcg"], 2),
+                            "vitamin_b12_mcg": round(nutrition_totals["vitamin_b12_mcg"], 2),
+                            "iron_mg": round(nutrition_totals["iron_mg"], 2),
+                        },
+                    },
                     embedding=self.create_embedding(embedding_text),
                     rating_avg=round(3.5 + (index % 15) * 0.1, 2),
                     rating_count=5 + (index % 100),

@@ -25,6 +25,30 @@ class PreparationStep(BaseModel):
     ingredients: List[str]
 
 
+class MicronutrientDetails(BaseModel):
+    vitamin_d_mcg: float = Field(default=0, ge=0)
+    vitamin_b12_mcg: float = Field(default=0, ge=0)
+    iron_mg: float = Field(default=0, ge=0)
+
+
+class CommunityFeedback(BaseModel):
+    moderation_status: str = Field(default="approved")
+    moderation_note: Optional[str] = None
+    verified_recommendation: bool = False
+
+
+class RecipeNutritionDetails(BaseModel):
+    calories: float = Field(default=0, ge=0)
+    protein: float = Field(default=0, ge=0)
+    carbs: float = Field(default=0, ge=0)
+    fats: float = Field(default=0, ge=0)
+    fiber_g: float = Field(default=0, ge=0)
+    sugar_g: float = Field(default=0, ge=0)
+    sodium_mg: float = Field(default=0, ge=0)
+    micronutrients: MicronutrientDetails = Field(default_factory=MicronutrientDetails)
+    community_feedback: CommunityFeedback = Field(default_factory=CommunityFeedback)
+
+
 class RecipeBase(BaseModel):
     id: str
     title: str
@@ -39,7 +63,7 @@ class RecipeBase(BaseModel):
     source: str
     img: Optional[str] = None
     preparation: List[PreparationStep]
-    nutrition: Optional[Dict[str, Any]] = None
+    nutrition: Optional[RecipeNutritionDetails] = None
 
     @field_validator("dietary_tags")
     @classmethod
@@ -99,6 +123,10 @@ class RecipePortionRequest(BaseModel):
 class RecipeResponse(RecipeBase):
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
+    rating_avg: Optional[float] = None
+    rating_count: int = 0
+    moderation_status: str = "approved"
+    is_verified: bool = False
 
     class Config:
         from_attributes = True

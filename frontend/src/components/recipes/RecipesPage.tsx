@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRecipes } from '../../hooks/useMealPlanning';
 import { nutritionAPI, recipesAPI } from '../../services/api';
 import { MacroBreakdownChart } from '../charts/MacroBreakdownChart';
@@ -28,7 +28,13 @@ export const RecipesPage: React.FC = () => {
   const [minFats, setMinFats] = useState<number | ''>('');
   const [maxFats, setMaxFats] = useState<number | ''>('');
   const [maxPrepTime, setMaxPrepTime] = useState<number | ''>('');
+  const [minVitaminD, setMinVitaminD] = useState<number | ''>('');
+  const [minVitaminB12, setMinVitaminB12] = useState<number | ''>('');
+  const [minIron, setMinIron] = useState<number | ''>('');
   const [availableIngredientsInput, setAvailableIngredientsInput] = useState('tofu, chickpeas, lentils, quinoa');
+  const [verifiedRecipes, setVerifiedRecipes] = useState<Recipe[]>([]);
+  const [moderationQueue, setModerationQueue] = useState<Recipe[]>([]);
+  const [loadingCommunity, setLoadingCommunity] = useState(false);
 
   const recipeQuery = useMemo(
     () => ({
@@ -45,11 +51,49 @@ export const RecipesPage: React.FC = () => {
       min_fats: minFats === '' ? undefined : Number(minFats),
       max_fats: maxFats === '' ? undefined : Number(maxFats),
       max_prep_time: maxPrepTime === '' ? undefined : Number(maxPrepTime),
+      min_vitamin_d_mcg: minVitaminD === '' ? undefined : Number(minVitaminD),
+      min_vitamin_b12_mcg: minVitaminB12 === '' ? undefined : Number(minVitaminB12),
+      min_iron_mg: minIron === '' ? undefined : Number(minIron),
     }),
-    [query, filterCuisine, filterDietary, filterAllergy, filterIngredient, maxCalories, minProtein, maxProtein, minCarbs, maxCarbs, minFats, maxFats, maxPrepTime]
+    [
+      query,
+      filterCuisine,
+      filterDietary,
+      filterAllergy,
+      filterIngredient,
+      maxCalories,
+      minProtein,
+      maxProtein,
+      minCarbs,
+      maxCarbs,
+      minFats,
+      maxFats,
+      maxPrepTime,
+      minVitaminD,
+      minVitaminB12,
+      minIron,
+    ]
   );
 
   const { recipes, loading } = useRecipes(recipeQuery);
+
+  const loadCommunityFeatures = async () => {
+    try {
+      setLoadingCommunity(true);
+      const [verified, queue] = await Promise.all([
+        recipesAPI.getVerifiedRecommendations(6).catch(() => []),
+        recipesAPI.getModerationQueue(10).catch(() => []),
+      ]);
+      setVerifiedRecipes(verified || []);
+      setModerationQueue(queue || []);
+    } finally {
+      setLoadingCommunity(false);
+    }
+  };
+
+  useEffect(() => {
+    loadCommunityFeatures();
+  }, []);
 
   const selectedNutrition = useMemo(() => ({
     protein: Number(selected?.nutrition?.protein || 0),
@@ -68,6 +112,7 @@ export const RecipesPage: React.FC = () => {
         servings,
       });
       setSelected(generated);
+      await loadCommunityFeatures();
       setSuccess('Custom recipe generated.');
     } catch (err: any) {
       setError(err.response?.data?.detail || err.message || 'Failed to generate recipe');
@@ -103,6 +148,19 @@ export const RecipesPage: React.FC = () => {
       setError(err.response?.data?.detail || err.message || 'Failed to recalculate portions');
     } finally {
       setRecalculating(false);
+    }
+  };
+
+  const moderateRecipe = async (recipeId: string, action: 'approve' | 'reject' | 'flag') => {
+    try {
+      setError(null);
+      setSuccess(null);
+      await recipesAPI.moderate(recipeId, action);
+      const actionLabel = action === 'approve' ? 'approved' : action === 'reject' ? 'rejected' : 'flagged';
+      setSuccess(`Recipe ${actionLabel} successfully.`);
+      await loadCommunityFeatures();
+    } catch (err: any) {
+      setError(err.response?.data?.detail || err.message || 'Failed moderation action');
     }
   };
 
@@ -146,6 +204,68 @@ export const RecipesPage: React.FC = () => {
           <input type="number" value={maxCarbs} onChange={(e) => setMaxCarbs(e.target.value === '' ? '' : Number(e.target.value))} placeholder="Max carbs (g)" className="border rounded p-2" />
           <input type="number" value={minFats} onChange={(e) => setMinFats(e.target.value === '' ? '' : Number(e.target.value))} placeholder="Min fats (g)" className="border rounded p-2" />
           <input type="number" value={maxFats} onChange={(e) => setMaxFats(e.target.value === '' ? '' : Number(e.target.value))} placeholder="Max fats (g)" className="border rounded p-2" />
+          <input type="number" value={minVitaminD} onChange={(e) => setMinVitaminD(e.target.value === '' ? '' : Number(e.target.value))} placeholder="Min Vitamin D (mcg)" className="border rounded p-2" />
+          <input type="number" value={minVitaminB12} onChange={(e) => setMinVitaminB12(e.target.value === '' ? '' : Number(e.target.value))} placeholder="Min Vitamin B12 (mcg)" className="border rounded p-2" />
+          <input type="number" value={minIron} onChange={(e) => setMinIron(e.target.value === '' ? '' : Number(e.target.value))} placeholder="Min Iron (mg)" className="border rounded p-2" />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white rounded-lg shadow-md p-6 space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-gray-900">Verified Recommendations</h2>
+            <button
+              className="text-sm text-blue-700 underline disabled:opacity-60"
+              onClick={loadCommunityFeatures}
+              disabled={loadingCommunity}
+            >
+              {loadingCommunity ? 'Refreshing...' : 'Refresh'}
+            </button>
+          </div>
+          <p className="text-xs text-gray-500">Highly rated, moderation-approved recipes from community feedback.</p>
+          <div className="space-y-2">
+            {verifiedRecipes.map((recipe) => (
+              <button
+                key={`verified-${recipe.id}`}
+                onClick={() => setSelected(recipe)}
+                className="w-full text-left border rounded p-3 hover:bg-gray-50"
+              >
+                <div className="font-medium text-gray-900">{recipe.title}</div>
+                <div className="text-xs text-gray-600">
+                  Rating: {Number(recipe.rating_avg || 0).toFixed(2)} ({recipe.rating_count || 0} votes) | status: {recipe.moderation_status || 'approved'}
+                </div>
+              </button>
+            ))}
+            {!verifiedRecipes.length && <p className="text-sm text-gray-600">No verified recommendations yet.</p>}
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-md p-6 space-y-3">
+          <h2 className="text-xl font-semibold text-gray-900">Moderation Queue</h2>
+          <p className="text-xs text-gray-500">Pending/flagged generated recipes for quality control.</p>
+          <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+            {moderationQueue.map((recipe) => (
+              <div key={`moderation-${recipe.id}`} className="border rounded p-3">
+                <div className="font-medium text-gray-900">{recipe.title}</div>
+                <div className="text-xs text-gray-600 mb-2">Current status: {recipe.moderation_status || 'pending'}</div>
+                <div className="flex gap-2">
+                  <button className="text-xs px-2 py-1 rounded bg-green-50 text-green-700" onClick={() => moderateRecipe(recipe.id, 'approve')}>
+                    Approve
+                  </button>
+                  <button className="text-xs px-2 py-1 rounded bg-red-50 text-red-700" onClick={() => moderateRecipe(recipe.id, 'reject')}>
+                    Reject
+                  </button>
+                  <button className="text-xs px-2 py-1 rounded bg-amber-50 text-amber-700" onClick={() => moderateRecipe(recipe.id, 'flag')}>
+                    Flag
+                  </button>
+                  <button className="text-xs text-blue-700 underline" onClick={() => setSelected(recipe)}>
+                    Open
+                  </button>
+                </div>
+              </div>
+            ))}
+            {!moderationQueue.length && <p className="text-sm text-gray-600">No recipes need moderation right now.</p>}
+          </div>
         </div>
       </div>
 
@@ -198,6 +318,12 @@ export const RecipesPage: React.FC = () => {
                 )}
                 <div className="text-sm text-gray-600">
                   Servings: {selected.servings} | Time: {selected.time} min | Difficulty: {selected.difficulty_level}
+                </div>
+                <div className="text-xs text-gray-600">
+                  Rating: {Number(selected.rating_avg || 0).toFixed(2)} ({selected.rating_count || 0}) | Moderation: {selected.moderation_status || 'approved'} | Verified: {selected.is_verified ? 'Yes' : 'No'}
+                </div>
+                <div className="text-xs text-gray-600">
+                  Fiber: {Number(selected.nutrition?.fiber_g || 0).toFixed(1)}g | Sugar: {Number(selected.nutrition?.sugar_g || 0).toFixed(1)}g | Sodium: {Number(selected.nutrition?.sodium_mg || 0).toFixed(1)}mg
                 </div>
                 <div className="flex items-center gap-2">
                   <label className="text-sm text-gray-700">Adjust servings</label>

@@ -46,6 +46,9 @@ class NutritionFunctions:
             "protein": 0.0,
             "carbs": 0.0,
             "fats": 0.0,
+            "fiber_g": 0.0,
+            "sugar_g": 0.0,
+            "sodium_mg": 0.0,
             "micronutrients": {"vitamin_d_mcg": 0.0, "vitamin_b12_mcg": 0.0, "iron_mg": 0.0},
             "missing_ingredients": [],
         }
@@ -76,6 +79,9 @@ class NutritionFunctions:
             totals["protein"] += float(nutrition.get("protein", 0.0)) * scale
             totals["carbs"] += float(nutrition.get("carbs", 0.0)) * scale
             totals["fats"] += float(nutrition.get("fats", 0.0)) * scale
+            totals["fiber_g"] += float(nutrition.get("fiber_g", 0.0)) * scale
+            totals["sugar_g"] += float(nutrition.get("sugar_g", 0.0)) * scale
+            totals["sodium_mg"] += float(nutrition.get("sodium_mg", 0.0)) * scale
             totals["micronutrients"]["vitamin_d_mcg"] += float(nutrition.get("vitamin_d_mcg", 0.0)) * scale
             totals["micronutrients"]["vitamin_b12_mcg"] += float(nutrition.get("vitamin_b12_mcg", 0.0)) * scale
             totals["micronutrients"]["iron_mg"] += float(nutrition.get("iron_mg", 0.0)) * scale
@@ -88,6 +94,9 @@ class NutritionFunctions:
             "protein": round(totals["protein"] / servings, 2),
             "carbs": round(totals["carbs"] / servings, 2),
             "fats": round(totals["fats"] / servings, 2),
+            "fiber_g": round(totals["fiber_g"] / servings, 2),
+            "sugar_g": round(totals["sugar_g"] / servings, 2),
+            "sodium_mg": round(totals["sodium_mg"] / servings, 2),
             "micronutrients": {
                 "vitamin_d_mcg": round(totals["micronutrients"]["vitamin_d_mcg"] / servings, 2),
                 "vitamin_b12_mcg": round(totals["micronutrients"]["vitamin_b12_mcg"] / servings, 2),
@@ -101,6 +110,9 @@ class NutritionFunctions:
                 "protein": round(totals["protein"], 2),
                 "carbs": round(totals["carbs"], 2),
                 "fats": round(totals["fats"], 2),
+                "fiber_g": round(totals["fiber_g"], 2),
+                "sugar_g": round(totals["sugar_g"], 2),
+                "sodium_mg": round(totals["sodium_mg"], 2),
             },
             "per_serving": per_serving,
             "missing_ingredients": totals["missing_ingredients"],

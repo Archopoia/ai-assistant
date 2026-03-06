@@ -203,6 +203,20 @@ export const Dashboard: React.FC = () => {
             <div>
               <strong>Macro balance:</strong> {nutritionInsights.macronutrient_balance_analysis}
             </div>
+            {!!nutritionInsights.improvement_suggestions?.deficiency_recommendations?.length && (
+              <div>
+                <strong>Deficiency recommendations:</strong>{' '}
+                {nutritionInsights.improvement_suggestions.deficiency_recommendations.join(' ')}
+              </div>
+            )}
+            {!!Object.keys(nutritionInsights.improvement_suggestions?.micronutrient_food_suggestions || {}).length && (
+              <div>
+                <strong>Micronutrient food suggestions:</strong>{' '}
+                {Object.entries(nutritionInsights.improvement_suggestions.micronutrient_food_suggestions)
+                  .map(([key, values]: any) => `${key.replace(/_/g, ' ')}: ${(values || []).join(', ')}`)
+                  .join(' | ')}
+              </div>
+            )}
           </div>
         ) : (
           <p className="text-gray-600 text-sm">Nutrition insights will appear once logs are available.</p>
