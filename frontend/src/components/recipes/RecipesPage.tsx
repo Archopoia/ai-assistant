@@ -325,6 +325,24 @@ export const RecipesPage: React.FC = () => {
                 <div className="text-xs text-gray-600">
                   Fiber: {Number(selected.nutrition?.fiber_g || 0).toFixed(1)}g | Sugar: {Number(selected.nutrition?.sugar_g || 0).toFixed(1)}g | Sodium: {Number(selected.nutrition?.sodium_mg || 0).toFixed(1)}mg
                 </div>
+                <div className="border rounded p-3 bg-gray-50 text-xs text-gray-700 space-y-1">
+                  <div className="font-semibold text-gray-900">Advanced Nutrition Profile</div>
+                  <div>
+                    Glycemic Index: {Number(selected.nutrition?.glycemic_index || 0).toFixed(0)} | Satiety Index: {Number(selected.nutrition?.satiety_index || 0).toFixed(0)}
+                  </div>
+                  <div>
+                    Nutrient Density Score: {Number(selected.nutrition?.nutrient_density_score || 0).toFixed(2)} | Processing Level: {selected.nutrition?.processing_level || 'n/a'}
+                  </div>
+                  <div>
+                    Antioxidants - Polyphenols: {selected.nutrition?.antioxidant_profile?.polyphenols || 'n/a'},
+                    Flavonoids: {selected.nutrition?.antioxidant_profile?.flavonoids || 'n/a'},
+                    Carotenoids: {selected.nutrition?.antioxidant_profile?.carotenoids || 'n/a'}
+                  </div>
+                  <div>
+                    Environmental Impact - Carbon: {selected.nutrition?.environmental_impact?.carbon_footprint || 'n/a'},
+                    Water: {selected.nutrition?.environmental_impact?.water_usage || 'n/a'}
+                  </div>
+                </div>
                 <div className="flex items-center gap-2">
                   <label className="text-sm text-gray-700">Adjust servings</label>
                   <input
