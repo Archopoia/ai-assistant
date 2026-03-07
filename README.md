@@ -148,7 +148,7 @@ Community-driven improvement support:
 
 - `ingredients`: includes `id`/`label`/`unit`/`quantity`/`nutrition`
 - `recipes`: includes all required fields (`id`, `title`, `cuisine`, `meal`, `servings`, `ingredients`, `summary`, `time`, `difficulty_level`, `dietary_tags`, `source`, `img`, `preparation`)
-- `recipes.nutrition`: extended with `fiber_g`, `sugar_g`, `sodium_mg` in addition to calories/macros/micronutrients
+- `recipes.nutrition`: extended with `fiber_g`, `sugar_g`, `sodium_mg`, `glycemic_index`, `antioxidant_profile`, `nutrient_density_score`, `processing_level`, `environmental_impact`, and `satiety_index`
 - `meal_plans` + `meal_plan_versions`: plan content + restorable history
 - `nutrition_logs`: per-meal/per-day nutrition intake
 

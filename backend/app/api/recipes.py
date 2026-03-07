@@ -44,6 +44,42 @@ def _normalized_ingredient(db: Session, item: Dict[str, Any]) -> Dict[str, Any]:
     return normalized
 
 
+def _derived_schema_additions(nutrition: Dict[str, Any]) -> Dict[str, Any]:
+    carbs = float(nutrition.get("carbs", 0.0))
+    fiber = float(nutrition.get("fiber_g", 0.0))
+    protein = float(nutrition.get("protein", 0.0))
+    fats = float(nutrition.get("fats", 0.0))
+    calories = float(nutrition.get("calories", 0.0))
+    sodium = float(nutrition.get("sodium_mg", 0.0))
+    micronutrients = nutrition.get("micronutrients") or {}
+    micronutrient_sum = (
+        float(micronutrients.get("vitamin_d_mcg", 0.0))
+        + float(micronutrients.get("vitamin_b12_mcg", 0.0))
+        + float(micronutrients.get("iron_mg", 0.0))
+    )
+    gi = int(max(20, min(90, 55 + (carbs * 0.15) - (fiber * 0.5))))
+    nutrient_density_score = round(max(1.0, min(10.0, ((protein + fiber + micronutrient_sum) / max(calories, 100.0)) * 120)), 2)
+    processing_level = "minimally processed" if sodium < 400 else "processed"
+    satiety_index = int(max(20, min(100, 35 + (protein * 0.5) + (fiber * 1.2) + (fats * 0.25))))
+    antioxidant_profile = {
+        "polyphenols": "high" if fiber >= 8 else "medium" if fiber >= 4 else "low",
+        "flavonoids": "high" if micronutrient_sum >= 12 else "medium" if micronutrient_sum >= 5 else "low",
+        "carotenoids": "high" if float(micronutrients.get("vitamin_d_mcg", 0.0)) >= 3 else "medium" if float(micronutrients.get("vitamin_d_mcg", 0.0)) >= 1 else "low",
+    }
+    environmental_impact = {
+        "carbon_footprint": "high" if protein > 35 else "medium" if protein > 20 else "low",
+        "water_usage": "high" if calories > 700 else "medium" if calories > 450 else "low",
+    }
+    return {
+        "glycemic_index": gi,
+        "antioxidant_profile": antioxidant_profile,
+        "nutrient_density_score": nutrient_density_score,
+        "processing_level": processing_level,
+        "environmental_impact": environmental_impact,
+        "satiety_index": satiety_index,
+    }
+
+
 def _normalized_nutrition(recipe: Recipe) -> Dict[str, Any]:
     nutrition = dict(recipe.nutrition or {})
     nutrition.setdefault("calories", 0.0)
@@ -64,6 +100,13 @@ def _normalized_nutrition(recipe: Recipe) -> Dict[str, Any]:
     feedback.setdefault("moderation_note", None)
     feedback.setdefault("verified_recommendation", False)
     nutrition["community_feedback"] = feedback
+    derived = _derived_schema_additions(nutrition)
+    nutrition.setdefault("glycemic_index", derived["glycemic_index"])
+    nutrition.setdefault("antioxidant_profile", derived["antioxidant_profile"])
+    nutrition.setdefault("nutrient_density_score", derived["nutrient_density_score"])
+    nutrition.setdefault("processing_level", derived["processing_level"])
+    nutrition.setdefault("environmental_impact", derived["environmental_impact"])
+    nutrition.setdefault("satiety_index", derived["satiety_index"])
     return nutrition
 
 
@@ -442,6 +485,7 @@ async def generate_recipe(
     nutrition.setdefault("sugar_g", 0.0)
     nutrition.setdefault("sodium_mg", 0.0)
     nutrition.setdefault("micronutrients", {"vitamin_d_mcg": 0.0, "vitamin_b12_mcg": 0.0, "iron_mg": 0.0})
+    nutrition.update(_derived_schema_additions(nutrition))
     nutrition["community_feedback"] = {
         "moderation_status": MODERATION_PENDING,
         "moderation_note": "Awaiting moderation review.",

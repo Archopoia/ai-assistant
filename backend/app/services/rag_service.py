@@ -95,6 +95,35 @@ class RAGService:
         template = self.recipe_title_templates[index % len(self.recipe_title_templates)]
         return template.format(cuisine=cuisine, meal=meal, main=main_ingredient.title())
 
+    def _schema_extension_from_nutrition(self, nutrition: Dict[str, Any]) -> Dict[str, Any]:
+        carbs = float(nutrition.get("carbs", 0.0))
+        fiber = float(nutrition.get("fiber_g", 0.0))
+        protein = float(nutrition.get("protein", 0.0))
+        fats = float(nutrition.get("fats", 0.0))
+        calories = float(nutrition.get("calories", 0.0))
+        sodium = float(nutrition.get("sodium_mg", 0.0))
+        micros = dict(nutrition.get("micronutrients") or {})
+        micro_sum = (
+            float(micros.get("vitamin_d_mcg", 0.0))
+            + float(micros.get("vitamin_b12_mcg", 0.0))
+            + float(micros.get("iron_mg", 0.0))
+        )
+        return {
+            "glycemic_index": int(max(20, min(90, 55 + (carbs * 0.15) - (fiber * 0.5)))),
+            "antioxidant_profile": {
+                "polyphenols": "high" if fiber >= 8 else "medium" if fiber >= 4 else "low",
+                "flavonoids": "high" if micro_sum >= 12 else "medium" if micro_sum >= 5 else "low",
+                "carotenoids": "high" if float(micros.get("vitamin_d_mcg", 0.0)) >= 3 else "medium" if float(micros.get("vitamin_d_mcg", 0.0)) >= 1 else "low",
+            },
+            "nutrient_density_score": round(max(1.0, min(10.0, ((protein + fiber + micro_sum) / max(calories, 100.0)) * 120)), 2),
+            "processing_level": "minimally processed" if sodium < 400 else "processed",
+            "environmental_impact": {
+                "carbon_footprint": "high" if protein > 35 else "medium" if protein > 20 else "low",
+                "water_usage": "high" if calories > 700 else "medium" if calories > 450 else "low",
+            },
+            "satiety_index": int(max(20, min(100, 35 + (protein * 0.5) + (fiber * 1.2) + (fats * 0.25)))),
+        }
+
     def _humanize_seed_data(self, db: Session, min_items: int) -> None:
         """Upgrade old generic seed labels/titles to human-friendly content."""
         realistic_names = self._build_realistic_ingredient_names(max(min_items, db.query(Ingredient).count()))
@@ -138,6 +167,7 @@ class RAGService:
             nutrition_payload.setdefault("fiber_g", 0.0)
             nutrition_payload.setdefault("sugar_g", 0.0)
             nutrition_payload.setdefault("sodium_mg", 0.0)
+            nutrition_payload.update(self._schema_extension_from_nutrition(nutrition_payload))
             recipe.nutrition = nutrition_payload
             if "Bowl" in recipe.title or recipe.title.lower().startswith(("italian", "korean", "mexican", "american")):
                 main = ingredient_list[0]["name"] if ingredient_list else "seasonal ingredients"
@@ -288,6 +318,22 @@ class RAGService:
                             "vitamin_b12_mcg": round(nutrition_totals["vitamin_b12_mcg"], 2),
                             "iron_mg": round(nutrition_totals["iron_mg"], 2),
                         },
+                        **self._schema_extension_from_nutrition(
+                            {
+                                "calories": round(nutrition_totals["calories"], 2),
+                                "protein": round(nutrition_totals["protein"], 2),
+                                "carbs": round(nutrition_totals["carbs"], 2),
+                                "fats": round(nutrition_totals["fats"], 2),
+                                "fiber_g": round(nutrition_totals["fiber_g"], 2),
+                                "sugar_g": round(nutrition_totals["sugar_g"], 2),
+                                "sodium_mg": round(nutrition_totals["sodium_mg"], 2),
+                                "micronutrients": {
+                                    "vitamin_d_mcg": round(nutrition_totals["vitamin_d_mcg"], 2),
+                                    "vitamin_b12_mcg": round(nutrition_totals["vitamin_b12_mcg"], 2),
+                                    "iron_mg": round(nutrition_totals["iron_mg"], 2),
+                                },
+                            }
+                        ),
                     },
                     embedding=self.create_embedding(embedding_text),
                     rating_avg=round(3.5 + (index % 15) * 0.1, 2),

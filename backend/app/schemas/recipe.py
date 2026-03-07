@@ -37,6 +37,17 @@ class CommunityFeedback(BaseModel):
     verified_recommendation: bool = False
 
 
+class AntioxidantProfile(BaseModel):
+    polyphenols: str = Field(default="medium")
+    flavonoids: str = Field(default="medium")
+    carotenoids: str = Field(default="medium")
+
+
+class EnvironmentalImpact(BaseModel):
+    carbon_footprint: str = Field(default="medium")
+    water_usage: str = Field(default="medium")
+
+
 class RecipeNutritionDetails(BaseModel):
     calories: float = Field(default=0, ge=0)
     protein: float = Field(default=0, ge=0)
@@ -45,6 +56,12 @@ class RecipeNutritionDetails(BaseModel):
     fiber_g: float = Field(default=0, ge=0)
     sugar_g: float = Field(default=0, ge=0)
     sodium_mg: float = Field(default=0, ge=0)
+    glycemic_index: int = Field(default=50, ge=0, le=100)
+    antioxidant_profile: AntioxidantProfile = Field(default_factory=AntioxidantProfile)
+    nutrient_density_score: float = Field(default=5.0, ge=0, le=10)
+    processing_level: str = Field(default="minimally processed")
+    environmental_impact: EnvironmentalImpact = Field(default_factory=EnvironmentalImpact)
+    satiety_index: int = Field(default=50, ge=0, le=100)
     micronutrients: MicronutrientDetails = Field(default_factory=MicronutrientDetails)
     community_feedback: CommunityFeedback = Field(default_factory=CommunityFeedback)
 
