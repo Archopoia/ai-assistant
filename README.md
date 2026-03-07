@@ -1,4 +1,4 @@
-# Wellness Platform - (Counting Calories)
+# Wellness Platform - (AI Assistant)
 
 An AI-powered wellness platform with personalized meal planning, recipe management, nutrition tracking, and RAG-grounded generation.
 
@@ -10,7 +10,9 @@ This project keeps the original health profile, analytics, auth, and dashboard f
 - Multi-turn context handling with automatic history compression for long chats
 - Structured tool/function calling for health metrics, goals, meal plans, recipes, nutrition, and chart payloads
 - Natural-language chart requests (weight trend line, protein vs target bar, macro breakdown pie)
+- Context-aware proactive visualization suggestions (protein/weight/macro conversations)
 - Safety guardrails for medical boundaries, out-of-scope prompts, and PII protection
+- Robust conversation input handling for empty, long, symbol-heavy, and code-like prompts
 - Daily and weekly AI-generated meal plans
 - Meal plan customization (swap/reorder/regenerate/manual add)
 - Versioned meal plans with restore support
@@ -78,6 +80,8 @@ That command starts PostgreSQL, backend, runs migrations, seeds RAG data, and se
    - Use follow-up prompts like "Can you tell me more about that?" and "Is that enough protein?".
    - Toggle response mode between concise and detailed.
    - Request charts by natural language and view chart previews directly in the conversation.
+   - Markdown-style assistant responses (headings, bullets, bold emphasis) are rendered in the chat UI.
+   - If you add or edit a custom meal in Meal Plan, the assistant reflects it on the next relevant meal query (no manual refresh required).
 
 ## Prompt Engineering Strategy
 
@@ -192,6 +196,7 @@ It is used for:
 - Multi-turn support keeps at least 5+ turns available for reference resolution.
 - Automatic compression activates for longer conversations (10+ user turns) and stores a rolling summary.
 - Dynamic context management prioritizes recent messages and includes older messages matching the current topic.
+- Visualization suggestions consider current prompt + recent topic context to recommend relevant charts.
 - Conversation history is persisted in DB, enabling close/re-open continuity.
 
 ## Assistant Function Calling Details
@@ -219,6 +224,9 @@ Function-call validations occur before retrieval (invalid enums, missing require
 - AI rate limits
 - connectivity/API errors
 - empty chat messages and overly long chat input
+- unsupported control characters (binary/hidden chars) in chat input
+- symbol-heavy malformed chat input
+- code-snippet style prompts handled gracefully with a wellness-scope redirect
 - missing conversation or unauthorized conversation access
 - missing profile/plan/log data for requested timeframe
 - chart data unavailable for requested period
@@ -261,6 +269,11 @@ Function-call validations occur before retrieval (invalid enums, missing require
 - `GET /nutrition/summary/weekly`
 - `GET /nutrition/trends`
 - `GET /nutrition/insights`
+- `POST /assistant/conversations`
+- `GET /assistant/conversations`
+- `GET /assistant/conversations/latest`
+- `GET /assistant/conversations/{conversation_id}`
+- `POST /assistant/conversations/{conversation_id}/messages`
 
 ## Development Verification
 
@@ -311,6 +324,7 @@ Use `.env.example` as the source of truth. Key values:
 - Analytics: BMI, wellness score, weekly/monthly progress, goal proximity
 - AI insights for status, recommendations, and periodic summaries
 - Security and privacy controls aligned to practical GDPR expectations
+- Conversational assistant with persisted memory, scoped function-calling, chart previews, and safety boundaries
 
 ## Core API Surface (Existing + New)
 
@@ -364,7 +378,9 @@ Meal planning/recipes/shopping/nutrition endpoints are listed in `API Surface Ad
 - JWT access + refresh tokens
 - Verification checks before protected flows
 - Input validation with Pydantic and ORM-safe DB access
+- Assistant route-level validation for malformed chat input and clear user-facing error responses
 - Privacy-aware AI normalization and encrypted health snapshots
+- Assistant-level safety middleware behavior (medical escalation wording, PII boundary refusals, out-of-scope redirection)
 - HTTPS support in production via `ENFORCE_HTTPS=true`
 
 ## Limitations
