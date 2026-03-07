@@ -15,6 +15,7 @@ import { MealPlanPage } from './components/meal-plan/MealPlanPage';
 import { RecipesPage } from './components/recipes/RecipesPage';
 import { ShoppingListPage } from './components/shopping/ShoppingListPage';
 import { ProgressChartsPage } from './components/progress/ProgressChartsPage';
+import { AssistantPage } from './components/assistant/AssistantPage';
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -86,6 +87,17 @@ const AppRoutes: React.FC = () => {
           <PrivateRoute>
             <Layout>
               <ProgressChartsPage />
+            </Layout>
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/assistant"
+        element={
+          <PrivateRoute>
+            <Layout>
+              <AssistantPage />
             </Layout>
           </PrivateRoute>
         }

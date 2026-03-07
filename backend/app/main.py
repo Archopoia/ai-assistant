@@ -5,7 +5,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from .config import settings
 from .database import engine, Base
 from .database import SessionLocal
-from .api import auth, users, health_profile, analytics, ai_insights, recipes, meal_plans, shopping_list, nutrition
+from .api import auth, users, health_profile, analytics, ai_insights, recipes, meal_plans, shopping_list, nutrition, assistant
 from .services.rag_service import rag_service
 
 # Create database tables
@@ -87,6 +87,7 @@ app.include_router(recipes.router)
 app.include_router(meal_plans.router)
 app.include_router(shopping_list.router)
 app.include_router(nutrition.router)
+app.include_router(assistant.router)
 
 
 @app.on_event("startup")

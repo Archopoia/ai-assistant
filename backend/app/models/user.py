@@ -34,3 +34,4 @@ class User(Base):
     ai_insights = relationship("AIInsights", back_populates="user")
     meal_plans = relationship("MealPlan", back_populates="user")
     nutrition_logs = relationship("NutritionLog", back_populates="user")
+    assistant_conversations = relationship("AssistantConversation", back_populates="user")

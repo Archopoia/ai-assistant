@@ -6,6 +6,8 @@ from .ingredient import Ingredient
 from .recipe import Recipe
 from .meal_plan import MealPlan, MealPlanVersion
 from .nutrition_log import NutritionLog
+from .assistant_conversation import AssistantConversation
+from .assistant_message import AssistantMessage
 
 __all__ = [
     "User",
@@ -17,4 +19,6 @@ __all__ = [
     "MealPlan",
     "MealPlanVersion",
     "NutritionLog",
+    "AssistantConversation",
+    "AssistantMessage",
 ]

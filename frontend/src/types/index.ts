@@ -151,3 +151,45 @@ export interface NutritionDailySummary {
   micronutrient_recommended: Record<string, number>;
   micronutrient_target_pct: Record<string, number>;
 }
+
+export type AssistantResponseMode = 'concise' | 'detailed';
+export type AssistantChartType = 'line' | 'bar' | 'pie';
+
+export interface AssistantChartPayload {
+  chart_type: AssistantChartType;
+  title: string;
+  description?: string;
+  x_key?: string;
+  y_keys: string[];
+  data: Array<Record<string, string | number>>;
+}
+
+export interface AssistantConversationSummary {
+  id: number;
+  title: string;
+  response_mode: AssistantResponseMode;
+  topic_hint?: string;
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface AssistantMessage {
+  id: number;
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  created_at: string;
+  metadata_json?: Record<string, any>;
+}
+
+export interface AssistantConversationDetail {
+  conversation: AssistantConversationSummary;
+  messages: AssistantMessage[];
+}
+
+export interface AssistantChatResponse {
+  conversation: AssistantConversationSummary;
+  user_message: AssistantMessage;
+  assistant_message: AssistantMessage;
+  chart?: AssistantChartPayload | null;
+  suggested_visualization?: string | null;
+}

@@ -10,6 +10,10 @@ import type {
   Recipe,
   ShoppingList,
   NutritionDailySummary,
+  AssistantConversationSummary,
+  AssistantConversationDetail,
+  AssistantChatResponse,
+  AssistantResponseMode,
 } from '../types';
 
 const api = axios.create({
@@ -369,6 +373,44 @@ export const nutritionAPI = {
 
   getInsights: async (): Promise<any> => {
     const response = await api.get('/nutrition/insights');
+    return response.data;
+  },
+};
+
+// Assistant API
+export const assistantAPI = {
+  createConversation: async (title = 'Wellness Assistant Chat', responseMode: AssistantResponseMode = 'concise'): Promise<AssistantConversationSummary> => {
+    const response = await api.post('/assistant/conversations', {
+      title,
+      response_mode: responseMode,
+    });
+    return response.data;
+  },
+
+  listConversations: async (): Promise<AssistantConversationSummary[]> => {
+    const response = await api.get('/assistant/conversations');
+    return response.data;
+  },
+
+  getLatestConversation: async (): Promise<AssistantConversationSummary | null> => {
+    const response = await api.get('/assistant/conversations/latest');
+    return response.data;
+  },
+
+  getConversation: async (conversationId: number): Promise<AssistantConversationDetail> => {
+    const response = await api.get(`/assistant/conversations/${conversationId}`);
+    return response.data;
+  },
+
+  sendMessage: async (
+    conversationId: number,
+    message: string,
+    responseMode: AssistantResponseMode
+  ): Promise<AssistantChatResponse> => {
+    const response = await api.post(`/assistant/conversations/${conversationId}/messages`, {
+      message,
+      response_mode: responseMode,
+    });
     return response.data;
   },
 };

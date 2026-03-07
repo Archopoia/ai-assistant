@@ -6,6 +6,11 @@ An AI-powered wellness platform with personalized meal planning, recipe manageme
 
 This project keeps the original health profile, analytics, auth, and dashboard features, then adds:
 
+- Conversational wellness assistant with persistent chat history
+- Multi-turn context handling with automatic history compression for long chats
+- Structured tool/function calling for health metrics, goals, meal plans, recipes, nutrition, and chart payloads
+- Natural-language chart requests (weight trend line, protein vs target bar, macro breakdown pie)
+- Safety guardrails for medical boundaries, out-of-scope prompts, and PII protection
 - Daily and weekly AI-generated meal plans
 - Meal plan customization (swap/reorder/regenerate/manual add)
 - Versioned meal plans with restore support
@@ -68,8 +73,26 @@ That command starts PostgreSQL, backend, runs migrations, seeds RAG data, and se
    - Micronutrient intake vs recommended daily values (Vitamin D, B12, Iron).
    - Weekly/monthly deficit-surplus trend lines.
    - AI nutrition highlights, deficiency recommendations, and food suggestions for specific micronutrients.
+7. Open **Assistant**:
+   - Ask conversational questions across health metrics, goals, meal plans, recipes, and nutrition.
+   - Use follow-up prompts like "Can you tell me more about that?" and "Is that enough protein?".
+   - Toggle response mode between concise and detailed.
+   - Request charts by natural language and view chart previews directly in the conversation.
 
 ## Prompt Engineering Strategy
+
+### Conversational Assistant System Prompt
+
+The assistant uses a single structured system prompt that enforces:
+
+- role and capability boundaries (wellness-only scope)
+- response formatting expectations (scannable sections + bullets)
+- concise vs detailed mode behavior
+- safety constraints (no diagnosis, urgent-care escalation wording)
+- privacy constraints (never reveal email/DOB/credentials/other-user data)
+- tool usage instruction (must call tools for personal account data)
+
+Prompt examples are embedded for health metrics, progress summaries, meal-plan summaries, and medical-boundary responses so output style is consistent across query types.
 
 Meal planning uses **sequential prompting with 3 steps**:
 
@@ -82,10 +105,14 @@ Few-shot style consistency is enforced with structured JSON prompts and schema-o
 ## AI Model Selection Rationale
 
 - `gpt-3.5-turbo` is used for recipe/plan reasoning because it offers a practical quality/latency/cost balance.
+- The same model is used for assistant chat because requirements emphasize breadth of everyday queries and follow-ups over deep specialist reasoning.
 - Nutrition calculations are **not trusted to free-form generation** and always run via explicit function execution.
 - Temperature and top-p are adjusted by step:
   - lower temperature for deterministic strategy/structure
   - slightly higher temperature for meal variety
+- Assistant settings:
+  - concise mode: lower temperature for compact predictable answers
+  - detailed mode: slightly higher temperature and larger token budget for fuller explanation
 
 ## RAG Implementation
 
@@ -136,6 +163,50 @@ It is used for:
 - recipe generation nutrition completion
 - serving-size adjustment recalculations
 
+## Conversational Assistant Architecture and Request Flow
+
+### Two-layer architecture
+
+- Conversation Layer (frontend + assistant API):
+  - chat UI, input validation, response mode toggle, persistent history load
+  - message storage and retrieval per authenticated user conversation
+  - response rendering (structured text + optional chart payload)
+- Data Access Layer (assistant tools):
+  - health metrics and trend retrieval
+  - goals/preferences retrieval
+  - meal plan and recipe lookup
+  - nutrition totals and target comparison
+  - chart payload generation for line/bar/pie requests
+
+### Request flow
+
+1. User sends message in Assistant page.
+2. Message is validated and persisted.
+3. Context manager selects relevant recent messages and applies compression summary for long chats.
+4. LLM receives system prompt + selected context and may call tools.
+5. Tool outputs are merged into final response text (and optional chart payload).
+6. Assistant response is persisted and rendered in chat.
+
+## Conversation Management Approach
+
+- Multi-turn support keeps at least 5+ turns available for reference resolution.
+- Automatic compression activates for longer conversations (10+ user turns) and stores a rolling summary.
+- Dynamic context management prioritizes recent messages and includes older messages matching the current topic.
+- Conversation history is persisted in DB, enabling close/re-open continuity.
+
+## Assistant Function Calling Details
+
+Assistant tools (all scoped to `current_user` and validated):
+
+- `get_health_metrics(metric_type, time_period)`
+- `get_health_goals_and_preferences(include_preferences)`
+- `get_meal_plan(timeframe)`
+- `get_recipe_for_meal(meal_name, day_hint)`
+- `get_nutrition_summary(period)`
+- `get_chart_data(chart_kind, period)`
+
+Function-call validations occur before retrieval (invalid enums, missing required fields, unauthorized cross-user IDs, and unavailable data all return structured errors).
+
 ## Error Handling and Recovery
 
 ### Covered Cases
@@ -147,12 +218,24 @@ It is used for:
 - timeouts
 - AI rate limits
 - connectivity/API errors
+- empty chat messages and overly long chat input
+- missing conversation or unauthorized conversation access
+- missing profile/plan/log data for requested timeframe
+- chart data unavailable for requested period
 
 ### Recovery
 
 - fallback to direct deterministic nutrition function execution
+- fallback deterministic assistant responses when model call fails
 - graceful user-facing error messages
 - meal generation fallbacks when model call fails
+
+## Assistant Safety and Boundaries
+
+- No medical diagnosis: urgent symptom prompts return immediate professional-care recommendation.
+- PII protection: assistant can personalize with name only; no email, DOB, credentials, or other-user data is exposed.
+- Prompt-injection boundary: assistant tools are always executed with authenticated `current_user` scope.
+- Out-of-scope prompts are redirected to supported wellness capabilities.
 
 ## API Surface Added
 
