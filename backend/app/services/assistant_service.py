@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import json
-from typing import Any, Dict, List, Optional, Tuple
+import re
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 from openai import OpenAI
 from openai import APIConnectionError, APIError, RateLimitError
 from sqlalchemy.orm import Session
@@ -55,6 +56,15 @@ class AssistantService:
                 metadata_json={"mode": response_mode, "safety": "scope"},
             ), None, None
 
+        unexpected_input_warning = self._unexpected_input_override(user_message.content)
+        if unexpected_input_warning:
+            return self._save_assistant_message(
+                db=db,
+                conversation=conversation,
+                content=unexpected_input_warning,
+                metadata_json={"mode": response_mode, "safety": "input_validation"},
+            ), None, None
+
         tool_data, fallback_text = self._deterministic_shortcuts(
             db, conversation, current_user, user_message.content, response_mode
         )
@@ -69,7 +79,7 @@ class AssistantService:
                 content=self._enforce_response_mode(fallback_text, response_mode),
                 metadata_json={"mode": response_mode, "chart_payload": chart},
             )
-            return assistant_message, chart, self._suggested_visualization(user_message.content)
+            return assistant_message, chart, self._suggested_visualization(user_message.content, conversation)
 
         messages = (
             db.query(AssistantMessage)
@@ -101,7 +111,7 @@ class AssistantService:
                 content=content,
                 metadata_json={"mode": response_mode, "chart_payload": chart},
             )
-            return assistant_message, chart, self._suggested_visualization(user_message.content)
+            return assistant_message, chart, self._suggested_visualization(user_message.content, conversation, messages)
 
         content_text = ""
         chart_payload: Optional[Dict[str, Any]] = chart
@@ -166,7 +176,7 @@ class AssistantService:
             content=content_text,
             metadata_json={"mode": response_mode, "chart_payload": chart_payload},
         )
-        return assistant_message, chart_payload, self._suggested_visualization(user_message.content)
+        return assistant_message, chart_payload, self._suggested_visualization(user_message.content, conversation, messages)
 
     def _build_llm_messages(
         self,
@@ -275,6 +285,35 @@ You must call tools whenever user asks about concrete personal data.
             return (
                 "I’m focused on wellness support in this app: health metrics, goals, nutrition, meal plans, recipes, "
                 "and chart insights. If you'd like, I can help you analyze your current progress in any of those areas."
+            )
+        return None
+
+    def _unexpected_input_override(self, prompt: str) -> Optional[str]:
+        stripped = prompt.strip()
+        if not stripped:
+            return None
+
+        # Graceful handling of code-like payloads while preserving chat continuity.
+        code_patterns = [
+            r"```",
+            r"\bimport\s+\w+",
+            r"\bdef\s+\w+\s*\(",
+            r"\bclass\s+\w+",
+            r"\bfunction\s+\w*\s*\(",
+            r"\bSELECT\s+.+\bFROM\b",
+            r"<script\b",
+        ]
+        if any(re.search(pattern, stripped, flags=re.IGNORECASE) for pattern in code_patterns):
+            return (
+                "I can’t execute or debug code in this chat, but I can still help with wellness topics. "
+                "Try asking your question in health, nutrition, meal-plan, or progress terms."
+            )
+
+        symbol_count = sum(1 for ch in stripped if not ch.isalnum() and not ch.isspace())
+        if len(stripped) >= 20 and symbol_count / max(len(stripped), 1) > 0.55:
+            return (
+                "Your message contains a lot of special characters, so I may misread it. "
+                "Please rephrase it as a plain wellness question."
             )
         return None
 
@@ -423,13 +462,31 @@ You must call tools whenever user asks about concrete personal data.
             return text + "\n\nIf you want, I can break this down with your personal targets and current progress."
         return text + "\n\nIf you want, I can break this down with your personal targets and current progress."
 
-    def _suggested_visualization(self, prompt: str) -> Optional[str]:
+    def _suggested_visualization(
+        self,
+        prompt: str,
+        conversation: Optional[AssistantConversation] = None,
+        messages: Optional[Sequence[AssistantMessage]] = None,
+    ) -> Optional[str]:
         lowered = prompt.lower()
-        if "protein" in lowered and "chart" not in lowered:
+        if any(token in lowered for token in ["chart", "graph", "visual", "show me"]):
+            return None
+
+        recent_context = ""
+        if messages:
+            tail = list(messages)[-6:]
+            recent_context = " ".join((item.content or "").lower() for item in tail)
+
+        topic_hint = (conversation.topic_hint or "").lower() if conversation else ""
+        nutrition_context = ("protein" in recent_context or "nutrition" in recent_context or topic_hint == "nutrition")
+        health_context = ("weight" in recent_context or "wellness" in recent_context or topic_hint == "health")
+        macro_context = ("macro" in recent_context or "carbs" in recent_context or "fats" in recent_context)
+
+        if "protein" in lowered or nutrition_context:
             return "Would you like to see a chart of your protein intake versus your target this week?"
-        if "weight" in lowered and "chart" not in lowered:
+        if "weight" in lowered or health_context:
             return "I can also show your weight trend chart for the last month."
-        if "macro" in lowered and "chart" not in lowered:
+        if "macro" in lowered or "macronutrient" in lowered or macro_context:
             return "Would you like a pie chart of today's macronutrient breakdown?"
         return None
 

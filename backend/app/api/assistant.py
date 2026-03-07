@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import string
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from ..api import get_current_user
@@ -18,6 +19,25 @@ from ..schemas.assistant import (
 from ..services.assistant_service import assistant_service
 
 router = APIRouter(prefix="/assistant", tags=["assistant"])
+
+
+def _contains_unsupported_control_chars(text: str) -> bool:
+    for char in text:
+        codepoint = ord(char)
+        if codepoint < 32 and char not in {"\n", "\r", "\t"}:
+            return True
+    return False
+
+
+def _looks_like_symbol_noise(text: str) -> bool:
+    stripped = text.strip()
+    if len(stripped) < 4:
+        return False
+    alnum_count = sum(1 for char in stripped if char.isalnum())
+    symbol_count = sum(1 for char in stripped if char in string.punctuation)
+    if alnum_count == 0 and symbol_count > 0:
+        return True
+    return symbol_count > alnum_count * 2 and len(stripped.split()) <= 2
 
 
 def _to_summary(conversation: AssistantConversation) -> AssistantConversationSummary:
@@ -117,6 +137,16 @@ async def send_message(
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Message cannot be empty.")
     if len(cleaned_message) > 6000:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Message exceeds 6000 characters.")
+    if _contains_unsupported_control_chars(cleaned_message):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Message includes unsupported control characters. Please remove hidden/binary characters and retry.",
+        )
+    if _looks_like_symbol_noise(cleaned_message):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Message appears malformed (mostly symbols). Please send a readable wellness question.",
+        )
 
     if payload.response_mode:
         conversation.response_mode = payload.response_mode
