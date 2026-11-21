@@ -52,6 +52,7 @@ AMD / no CUDA: leave Hunyuan/TRELLIS down — Studio uses free Hugging Face Trip
 | `scripts/characters/` | Step 07 generators (local free / Tripo optional) |
 | `scripts/tools/` | Sheet split, OpenCV measure, PyMeshLab, xatlas, glTF-Transform |
 | `studio/` | Local web UI (prompt/picture funnel) |
+| `FREE_PATH.md` | Guide steps 01–15 ↔ free implementation + QC |
 | `prompts/` | Copy-paste prompts from the article |
 | `examples/` | Working assets (`crate`, `demo`) |
 | `third_party/SOURCES.md` | The 14 GitHub projects + free generators |

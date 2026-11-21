@@ -229,7 +229,7 @@ def main() -> None:
     hero.hide_viewport = False
     scale = frame_objects([hero])
     for view in ("front", "side", "back"):
-        render_view(base / "renders" / f"clean_{view}.png", view, px=768, ortho_scale=scale)
+        render_view(base / "renders" / f"clean_{view}.png", view, px=768, ortho_scale=scale, grid=True)
 
     report = {
         **stats,

@@ -21,8 +21,9 @@ def run_step(script_rel: str, args: dict) -> None:
 
 
 def cmd_measure(name: str, *, width: float, depth: float, height: float) -> None:
-    """Step 02–03: split concept sheet if needed, measure refs → parts.json."""
+    """Step 02–03: generate/split refs if needed, measure → parts.json."""
     sys.path.insert(0, str(ROOT / "scripts" / "tools"))
+    from generate_sheet import generate_views, looks_like_multiview_sheet  # type: ignore
     from measure_parts import measure  # type: ignore
     from split_sheet import save_prop_views  # type: ignore
 
@@ -30,11 +31,16 @@ def cmd_measure(name: str, *, width: float, depth: float, height: float) -> None
     refs = base / "references"
     concept = refs / "concept.png"
     if concept.exists() and not (refs / "side.png").exists():
-        print("=== split concept sheet → front/side/top ===")
-        save_prop_views(concept, refs)
+        if looks_like_multiview_sheet(concept):
+            print("=== split multi-panel sheet → front/side/top ===")
+            save_prop_views(concept, refs)
+        else:
+            print("=== single concept → ortho panels (FLUX + QC) ===")
+            prompt = (base / "prompt.txt").read_text(encoding="utf-8") if (base / "prompt.txt").exists() else name
+            generate_views(kind="prop", design=prompt, out_dir=refs, concept=concept, force=True, mode="auto")
     front, side = refs / "front.png", refs / "side.png"
     if not side.exists() and not front.exists():
-        raise SystemExit(f"Need {refs}/front.png or side.png (or concept.png to split)")
+        raise SystemExit(f"Need {refs}/front.png or side.png (or concept.png)")
     doc = measure(
         front=front if front.exists() else None,
         side=side if side.exists() else None,
@@ -45,11 +51,13 @@ def cmd_measure(name: str, *, width: float, depth: float, height: float) -> None
     )
     out = base / "parts.json"
     out.write_text(json.dumps(doc, indent=2), encoding="utf-8")
-    print(f"wrote {out} ({len(doc['parts'])} parts, contour on tallest)")
+    print(f"wrote {out} ({len(doc['parts'])} parts, contour on tallest) — review before build")
 
 
 def cmd_prop(name: str, *, remeasure: bool = False) -> None:
-    """Steps 03–05 for a code-built prop (demo: crate)."""
+    """Steps 03–05: measure (optional) → build with ≤3 QC rounds → assemble."""
+    from .prop_build import build_parts_with_qc
+
     base = ensure_asset_dirs("props", name)
     parts = base / "parts.json"
     if remeasure or not parts.exists():
@@ -57,14 +65,7 @@ def cmd_prop(name: str, *, remeasure: bool = False) -> None:
     if not parts.exists():
         raise SystemExit(f"Missing {parts} — write measurements first (step 03).")
 
-    doc = json.loads(parts.read_text())
-    for part in doc["parts"]:
-        print(f"\n=== build part {part['name']} ({part.get('build', 'box')}) ===")
-        run_step("blender/props/build_part.py", {"asset": name, "part": part["name"], "render_px": 768})
-
-    print("\n=== assemble + export ===")
-    run_step("blender/props/assemble.py", {"asset": name})
-
+    build_parts_with_qc(name)
     glb = base / "exports" / f"{name}.glb"
     if glb.exists():
         opt = base / "exports" / f"{name}_opt.glb"

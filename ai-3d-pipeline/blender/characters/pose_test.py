@@ -102,9 +102,37 @@ def clear_pose(arm):
     bpy.ops.object.mode_set(mode="OBJECT")
 
 
+def patch_worst_weights(obj, report: dict, threshold: float = 1.35) -> int:
+    """Guide step 12: soften influences on the worst stretched verts."""
+    fixed = 0
+    for pose_name, data in report.items():
+        if not isinstance(data, dict):
+            continue
+        for item in data.get("worst", []):
+            if float(item.get("ratio", 1)) < threshold:
+                continue
+            vi = int(item["v"])
+            if vi >= len(obj.data.vertices):
+                continue
+            # zero arm influences on torso-ish high stretch; damp others 20%
+            for g in obj.data.vertices[vi].groups:
+                vg = obj.vertex_groups[g.group]
+                if any(k in vg.name for k in ("Arm", "Hand", "ForeArm")):
+                    vg.add([vi], 0.0, "REPLACE")
+                    fixed += 1
+                else:
+                    vg.add([vi], max(0.0, g.weight * 0.8), "REPLACE")
+                    fixed += 1
+    if fixed:
+        bpy.ops.object.vertex_group_normalize_all(lock_active=False)
+    return fixed
+
+
 def main() -> None:
     args = pipeline_args()
     name = args["asset"]
+    round_i = int(args.get("round", 1))
+    do_fix = bool(args.get("fix", False))
     base = ROOT / "examples" / "characters" / name
     bpy.ops.wm.open_mainfile(filepath=str(base / "exports" / f"{name}_rigged.blend"))
     arm = bpy.data.objects["Armature"]
@@ -112,7 +140,7 @@ def main() -> None:
 
     clear_pose(arm)
     rest = rest_edge_lengths(obj)
-    reports = {}
+    reports = {"round": round_i}
     scale = frame_objects([obj])
 
     for pname, pdata in POSES.items():
@@ -123,6 +151,11 @@ def main() -> None:
         log(f"{pname}: max stretch {reports[pname]['max_stretch']}x")
 
     clear_pose(arm)
+    if do_fix:
+        n = patch_worst_weights(obj, reports)
+        reports["weights_patched"] = n
+        log(f"patched {n} weight entries on worst verts")
+
     write_json(base / "exports" / "pose_test_report.json", reports)
     bpy.ops.wm.save_as_mainfile(filepath=str(base / "exports" / f"{name}_rigged.blend"))
 

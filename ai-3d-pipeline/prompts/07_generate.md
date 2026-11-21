@@ -2,23 +2,22 @@
 
 Split sheet into `view_front.png`, `view_right.png`, `view_back.png`.
 
-## Free (recommended here) — TRELLIS on Windows
+## Free chain (Studio / CLI default)
 
 ```powershell
-# Anaconda PowerShell Prompt, from ai-3d-pipeline\
-.\scripts\install_trellis.ps1
-.\scripts\serve_trellis.ps1   # http://127.0.0.1:8090
-
-python scripts\characters\07_generate_local.py `
-  --backend trellis `
-  --front examples\characters\demo\views\view_front.png `
-  --right examples\characters\demo\views\view_right.png `
-  --back examples\characters\demo\views\view_back.png `
-  -o examples\characters\demo\exports\raw.glb
-# backends: import | triposr | trellis | hunyuan
+python -m pipeline.cli generate <name> --force
+# → scripts/characters/07_generate_chain.py
+# Hunyuan :8080 → TRELLIS :8090 → HF TripoSR → demo mesh fallback
 ```
 
-Or drop any GLB as `raw.glb` / use `--demo` placeholder.
+Optional local NVIDIA:
+
+```powershell
+.\scripts\serve_hunyuan.ps1   # :8080
+.\scripts\serve_trellis.ps1   # :8090
+```
+
+Or drop any GLB as `raw.glb` / `python -m pipeline.cli character <name> --demo`.
 
 ## Optional paid Tripo
 

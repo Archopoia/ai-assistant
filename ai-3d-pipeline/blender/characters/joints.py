@@ -87,8 +87,8 @@ def main() -> None:
 
     scale = frame_objects([obj])
     for view in ("front", "side"):
-        render_view(base / "renders" / f"joints_{view}.png", view, px=768, ortho_scale=scale)
-    log(f"wrote {len(joints)} joints")
+        render_view(base / "renders" / f"joints_{view}.png", view, px=768, ortho_scale=scale, grid=True)
+    log(f"wrote {len(joints)} joints (5 cm grid + axis markers)")
 
 
 if __name__ == "__main__":

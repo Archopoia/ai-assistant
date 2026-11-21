@@ -7,6 +7,42 @@ import bpy
 from mathutils import Vector
 
 
+def add_cm_grid(extent_m: float = 1.5, step_m: float = 0.05) -> list:
+    """Guide step 08/10 — 5 cm grid on XY (ground) for scale checks."""
+    created = []
+    # clear old
+    for obj in list(bpy.data.objects):
+        if obj.name.startswith("Grid5cm"):
+            bpy.data.objects.remove(obj, do_unlink=True)
+    n = int(extent_m / step_m)
+    for i in range(-n, n + 1):
+        for axis in ("x", "y"):
+            mesh = bpy.data.meshes.new(f"Grid5cm_{axis}_{i}")
+            if axis == "x":
+                verts = [(-extent_m, i * step_m, 0), (extent_m, i * step_m, 0)]
+            else:
+                verts = [(i * step_m, -extent_m, 0), (i * step_m, extent_m, 0)]
+            mesh.from_pydata(verts, [(0, 1)], [])
+            obj = bpy.data.objects.new(f"Grid5cm_{axis}_{i}", mesh)
+            bpy.context.collection.objects.link(obj)
+            created.append(obj)
+    # labelled axes
+    for name, loc, color in (
+        ("Grid5cm_axis_X", (extent_m * 0.9, 0, 0.02), (1, 0.2, 0.2, 1)),
+        ("Grid5cm_axis_Y", (0, extent_m * 0.9, 0.02), (0.2, 1, 0.2, 1)),
+        ("Grid5cm_axis_Z", (0, 0, extent_m * 0.5), (0.2, 0.4, 1, 1)),
+    ):
+        bpy.ops.mesh.primitive_cube_add(size=0.04, location=loc)
+        obj = bpy.context.active_object
+        obj.name = name
+        mat = bpy.data.materials.new(name=f"mat_{name}")
+        mat.use_nodes = False
+        mat.diffuse_color = color
+        obj.data.materials.append(mat)
+        created.append(obj)
+    return created
+
+
 def setup_ortho_camera(view: str = "side", size: float = 2.0) -> bpy.types.Object:
     cam_data = bpy.data.cameras.new("PipelineCam")
     cam_data.type = "ORTHO"
@@ -48,23 +84,39 @@ def setup_flat_light() -> None:
         bpy.context.collection.objects.link(obj)
 
 
-def render_view(path: Path, view: str = "side", px: int = 768, ortho_scale: float = 2.0) -> Path:
+def render_view(
+    path: Path,
+    view: str = "side",
+    px: int = 768,
+    ortho_scale: float = 2.0,
+    *,
+    grid: bool = False,
+) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     # remove old cameras/lights named Pipeline*
     for obj in list(bpy.data.objects):
         if obj.name.startswith("PipelineCam") or obj.name in {"Key", "Fill", "Rim"}:
             bpy.data.objects.remove(obj, do_unlink=True)
 
+    grid_objs = add_cm_grid(extent_m=max(1.0, ortho_scale), step_m=0.05) if grid else []
     setup_ortho_camera(view, size=ortho_scale)
     setup_flat_light()
 
     scene = bpy.context.scene
-    scene.render.engine = "BLENDER_EEVEE"
+    try:
+        scene.render.engine = "BLENDER_EEVEE_NEXT"
+    except TypeError:
+        scene.render.engine = "BLENDER_EEVEE"
     scene.render.resolution_x = px
     scene.render.resolution_y = px
     scene.render.filepath = str(path)
     scene.render.image_settings.file_format = "PNG"
     bpy.ops.render.render(write_still=True)
+    for obj in grid_objs:
+        try:
+            bpy.data.objects.remove(obj, do_unlink=True)
+        except ReferenceError:
+            pass
     return path
 
 

@@ -132,11 +132,12 @@
         <div class="chip" id="projectMeta"></div>
         <div class="sheetbox hidden" id="sheetPrompt"></div>
         <div class="steps" id="steps"></div>
-        <label id="partsWrap" class="hidden">03 · parts.json (edit, then save)
+        <label id="partsWrap" class="hidden">03 · parts.json — edit, then Save (= guide OK) before build
           <textarea id="partsJson" class="mono"></textarea>
         </label>
+        <div id="qcBox" class="sheetbox hidden"></div>
         <div class="actions">
-          <button type="button" id="btnSaveParts" class="hidden">Save parts.json</button>
+          <button type="button" id="btnSaveParts" class="hidden">Save parts.json (approve)</button>
           <button type="button" id="btnNext">Next step</button>
         </div>
       </div>
@@ -188,6 +189,7 @@
       btnSaveParts: document.getElementById('btnSaveParts'),
       btnAll: document.getElementById('btnAll'),
       btnNext: document.getElementById('btnNext'),
+      qcBox: document.getElementById('qcBox'),
       empty3d: document.getElementById('empty3d'),
       viewMeta: document.getElementById('viewMeta'),
       viewTitle: document.getElementById('viewTitle'),
@@ -350,6 +352,15 @@
       const result = await waitJob();
       if (result.parts) {
         el.partsJson.value = JSON.stringify(result.parts, null, 2);
+        if (result.needs_approval) logLine('  Review parts.json and click Save (= OK) before build.', 'run');
+      }
+      if (result.qc || result.fbx || result.views) {
+        el.qcBox.classList.remove('hidden');
+        el.qcBox.textContent = [
+          result.fbx ? `FBX: ${result.fbx}` : '',
+          result.qc ? `QC: ${typeof result.qc === 'string' ? result.qc : JSON.stringify(result.qc).slice(0, 240)}` : '',
+          result.views ? `Views: ${Object.keys(result.views).join(', ')}` : '',
+        ].filter(Boolean).join('\n') || '';
       }
       if (result.studio_model || result.model || result.raw) {
         await showModel(result.studio_model || result.model || result.raw, state.project.name, step.title);
@@ -422,7 +433,8 @@
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name: state.project.name, parts }),
         });
-        logLine('parts.json saved.', 'ok');
+        state.project.parts_approved = true;
+        logLine('parts.json saved & approved (guide step 03 OK).', 'ok');
       } catch (e) { logLine(String(e), 'err'); }
     };
 

@@ -116,9 +116,15 @@ def prop_steps() -> list[dict]:
 
 def character_steps() -> list[dict]:
     return [
-        {"id": "sheet", "title": "06 · Turnaround from reference", "blurb": "Drop ONE concept picture → caption → front/right/back + self-correct ≤3 rounds."},
-        {"id": "generate", "title": "07 · Generate mesh", "blurb": "Hunyuan → TRELLIS → HF TripoSR (or drop GLB)."},
-        {"id": "pipeline", "title": "08–15 · Clean → rig → clips → export", "blurb": "Bake maps when possible, then Mixamo-style free pipeline."},
+        {"id": "sheet", "title": "06 · Turnaround from reference", "blurb": "One concept → caption → front/right/back + QC ≤3."},
+        {"id": "generate", "title": "07 · Generate mesh", "blurb": "Hunyuan → TRELLIS → HF TripoSR (demo mesh if all fail)."},
+        {"id": "clean", "title": "08 · Clean + bake", "blurb": "Orient, merge, decimate, bake; 5 cm grid renders."},
+        {"id": "split", "title": "09 · Tag parts", "blurb": "Head/torso/limbs (+ coat etc.)."},
+        {"id": "joints", "title": "10 · Joints", "blurb": "Mixamo joints.json + grid/axis debug."},
+        {"id": "weights", "title": "11 · Rig + weights", "blurb": "Armature, cloth bones, max 4 influences."},
+        {"id": "pose", "title": "12 · Pose test", "blurb": "Stretch battery; reweight ≤3 rounds."},
+        {"id": "clips", "title": "13–14 · Idle + walk + QC", "blurb": "Loops from rest pose; foot-slide report."},
+        {"id": "export", "title": "15 · Export FBX/GLB", "blurb": "Apply Transform off, no leaf bones."},
     ]
 
 
@@ -341,17 +347,11 @@ def start_project(prompt: str, route: str, files: dict[str, bytes], name_overrid
 def build_prop(name: str) -> dict:
     name = slug(name)
     base = ensure_asset_dirs("props", name)
-    parts_path = base / "parts.json"
-    doc = json.loads(parts_path.read_text(encoding="utf-8"))
-    for part in doc["parts"]:
-        log(f"04 · Build part “{part['name']}”")
-        run_blender_script(
-            ROOT / "blender/props/build_part.py",
-            args={"asset": name, "part": part["name"], "render_px": 768},
-        )
-        _sync(base / "parts" / f"{part['name']}.glb", "prop", name)
-    log("05 · Assemble + export")
-    run_blender_script(ROOT / "blender/props/assemble.py", args={"asset": name})
+    from pipeline.prop_build import build_parts_with_qc
+
+    build_parts_with_qc(name, log=log)
+    for glb_part in (base / "parts").glob("*.glb"):
+        _sync(glb_part, "prop", name)
     glb = base / "exports" / f"{name}.glb"
     opt = base / "exports" / f"{name}_opt.glb"
     if glb.exists():
@@ -375,45 +375,105 @@ def generate_character_mesh(name: str) -> Path:
 
     chain = import_module("07_generate_chain")
     log("07 · Generator chain: Hunyuan → TRELLIS → HF TripoSR")
-    backend = chain.generate(base, out)
+    try:
+        backend = chain.generate(base, out)
+    except Exception as e:
+        log(f"07 · Generators failed ({e}) — free demo mesh fallback")
+        run_blender_script(ROOT / "blender/characters/make_demo_mesh.py", args={"asset": name})
+        backend = "demo_mesh"
+    if not out.exists():
+        run_blender_script(ROOT / "blender/characters/make_demo_mesh.py", args={"asset": name})
+        backend = "demo_mesh"
     _sync(out, "character", name)
     log(f"Saved raw.glb via {backend} → {out}")
     return out
 
 
-def run_character_pipeline(name: str) -> dict:
-    name = slug(name)
+def _char_cfg(name: str) -> tuple[Path, dict]:
     base = ensure_asset_dirs("characters", name)
+    return base, load_config()["characters"]
+
+
+def run_character_step(name: str, step_id: str) -> dict:
+    """Guide steps 08–15 individually (free Blender path)."""
+    name = slug(name)
+    base, cfg = _char_cfg(name)
     raw = base / "exports" / "raw.glb"
-    if not raw.exists():
-        raise FileNotFoundError("No raw.glb — run generate (step 07) or upload a GLB")
-    cfg = load_config()["characters"]
-    steps = [
-        ("08 clean", "blender/characters/clean.py", {"asset": name, "input": str(raw), **{k: cfg[k] for k in ("height_m", "hero_triangles", "crowd_triangles")}}),
-        ("09 split", "blender/characters/split_parts.py", {"asset": name}),
-        ("10 joints", "blender/characters/joints.py", {"asset": name}),
-        ("11 weights", "blender/characters/rig_weights.py", {"asset": name}),
-        ("12 pose", "blender/characters/pose_test.py", {"asset": name}),
-        ("13 idle", "blender/characters/clips/idle.py", {"asset": name}),
-        ("13 walk", "blender/characters/clips/walk.py", {"asset": name}),
-        ("14 qc", "blender/characters/check_clips.py", {"asset": name}),
-        ("15 export", "blender/characters/export_fbx.py", {"asset": name}),
-    ]
-    for label, script, args in steps:
-        log(label)
-        run_blender_script(ROOT / script, args=args)
-    glb = base / "exports" / f"{name}.glb"
-    opt = base / "exports" / f"{name}_opt.glb"
-    if glb.exists():
-        try:
-            subprocess.check_call(
-                [sys.executable, str(ROOT / "scripts/tools/optimize_gltf.py"), str(glb), "-o", str(opt)],
-                cwd=str(ROOT),
+    if step_id == "clean":
+        if not raw.exists():
+            raise FileNotFoundError("No raw.glb — run generate first")
+        log("08 · Clean + bake")
+        run_blender_script(
+            ROOT / "blender/characters/clean.py",
+            args={"asset": name, "input": str(raw), **{k: cfg[k] for k in ("height_m", "hero_triangles", "crowd_triangles")}},
+        )
+        return {"clean": _rel(base / "exports" / f"{name}_clean.glb")}
+    if step_id == "split":
+        log("09 · Tag parts")
+        run_blender_script(ROOT / "blender/characters/split_parts.py", args={"asset": name})
+        return {"parts_blend": _rel(base / "exports" / f"{name}_parts.blend")}
+    if step_id == "joints":
+        log("10 · Joints")
+        run_blender_script(ROOT / "blender/characters/joints.py", args={"asset": name})
+        return {"joints": _rel(base / "exports" / "joints.json")}
+    if step_id == "weights":
+        log("11 · Rig + weights")
+        run_blender_script(ROOT / "blender/characters/rig_weights.py", args={"asset": name})
+        return {"rigged": _rel(base / "exports" / f"{name}_rigged.blend")}
+    if step_id == "pose":
+        log("12 · Pose test (≤3 reweight rounds)")
+        for round_i in range(1, 4):
+            run_blender_script(
+                ROOT / "blender/characters/pose_test.py",
+                args={"asset": name, "round": round_i, "fix": True},
             )
-        except Exception as e:
-            log(f"optimize skipped: {e}")
-    studio = _sync(opt if opt.exists() else glb, "character", name)
-    return {"name": name, "model": _rel(opt if opt.exists() else glb), "studio_model": studio, "fbx": _rel(base / "exports" / f"{name}.fbx")}
+            report = json.loads((base / "exports" / "pose_test_report.json").read_text(encoding="utf-8"))
+            worst = max((v.get("max_stretch", 1) for v in report.values() if isinstance(v, dict)), default=1)
+            log(f"  pose round {round_i}: max_stretch={worst}")
+            if worst <= 1.35:
+                break
+            log("  re-applying weight rules…")
+            run_blender_script(ROOT / "blender/characters/rig_weights.py", args={"asset": name})
+        return {"pose": _rel(base / "exports" / "pose_test_report.json")}
+    if step_id == "clips":
+        log("13 · Idle")
+        run_blender_script(ROOT / "blender/characters/clips/idle.py", args={"asset": name})
+        log("13 · Walk")
+        run_blender_script(ROOT / "blender/characters/clips/walk.py", args={"asset": name})
+        log("14 · Clip QC")
+        run_blender_script(ROOT / "blender/characters/check_clips.py", args={"asset": name})
+        return {"qc": _rel(base / "exports" / "clip_qc_report.json")}
+    if step_id == "export":
+        log("15 · Export")
+        run_blender_script(ROOT / "blender/characters/export_fbx.py", args={"asset": name})
+        glb = base / "exports" / f"{name}.glb"
+        opt = base / "exports" / f"{name}_opt.glb"
+        if glb.exists():
+            try:
+                subprocess.check_call(
+                    [sys.executable, str(ROOT / "scripts/tools/optimize_gltf.py"), str(glb), "-o", str(opt)],
+                    cwd=str(ROOT),
+                )
+            except Exception as e:
+                log(f"optimize skipped: {e}")
+        studio = _sync(opt if opt.exists() else glb, "character", name)
+        return {
+            "name": name,
+            "model": _rel(opt if opt.exists() else glb),
+            "studio_model": studio,
+            "fbx": _rel(base / "exports" / f"{name}.fbx"),
+        }
+    if step_id == "pipeline":
+        # backwards compatible: run 08–15
+        result = None
+        for sid in ("clean", "split", "joints", "weights", "pose", "clips", "export"):
+            result = run_character_step(name, sid)
+        return result or {}
+    raise ValueError(f"Unknown character step {step_id}")
+
+
+def run_character_pipeline(name: str) -> dict:
+    return run_character_step(name, "pipeline")
 
 
 def run_step(name: str, step_id: str) -> dict:
@@ -450,12 +510,21 @@ def run_step(name: str, step_id: str) -> dict:
                     height_m=float(brief.get("height_m", 0.5)),
                 )
                 path.write_text(json.dumps(doc, indent=2), encoding="utf-8")
-                log(f"03 · Remeasured parts.json ({len(doc['parts'])} parts, contour where possible)")
+                log(f"03 · Remeasured parts.json ({len(doc['parts'])} parts) — review & Save before build")
             else:
                 doc = json.loads(path.read_text(encoding="utf-8"))
-                log("03 · parts.json loaded (no refs — template / prompt sizes)")
-            return {"parts": doc}
+                log("03 · parts.json loaded (template) — review & Save before build")
+            proj["parts"] = doc
+            proj["parts_approved"] = False
+            _projects[name] = proj
+            (STUDIO / "assets" / "_projects" / f"{name}.json").write_text(json.dumps(proj, indent=2), encoding="utf-8")
+            return {"parts": doc, "needs_approval": True}
         if step_id == "build":
+            if not proj.get("parts_approved"):
+                log("03→04 · Auto-approving parts.json (Save parts to approve explicitly next time)")
+                # guide wants OK; Studio run-all still proceeds but marks approval
+                proj["parts_approved"] = True
+                _projects[name] = proj
             return build_prop(name)
     if route == "character":
         if step_id == "sheet":
@@ -486,8 +555,8 @@ def run_step(name: str, step_id: str) -> dict:
                 return {"raw": _rel(raw), "studio_model": _sync(raw, "character", name)}
             generate_character_mesh(name)
             return {"raw": _rel(ROOT / "examples" / "characters" / name / "exports" / "raw.glb")}
-        if step_id == "pipeline":
-            return run_character_pipeline(name)
+        if step_id in ("clean", "split", "joints", "weights", "pose", "clips", "export", "pipeline"):
+            return run_character_step(name, step_id)
     if route == "buildings" and step_id == "generate":
         count = int(proj.get("count", 5))
         ensure_asset_dirs("props", "buildings")
@@ -666,7 +735,11 @@ class Handler(SimpleHTTPRequestHandler):
                 path.write_text(json.dumps(doc, indent=2), encoding="utf-8")
                 if name in _projects:
                     _projects[name]["parts"] = doc
-                self._json(200, {"ok": True, "path": _rel(path)})
+                    _projects[name]["parts_approved"] = True  # guide step 03 OK
+                    (STUDIO / "assets" / "_projects" / f"{name}.json").write_text(
+                        json.dumps(_projects[name], indent=2), encoding="utf-8"
+                    )
+                self._json(200, {"ok": True, "path": _rel(path), "parts_approved": True})
                 return
 
             if parsed.path == "/api/project/run":
