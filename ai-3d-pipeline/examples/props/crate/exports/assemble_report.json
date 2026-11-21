@@ -1,0 +1,32 @@
+{
+  "asset": "crate",
+  "triangles": 132,
+  "budget": 2000,
+  "over_budget": false,
+  "bounding_size_m": {
+    "x": 0.62,
+    "y": 0.62,
+    "z": 0.45
+  },
+  "expected_size_m": {
+    "x": 0.6,
+    "y": 0.6,
+    "z": 0.5
+  },
+  "gaps": [
+    {
+      "part": "lid",
+      "parent": "body",
+      "gap_m": 0.0
+    },
+    {
+      "part": "band",
+      "parent": "body",
+      "gap_m": 0.0
+    }
+  ],
+  "exports": [
+    "examples/props/crate/exports/crate.glb",
+    "examples/props/crate/exports/crate.fbx"
+  ]
+}

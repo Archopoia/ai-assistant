@@ -1,0 +1,14 @@
+{
+  "counts": {
+    "head": 12,
+    "torso": 12,
+    "arm_L": 18,
+    "arm_R": 18,
+    "hand_L": 0,
+    "hand_R": 0,
+    "leg_L": 42,
+    "leg_R": 42,
+    "coat": 72
+  },
+  "height_m": 1.149999976158142
+}

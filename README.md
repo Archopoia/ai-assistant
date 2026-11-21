@@ -2,6 +2,17 @@
 
 An AI-powered wellness platform with personalized meal planning, recipe management, nutrition tracking, and RAG-grounded generation.
 
+## Free AI 3D Modeling Pipeline
+
+Game-ready props/characters without per-model fees live in [`ai-3d-pipeline/`](ai-3d-pipeline/README.md):
+
+```bash
+cd ai-3d-pipeline
+python3 -m pipeline.cli doctor
+python3 -m pipeline.cli prop crate
+python3 -m pipeline.cli character demo --demo
+```
+
 ## Project Overview
 
 This project keeps the original health profile, analytics, auth, and dashboard features, then adds:
