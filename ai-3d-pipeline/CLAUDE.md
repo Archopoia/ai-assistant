@@ -30,6 +30,8 @@ On an NVIDIA box (~16 GB+): `.\scripts\install_trellis.ps1` → `.\scripts\serve
 
 ## Character rules
 
+- Input is **one concept picture** (or prompt). Never assume the user has a turnaround.
+- Build the sheet: caption → front/right/back → score vs reference → fix ≤3 rounds (`sheet_qc.json`).
 - Sheets: orthographic front / right / back, A-pose, empty hands, flat light.
 - Put each view in the correct Tripo/local slot. Left slot empty if no left view.
 - Clean before any bone: facing engine forward (-Y), feet on Z=0, apply transforms.

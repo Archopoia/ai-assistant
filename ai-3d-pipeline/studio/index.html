@@ -104,15 +104,15 @@
     <section class="side">
       <div>
         <h2 id="title">01 · Pick the route</h2>
-        <p class="hint" id="hint">Prompt alone is enough: free HF FLUX builds the turnaround/ortho sheet, then the 3D route runs. Or drop your own sheet.</p>
+        <p class="hint" id="hint">Drop ONE concept picture (not a sheet). Pipeline captions it, generates front/right/back, scores vs the reference, and self-corrects up to 3 rounds.</p>
       </div>
 
       <div class="scroll" id="entry">
         <label>Prompt
           <textarea id="prompt" placeholder="e.g. wooden oil barrel 50cm wide and 90cm tall&#10;or: fantasy hunter girl, green coat, empty hands, A-pose&#10;or: row of medieval shops"></textarea>
         </label>
-        <label>Picture(s) — concept sheet, orthographic refs, or character turnaround
-          <span class="filebtn">Choose files
+        <label>Picture — single concept / reference (sheet is generated for you)
+          <span class="filebtn">Choose file
             <input id="files" type="file" accept="image/*,.glb" multiple />
           </span>
           <span class="chip" id="fileChip"></span>

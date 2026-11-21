@@ -25,7 +25,7 @@ cd ai-3d-pipeline
 3. **Start project** → run steps (or **Run remaining steps**)  
 4. Model updates on the right  
 
-**Prompt-only / single concept:** step 02 (prop) or 06 (character) calls free **HF FLUX.1-schnell** to generate front/side/top or front/right/back. Optional `HF_TOKEN` raises ZeroGPU quota. Existing multi-view uploads skip generation and are split instead.
+**Single concept picture (the normal case):** step 06 captions the image (Joy-Caption), generates front/right/back, scores colour+silhouette vs the reference, critiques misses, and regenerates up to **3 rounds** (guide self-correction). Optional CharacterSheet LoRA Space tried first. Prompt-only still works via FLUX. True multi-panel sheets are detected and split only.
 
 Generator chain (step 07): live `HUNYUAN_URL` → `TRELLIS_URL` → free HF TripoSR. AMD Lenovo = TripoSR unless you point at a remote NVIDIA box.
 

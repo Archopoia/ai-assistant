@@ -80,8 +80,8 @@ def cmd_buildings(count: int = 10) -> None:
     run_step("blender/props/buildings.py", {"count": count})
 
 
-def cmd_sheet(name: str, *, kind: str, prompt: str = "", force: bool = False) -> None:
-    """Step 02/06 — HF FLUX orthographic / turnaround generation."""
+def cmd_sheet(name: str, *, kind: str, prompt: str = "", force: bool = False, concept: Path | None = None) -> None:
+    """Step 02/06 — single reference → full sheet with caption + QC loop."""
     sys.path.insert(0, str(ROOT / "scripts" / "tools"))
     from generate_sheet import generate_views  # type: ignore
 
@@ -95,16 +95,21 @@ def cmd_sheet(name: str, *, kind: str, prompt: str = "", force: bool = False) ->
         prompt_path = base / "prompt.txt"
     if not prompt and prompt_path.exists():
         prompt = prompt_path.read_text(encoding="utf-8")
-    concept = out / "concept.png"
+    if concept and concept.exists():
+        dest = out / "concept.png"
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        if concept.resolve() != dest.resolve():
+            shutil.copy2(concept, dest)
+    concept_path = out / "concept.png"
     info = generate_views(
         kind=kind,
         design=(prompt or "game asset").strip(),
         out_dir=out,
-        concept=concept if concept.exists() else None,
+        concept=concept_path if concept_path.exists() else None,
         force=force,
-        mode="panels",
+        mode="auto",
     )
-    print(info)
+    print(json.dumps({k: info[k] for k in ("mode", "backend", "passed", "best_avg", "saved") if k in info}, indent=2))
 
 
 def cmd_generate(name: str, *, force: bool = False) -> None:
@@ -260,10 +265,11 @@ def main(argv: list[str] | None = None) -> int:
     p_g.add_argument("name")
     p_g.add_argument("--force", action="store_true")
 
-    p_s = sub.add_parser("sheet", help="Generate turnaround/ortho views via free HF FLUX (02/06)")
+    p_s = sub.add_parser("sheet", help="One reference → turnaround/ortho with QC loop (02/06)")
     p_s.add_argument("name")
     p_s.add_argument("--kind", choices=("character", "prop"), default="character")
     p_s.add_argument("--prompt", default="")
+    p_s.add_argument("--concept", type=Path, default=None, help="Single reference image path")
     p_s.add_argument("--force", action="store_true")
 
     sub.add_parser("doctor", help="Check Blender + deps")
@@ -285,7 +291,7 @@ def main(argv: list[str] | None = None) -> int:
     elif args.cmd == "generate":
         cmd_generate(args.name, force=args.force)
     elif args.cmd == "sheet":
-        cmd_sheet(args.name, kind=args.kind, prompt=args.prompt, force=args.force)
+        cmd_sheet(args.name, kind=args.kind, prompt=args.prompt, force=args.force, concept=args.concept)
     elif args.cmd == "doctor":
         cmd_doctor()
     return 0
