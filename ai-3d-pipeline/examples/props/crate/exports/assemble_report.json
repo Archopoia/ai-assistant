@@ -26,7 +26,7 @@
     }
   ],
   "exports": [
-    "examples/props/crate/exports/crate.glb",
-    "examples/props/crate/exports/crate.fbx"
+    "examples\\props\\crate\\exports\\crate.glb",
+    "examples\\props\\crate\\exports\\crate.fbx"
   ]
 }

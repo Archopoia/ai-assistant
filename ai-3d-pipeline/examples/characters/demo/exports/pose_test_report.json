@@ -1,998 +1,276 @@
 {
   "arms_up_90": {
-    "max_stretch": 7.0,
+    "max_stretch": 1.0,
     "worst": [
       {
-        "ratio": 7.0,
-        "v": 139,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "RightHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 212,
+        "bones": []
       },
       {
-        "ratio": 7.0,
-        "v": 104,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "LeftHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 210,
+        "bones": []
       },
       {
-        "ratio": 6.8,
-        "v": 133,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "RightHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 209,
+        "bones": []
       },
       {
-        "ratio": 6.8,
-        "v": 98,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "LeftHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 209,
+        "bones": []
       },
       {
-        "ratio": 6.47,
-        "v": 128,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "RightHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 208,
+        "bones": []
       },
       {
-        "ratio": 6.47,
-        "v": 126,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "RightHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 206,
+        "bones": []
       },
       {
-        "ratio": 6.47,
-        "v": 116,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "LeftHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 206,
+        "bones": []
       },
       {
-        "ratio": 6.47,
-        "v": 115,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "LeftHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 205,
+        "bones": []
       },
       {
-        "ratio": 6.15,
-        "v": 122,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "RightHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 204,
+        "bones": []
       },
       {
-        "ratio": 6.15,
-        "v": 120,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "RightHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 202,
+        "bones": []
       }
     ]
   },
   "arms_forward_60": {
-    "max_stretch": 5.35,
+    "max_stretch": 1.0,
     "worst": [
       {
-        "ratio": 5.35,
-        "v": 133,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "RightHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 212,
+        "bones": []
       },
       {
-        "ratio": 5.35,
-        "v": 98,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "LeftHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 210,
+        "bones": []
       },
       {
-        "ratio": 5.17,
-        "v": 139,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "RightHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 209,
+        "bones": []
       },
       {
-        "ratio": 5.17,
-        "v": 104,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "LeftHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 209,
+        "bones": []
       },
       {
-        "ratio": 4.86,
-        "v": 122,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "RightHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 208,
+        "bones": []
       },
       {
-        "ratio": 4.86,
-        "v": 120,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "RightHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 206,
+        "bones": []
       },
       {
-        "ratio": 4.86,
-        "v": 110,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "LeftHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 206,
+        "bones": []
       },
       {
-        "ratio": 4.86,
-        "v": 109,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "LeftHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 205,
+        "bones": []
       },
       {
-        "ratio": 4.6,
-        "v": 128,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "RightHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 204,
+        "bones": []
       },
       {
-        "ratio": 4.6,
-        "v": 126,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "RightHand",
-            "w": 0.5
-          }
-        ]
+        "ratio": 1.0,
+        "v": 202,
+        "bones": []
       }
     ]
   },
   "step_L": {
-    "max_stretch": 1.18,
+    "max_stretch": 1.0,
     "worst": [
       {
-        "ratio": 1.18,
-        "v": 149,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftLeg",
-            "w": 0.489
-          },
-          {
-            "bone": "CoatFront",
-            "w": 0.342
-          },
-          {
-            "bone": "CoatBack",
-            "w": 0.169
-          }
-        ]
+        "ratio": 1.0,
+        "v": 212,
+        "bones": []
       },
       {
-        "ratio": 1.05,
-        "v": 155,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftLeg",
-            "w": 0.489
-          },
-          {
-            "bone": "CoatFront",
-            "w": 0.169
-          },
-          {
-            "bone": "CoatBack",
-            "w": 0.342
-          }
-        ]
+        "ratio": 1.0,
+        "v": 210,
+        "bones": []
       },
       {
-        "ratio": 1.05,
-        "v": 154,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftUpLeg",
-            "w": 0.687
-          },
-          {
-            "bone": "CoatBack",
-            "w": 0.313
-          }
-        ]
+        "ratio": 1.0,
+        "v": 209,
+        "bones": []
       },
       {
-        "ratio": 1.05,
-        "v": 173,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightLeg",
-            "w": 0.077
-          },
-          {
-            "bone": "CoatFront",
-            "w": 0.792
-          },
-          {
-            "bone": "CoatBack",
-            "w": 0.131
-          }
-        ]
+        "ratio": 1.0,
+        "v": 209,
+        "bones": []
       },
       {
-        "ratio": 1.05,
-        "v": 148,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftUpLeg",
-            "w": 0.666
-          },
-          {
-            "bone": "LeftLeg",
-            "w": 0.031
-          },
-          {
-            "bone": "CoatFront",
-            "w": 0.304
-          }
-        ]
+        "ratio": 1.0,
+        "v": 208,
+        "bones": []
       },
       {
-        "ratio": 1.05,
-        "v": 149,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftLeg",
-            "w": 0.489
-          },
-          {
-            "bone": "CoatFront",
-            "w": 0.342
-          },
-          {
-            "bone": "CoatBack",
-            "w": 0.169
-          }
-        ]
+        "ratio": 1.0,
+        "v": 206,
+        "bones": []
       },
       {
-        "ratio": 1.04,
-        "v": 144,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftUpLeg",
-            "w": 0.032
-          },
-          {
-            "bone": "LeftLeg",
-            "w": 0.062
-          },
-          {
-            "bone": "LeftFoot",
-            "w": 0.906
-          }
-        ]
+        "ratio": 1.0,
+        "v": 206,
+        "bones": []
       },
       {
-        "ratio": 1.04,
-        "v": 158,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftUpLeg",
-            "w": 0.055
-          },
-          {
-            "bone": "LeftLeg",
-            "w": 0.086
-          },
-          {
-            "bone": "LeftFoot",
-            "w": 0.86
-          }
-        ]
+        "ratio": 1.0,
+        "v": 205,
+        "bones": []
       },
       {
-        "ratio": 1.03,
-        "v": 172,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightUpLeg",
-            "w": 0.139
-          },
-          {
-            "bone": "RightLeg",
-            "w": 0.002
-          },
-          {
-            "bone": "CoatFront",
-            "w": 0.86
-          }
-        ]
+        "ratio": 1.0,
+        "v": 204,
+        "bones": []
       },
       {
-        "ratio": 1.03,
-        "v": 170,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightUpLeg",
-            "w": 0.02
-          },
-          {
-            "bone": "RightLeg",
-            "w": 0.902
-          },
-          {
-            "bone": "CoatFront",
-            "w": 0.078
-          }
-        ]
+        "ratio": 1.0,
+        "v": 202,
+        "bones": []
       }
     ]
   },
   "step_R": {
-    "max_stretch": 1.05,
+    "max_stretch": 1.0,
     "worst": [
       {
-        "ratio": 1.05,
-        "v": 179,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightLeg",
-            "w": 0.077
-          },
-          {
-            "bone": "CoatFront",
-            "w": 0.131
-          },
-          {
-            "bone": "CoatBack",
-            "w": 0.792
-          }
-        ]
+        "ratio": 1.0,
+        "v": 212,
+        "bones": []
       },
       {
-        "ratio": 1.05,
-        "v": 178,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightUpLeg",
-            "w": 0.138
-          },
-          {
-            "bone": "CoatBack",
-            "w": 0.862
-          }
-        ]
+        "ratio": 1.0,
+        "v": 210,
+        "bones": []
       },
       {
-        "ratio": 1.05,
-        "v": 172,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightUpLeg",
-            "w": 0.139
-          },
-          {
-            "bone": "RightLeg",
-            "w": 0.002
-          },
-          {
-            "bone": "CoatFront",
-            "w": 0.86
-          }
-        ]
+        "ratio": 1.0,
+        "v": 209,
+        "bones": []
       },
       {
-        "ratio": 1.05,
-        "v": 173,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightLeg",
-            "w": 0.077
-          },
-          {
-            "bone": "CoatFront",
-            "w": 0.792
-          },
-          {
-            "bone": "CoatBack",
-            "w": 0.131
-          }
-        ]
+        "ratio": 1.0,
+        "v": 209,
+        "bones": []
       },
       {
-        "ratio": 1.04,
-        "v": 182,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightUpLeg",
-            "w": 0.032
-          },
-          {
-            "bone": "RightLeg",
-            "w": 0.062
-          },
-          {
-            "bone": "RightFoot",
-            "w": 0.906
-          }
-        ]
+        "ratio": 1.0,
+        "v": 208,
+        "bones": []
       },
       {
-        "ratio": 1.04,
-        "v": 168,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightUpLeg",
-            "w": 0.055
-          },
-          {
-            "bone": "RightLeg",
-            "w": 0.086
-          },
-          {
-            "bone": "RightFoot",
-            "w": 0.86
-          }
-        ]
+        "ratio": 1.0,
+        "v": 206,
+        "bones": []
       },
       {
-        "ratio": 1.03,
-        "v": 157,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftUpLeg",
-            "w": 0.02
-          },
-          {
-            "bone": "LeftLeg",
-            "w": 0.902
-          },
-          {
-            "bone": "CoatFront",
-            "w": 0.078
-          }
-        ]
+        "ratio": 1.0,
+        "v": 206,
+        "bones": []
       },
       {
-        "ratio": 1.02,
-        "v": 148,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftUpLeg",
-            "w": 0.666
-          },
-          {
-            "bone": "LeftLeg",
-            "w": 0.031
-          },
-          {
-            "bone": "CoatFront",
-            "w": 0.304
-          }
-        ]
+        "ratio": 1.0,
+        "v": 205,
+        "bones": []
       },
       {
-        "ratio": 1.02,
-        "v": 181,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightUpLeg",
-            "w": 0.044
-          },
-          {
-            "bone": "RightLeg",
-            "w": 0.906
-          },
-          {
-            "bone": "CoatFront",
-            "w": 0.05
-          }
-        ]
+        "ratio": 1.0,
+        "v": 204,
+        "bones": []
       },
       {
-        "ratio": 1.01,
-        "v": 154,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftUpLeg",
-            "w": 0.687
-          },
-          {
-            "bone": "CoatBack",
-            "w": 0.313
-          }
-        ]
+        "ratio": 1.0,
+        "v": 202,
+        "bones": []
       }
     ]
   },
   "head_turn_60": {
-    "max_stretch": 1.29,
+    "max_stretch": 1.0,
     "worst": [
       {
-        "ratio": 1.29,
-        "v": 44,
-        "bones": [
-          {
-            "bone": "torso",
-            "w": 1.0
-          },
-          {
-            "bone": "Spine2",
-            "w": 0.741
-          },
-          {
-            "bone": "Head",
-            "w": 0.259
-          }
-        ]
-      },
-      {
-        "ratio": 1.29,
-        "v": 38,
-        "bones": [
-          {
-            "bone": "torso",
-            "w": 1.0
-          },
-          {
-            "bone": "Spine2",
-            "w": 0.741
-          },
-          {
-            "bone": "Head",
-            "w": 0.259
-          }
-        ]
-      },
-      {
-        "ratio": 1.16,
-        "v": 41,
-        "bones": [
-          {
-            "bone": "head",
-            "w": 1.0
-          },
-          {
-            "bone": "Head",
-            "w": 1.0
-          }
-        ]
+        "ratio": 1.0,
+        "v": 212,
+        "bones": []
       },
       {
         "ratio": 1.0,
-        "v": 32,
-        "bones": [
-          {
-            "bone": "torso",
-            "w": 1.0
-          },
-          {
-            "bone": "Head",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftShoulder",
-            "w": 0.0
-          },
-          {
-            "bone": "RightShoulder",
-            "w": 0.0
-          }
-        ]
+        "v": 210,
+        "bones": []
       },
       {
         "ratio": 1.0,
-        "v": 26,
-        "bones": [
-          {
-            "bone": "torso",
-            "w": 1.0
-          },
-          {
-            "bone": "Head",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftShoulder",
-            "w": 0.0
-          },
-          {
-            "bone": "RightShoulder",
-            "w": 0.0
-          }
-        ]
+        "v": 209,
+        "bones": []
       },
       {
         "ratio": 1.0,
-        "v": 139,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "RightHand",
-            "w": 0.5
-          }
-        ]
+        "v": 209,
+        "bones": []
       },
       {
         "ratio": 1.0,
-        "v": 104,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "LeftHand",
-            "w": 0.5
-          }
-        ]
+        "v": 208,
+        "bones": []
       },
       {
         "ratio": 1.0,
-        "v": 128,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "RightHand",
-            "w": 0.5
-          }
-        ]
+        "v": 206,
+        "bones": []
       },
       {
         "ratio": 1.0,
-        "v": 126,
-        "bones": [
-          {
-            "bone": "leg_R",
-            "w": 1.0
-          },
-          {
-            "bone": "RightForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "RightHand",
-            "w": 0.5
-          }
-        ]
+        "v": 206,
+        "bones": []
       },
       {
         "ratio": 1.0,
-        "v": 116,
-        "bones": [
-          {
-            "bone": "leg_L",
-            "w": 1.0
-          },
-          {
-            "bone": "LeftForeArm",
-            "w": 0.5
-          },
-          {
-            "bone": "LeftHand",
-            "w": 0.5
-          }
-        ]
+        "v": 205,
+        "bones": []
+      },
+      {
+        "ratio": 1.0,
+        "v": 204,
+        "bones": []
+      },
+      {
+        "ratio": 1.0,
+        "v": 202,
+        "bones": []
       }
     ]
   }

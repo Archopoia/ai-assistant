@@ -1,8 +1,10 @@
 """
-Step 08 — clean generator GLB: orient, feet on floor, merge, normals, decimate+bake, crowd LOD.
+Step 08 — clean generator GLB: orient, feet on floor, merge, normals,
+decimate hero + crowd, bake base colour + normal from hi → lo when possible.
 """
 from __future__ import annotations
 
+import json
 import math
 import sys
 from pathlib import Path
@@ -37,7 +39,6 @@ def get_mesh() -> bpy.types.Object:
 
 
 def orient_and_scale(obj: bpy.types.Object, height_m: float) -> None:
-    # Tripo often faces +X; rotate to -Y forward
     obj.rotation_euler = Euler((0, 0, -math.pi / 2), "XYZ")
     bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
 
@@ -53,7 +54,6 @@ def orient_and_scale(obj: bpy.types.Object, height_m: float) -> None:
         obj.scale = (s, s, s)
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
 
-    # center XY
     bbox = [obj.matrix_world @ Vector(c) for c in obj.bound_box]
     cx = (min(v.x for v in bbox) + max(v.x for v in bbox)) / 2
     cy = (min(v.y for v in bbox) + max(v.y for v in bbox)) / 2
@@ -69,7 +69,6 @@ def merge_and_normals(obj: bpy.types.Object) -> dict:
     bpy.ops.mesh.remove_doubles(threshold=0.0001)
     bpy.ops.mesh.normals_make_consistent(inside=False)
     bpy.ops.object.mode_set(mode="OBJECT")
-    # loose parts
     bpy.ops.object.mode_set(mode="EDIT")
     bpy.ops.mesh.select_all(action="DESELECT")
     bpy.ops.mesh.select_loose()
@@ -93,6 +92,97 @@ def decimate_copy(obj: bpy.types.Object, budget: int, name: str) -> bpy.types.Ob
     return low
 
 
+def ensure_uv(obj: bpy.types.Object) -> None:
+    if obj.data.uv_layers:
+        return
+    bpy.context.view_layer.objects.active = obj
+    bpy.ops.object.mode_set(mode="EDIT")
+    bpy.ops.mesh.select_all(action="SELECT")
+    bpy.ops.uv.smart_project(angle_limit=66, island_margin=0.03)
+    bpy.ops.object.mode_set(mode="OBJECT")
+
+
+def bake_maps(hi: bpy.types.Object, lo: bpy.types.Object, out_dir: Path, size: int = 1024) -> dict:
+    """Bake colour + normal from hi onto lo (tutorial step 08.4)."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    ensure_uv(lo)
+    ensure_uv(hi)
+
+    # Cycles bake
+    bpy.context.scene.render.engine = "CYCLES"
+    bpy.context.scene.cycles.samples = 8
+    bpy.context.scene.cycles.bake_type = "NORMAL"
+
+    def _img(name: str):
+        img = bpy.data.images.new(name, width=size, height=size, alpha=True)
+        return img
+
+    results = {}
+    try:
+        # material on lo with image nodes
+        mat = bpy.data.materials.new(name=f"{lo.name}_bake")
+        mat.use_nodes = True
+        nt = mat.node_tree
+        nt.nodes.clear()
+        out_n = nt.nodes.new("ShaderNodeOutputMaterial")
+        bsdf = nt.nodes.new("ShaderNodeBsdfPrincipled")
+        nt.links.new(bsdf.outputs["BSDF"], out_n.inputs["Surface"])
+        tex_c = nt.nodes.new("ShaderNodeTexImage")
+        tex_n = nt.nodes.new("ShaderNodeTexImage")
+        img_c = _img(f"{lo.name}_basecolor")
+        img_n = _img(f"{lo.name}_normal")
+        tex_c.image = img_c
+        tex_n.image = img_n
+        if lo.data.materials:
+            lo.data.materials[0] = mat
+        else:
+            lo.data.materials.append(mat)
+
+        # select hi then lo active for selected-to-active
+        bpy.ops.object.select_all(action="DESELECT")
+        hi.hide_render = False
+        hi.hide_viewport = False
+        hi.select_set(True)
+        lo.select_set(True)
+        bpy.context.view_layer.objects.active = lo
+
+        bpy.context.scene.render.bake.use_selected_to_active = True
+        bpy.context.scene.render.bake.cage_extrusion = 0.05
+        bpy.context.scene.render.bake.margin = 4
+
+        # base colour / diffuse
+        nt.nodes.active = tex_c
+        bpy.context.scene.cycles.bake_type = "DIFFUSE"
+        bpy.context.scene.render.bake.use_pass_direct = False
+        bpy.context.scene.render.bake.use_pass_indirect = False
+        bpy.context.scene.render.bake.use_pass_color = True
+        bpy.ops.object.bake(type="DIFFUSE")
+        path_c = out_dir / f"{lo.name}_basecolor.png"
+        img_c.filepath_raw = str(path_c)
+        img_c.file_format = "PNG"
+        img_c.save()
+        results["basecolor"] = str(path_c)
+
+        nt.nodes.active = tex_n
+        bpy.context.scene.cycles.bake_type = "NORMAL"
+        bpy.ops.object.bake(type="NORMAL")
+        path_n = out_dir / f"{lo.name}_normal.png"
+        img_n.filepath_raw = str(path_n)
+        img_n.file_format = "PNG"
+        img_n.save()
+        results["normal"] = str(path_n)
+
+        # hook textures into principled
+        nt.links.new(tex_c.outputs["Color"], bsdf.inputs["Base Color"])
+        nmap = nt.nodes.new("ShaderNodeNormalMap")
+        nt.links.new(tex_n.outputs["Color"], nmap.inputs["Color"])
+        nt.links.new(nmap.outputs["Normal"], bsdf.inputs["Normal"])
+    except Exception as e:
+        results["bake_error"] = str(e)
+        log(f"bake skipped/partial: {e}")
+    return results
+
+
 def main() -> None:
     args = pipeline_args()
     name = args["asset"]
@@ -112,13 +202,18 @@ def main() -> None:
     hero = decimate_copy(obj, hero_budget, f"{name}_hero")
     crowd = decimate_copy(obj, crowd_budget, f"{name}_crowd")
 
-    # hide original heavy if different
+    exports = base / "exports"
+    exports.mkdir(parents=True, exist_ok=True)
+    bake = {}
+    if triangle_count(obj) > triangle_count(hero) + 50:
+        bake = bake_maps(obj, hero, exports / "textures")
+    else:
+        ensure_uv(hero)
+
     if obj.name != hero.name:
         obj.hide_render = True
         obj.hide_viewport = True
 
-    exports = base / "exports"
-    exports.mkdir(parents=True, exist_ok=True)
     bpy.ops.object.select_all(action="DESELECT")
     hero.select_set(True)
     bpy.context.view_layer.objects.active = hero
@@ -128,7 +223,6 @@ def main() -> None:
     bpy.context.view_layer.objects.active = crowd
     bpy.ops.export_scene.gltf(filepath=str(exports / f"{name}_crowd.glb"), export_format="GLB", use_selection=True)
 
-    # QC renders of hero
     crowd.hide_render = True
     crowd.hide_viewport = True
     hero.hide_render = False
@@ -142,12 +236,11 @@ def main() -> None:
         "hero_triangles": triangle_count(hero),
         "crowd_triangles": triangle_count(crowd),
         "height_m": height,
+        "bake": bake,
     }
     write_json(exports / "clean_report.json", report)
     log(json.dumps(report))
 
 
 if __name__ == "__main__":
-    import json
-
     main()

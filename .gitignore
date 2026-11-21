@@ -54,6 +54,15 @@ ai-3d-pipeline/examples/**/exports/*.blend1
 ai-3d-pipeline/**/*.blend1
 ai-3d-pipeline/examples/**/renders/
 ai-3d-pipeline/third_party/repos/
+ai-3d-pipeline/third_party/Hunyuan3D-2-WinPortable/
+ai-3d-pipeline/studio/assets/_projects/
+ai-3d-pipeline/studio/assets/prop/
+ai-3d-pipeline/studio/assets/character/
+ai-3d-pipeline/examples/props/smoke_*/
+ai-3d-pipeline/examples/props/api_smoke_*/
+ai-3d-pipeline/examples/props/desert_*/
+ai-3d-pipeline/examples/characters/smoke_*/
+ai-3d-pipeline/examples/characters/api_smoke_*/
 ai-3d-pipeline/node_modules/
 
 # Node

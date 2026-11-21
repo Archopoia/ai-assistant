@@ -108,17 +108,17 @@ def _sync(src: Path, kind: str, name: str) -> str | None:
 
 def prop_steps() -> list[dict]:
     return [
-        {"id": "refs", "title": "02 · Measurable references", "blurb": "Orthographic front/side/top — or paste the image-gen prompt."},
-        {"id": "parts", "title": "03 · parts.json", "blurb": "Numbers before geometry. Approve sizes and attachments."},
-        {"id": "build", "title": "04–05 · Build + assemble", "blurb": "One Blender part at a time, then gap check and export."},
+        {"id": "refs", "title": "02 · Measurable references", "blurb": "Orthographic front/side/top — auto-split from a concept sheet if needed."},
+        {"id": "parts", "title": "03 · parts.json", "blurb": "OpenCV measure + silhouette contour. Approve sizes before build."},
+        {"id": "build", "title": "04–05 · Build + assemble", "blurb": "Contour extrude / boxes in Blender, then assemble + export."},
     ]
 
 
 def character_steps() -> list[dict]:
     return [
-        {"id": "sheet", "title": "06–07 · Turnaround sheet", "blurb": "Front / right / back A-pose, empty hands, views in correct slots."},
-        {"id": "generate", "title": "07 · Generate mesh", "blurb": "Free TripoSR (HF) or local Hunyuan/TRELLIS / drop GLB."},
-        {"id": "pipeline", "title": "08–15 · Clean → rig → clips → export", "blurb": "Same free Blender pipeline for every character."},
+        {"id": "sheet", "title": "06–07 · Turnaround sheet", "blurb": "Front / right / back A-pose — auto-split from one sheet."},
+        {"id": "generate", "title": "07 · Generate mesh", "blurb": "Hunyuan → TRELLIS → HF TripoSR (or drop GLB)."},
+        {"id": "pipeline", "title": "08–15 · Clean → rig → clips → export", "blurb": "Bake maps when possible, then Mixamo-style free pipeline."},
     ]
 
 
@@ -129,6 +129,10 @@ def buildings_steps() -> list[dict]:
 
 
 def start_project(prompt: str, route: str, files: dict[str, bytes], name_override: str | None = None) -> dict:
+    sys.path.insert(0, str(ROOT / "scripts" / "tools"))
+    from measure_parts import measure as measure_parts  # type: ignore
+    from split_sheet import save_character_views, save_prop_views  # type: ignore
+
     brief = parse_brief(prompt, route)
     name = slug(name_override or brief["name"])
     route = brief["route"]
@@ -138,9 +142,15 @@ def start_project(prompt: str, route: str, files: dict[str, bytes], name_overrid
         base = ensure_asset_dirs("props", name)
         (base / "prompt.txt").write_text(prompt, encoding="utf-8")
         (base / "sheet_prompt.txt").write_text(brief["sheet_prompt"], encoding="utf-8")
-        # save uploads as references
-        ref_map = {"front": "front.png", "side": "side.png", "top": "top.png", "image": "concept.png", "sheet": "concept.png"}
+        ref_map = {
+            "front": "front.png",
+            "side": "side.png",
+            "top": "top.png",
+            "image": "concept.png",
+            "sheet": "concept.png",
+        }
         saved = []
+        concept: Path | None = None
         for key, data in files.items():
             if not data:
                 continue
@@ -149,14 +159,47 @@ def start_project(prompt: str, route: str, files: dict[str, bytes], name_overrid
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)
             saved.append(_rel(path))
-        doc = suggest_parts(
-            name=name,
-            kind=brief["prop_kind"],
-            width_m=brief["width_m"],
-            depth_m=brief["depth_m"],
-            height_m=brief["height_m"],
-            notes=prompt,
-        )
+            if key in ("image", "sheet"):
+                concept = path
+        # Split a single concept sheet into front/side/top when needed
+        if concept and concept.exists() and not (base / "references" / "side.png").exists():
+            try:
+                split = save_prop_views(concept, base / "references")
+                saved.extend(split.values())
+            except Exception as e:
+                log(f"prop sheet split skipped: {e}")
+
+        front = base / "references" / "front.png"
+        side = base / "references" / "side.png"
+        if side.exists() or front.exists():
+            try:
+                doc = measure_parts(
+                    front=front if front.exists() else None,
+                    side=side if side.exists() else None,
+                    name=name,
+                    width_m=brief["width_m"],
+                    depth_m=brief["depth_m"],
+                    height_m=brief["height_m"],
+                )
+            except Exception as e:
+                log(f"measure failed ({e}); using template")
+                doc = suggest_parts(
+                    name=name,
+                    kind=brief["prop_kind"],
+                    width_m=brief["width_m"],
+                    depth_m=brief["depth_m"],
+                    height_m=brief["height_m"],
+                    notes=prompt,
+                )
+        else:
+            doc = suggest_parts(
+                name=name,
+                kind=brief["prop_kind"],
+                width_m=brief["width_m"],
+                depth_m=brief["depth_m"],
+                height_m=brief["height_m"],
+                notes=prompt,
+            )
         (base / "parts.json").write_text(json.dumps(doc, indent=2), encoding="utf-8")
         steps = prop_steps()
         project = {
@@ -174,25 +217,29 @@ def start_project(prompt: str, route: str, files: dict[str, bytes], name_overrid
         (base / "prompt.txt").write_text(prompt, encoding="utf-8")
         (base / "sheet_prompt.txt").write_text(brief["sheet_prompt"], encoding="utf-8")
         saved = {}
+        concept: Path | None = None
         for key, data in files.items():
             if not data:
                 continue
-            if key == "glb" or (key.endswith(".glb") if False else False):
+            if key == "glb":
                 path = base / "exports" / "raw.glb"
-            elif key in ("front", "right", "back", "left", "sheet", "image"):
-                slot = "front" if key in ("sheet", "image") else key
-                path = base / "views" / f"view_{slot}.png"
-            else:
-                path = base / "views" / f"{key}.png"
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(data)
+                saved["glb"] = _rel(path)
+                continue
+            slot = "front" if key in ("sheet", "image") else key
+            path = base / "views" / f"view_{slot}.png"
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)
             saved[key] = _rel(path)
-            if key == "glb":
-                shutil.copy2(path, base / "exports" / "raw.glb")
-        # if single concept image uploaded as glb? handled above
-        if "glb" in files and files["glb"]:
-            (base / "exports" / "raw.glb").write_bytes(files["glb"])
-            saved["glb"] = _rel(base / "exports" / "raw.glb")
+            if key in ("sheet", "image"):
+                concept = path
+        if concept and concept.exists() and not (base / "views" / "view_right.png").exists():
+            try:
+                split = save_character_views(concept, base / "views")
+                saved.update(split)
+            except Exception as e:
+                log(f"character sheet split skipped: {e}")
         steps = character_steps()
         project = {
             "name": name,
@@ -255,32 +302,14 @@ def generate_character_mesh(name: str) -> Path:
     name = slug(name)
     base = ensure_asset_dirs("characters", name)
     out = base / "exports" / "raw.glb"
-    front = base / "views" / "view_front.png"
-    if not front.exists():
-        pngs = sorted((base / "views").glob("*.png"))
-        if not pngs:
-            raise FileNotFoundError("No front view — upload a turnaround / concept picture first (step 06–07)")
-        front = pngs[0]
+    sys.path.insert(0, str(ROOT / "scripts" / "characters"))
+    from importlib import import_module
 
-    log("07 · Free TripoSR on Hugging Face (stabilityai/TripoSR)…")
-    from gradio_client import Client, handle_file
-
-    client = Client("stabilityai/TripoSR")
-    result = client.predict(handle_file(str(front)), True, 0.85, 256, api_name="/generate")
-    glb_src = None
-    if isinstance(result, (list, tuple)):
-        for item in result:
-            if isinstance(item, str) and item.lower().endswith(".glb"):
-                glb_src = item
-                break
-    elif isinstance(result, str) and result.lower().endswith(".glb"):
-        glb_src = result
-    if not glb_src or not Path(glb_src).exists():
-        raise RuntimeError(f"TripoSR returned no GLB: {result!r}")
-    out.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(glb_src, out)
+    chain = import_module("07_generate_chain")
+    log("07 · Generator chain: Hunyuan → TRELLIS → HF TripoSR")
+    backend = chain.generate(base, out)
     _sync(out, "character", name)
-    log(f"Saved raw.glb → {out}")
+    log(f"Saved raw.glb via {backend} → {out}")
     return out
 
 
@@ -324,20 +353,60 @@ def run_step(name: str, step_id: str) -> dict:
     route = proj["route"]
     if route == "prop":
         if step_id == "refs":
-            log("02 · References ready (upload more anytime). Copy sheet_prompt into an image model if you still need orthographic views.")
-            return {"studio_model": None, "sheet_prompt": proj.get("sheet_prompt"), "message": "Refs / prompt saved"}
+            base = ROOT / "examples" / "props" / name
+            refs = list((base / "references").glob("*.png"))
+            log(f"02 · {len(refs)} reference file(s). Sheet prompt available for image-gen if views missing.")
+            return {"studio_model": None, "sheet_prompt": proj.get("sheet_prompt"), "refs": [_rel(r) for r in refs]}
         if step_id == "parts":
-            # reload parts from disk if user edited via save
             path = ROOT / "examples" / "props" / name / "parts.json"
-            doc = json.loads(path.read_text(encoding="utf-8"))
-            log("03 · parts.json loaded — edit in UI then re-save if needed")
+            base = path.parent
+            front, side = base / "references" / "front.png", base / "references" / "side.png"
+            if side.exists() or front.exists():
+                sys.path.insert(0, str(ROOT / "scripts" / "tools"))
+                from measure_parts import measure as measure_parts  # type: ignore
+
+                brief = proj.get("brief") or {}
+                doc = measure_parts(
+                    front=front if front.exists() else None,
+                    side=side if side.exists() else None,
+                    name=name,
+                    width_m=float(brief.get("width_m", 0.6)),
+                    depth_m=float(brief.get("depth_m", 0.6)),
+                    height_m=float(brief.get("height_m", 0.5)),
+                )
+                path.write_text(json.dumps(doc, indent=2), encoding="utf-8")
+                log(f"03 · Remeasured parts.json ({len(doc['parts'])} parts, contour where possible)")
+            else:
+                doc = json.loads(path.read_text(encoding="utf-8"))
+                log("03 · parts.json loaded (no refs — template / prompt sizes)")
             return {"parts": doc}
         if step_id == "build":
             return build_prop(name)
     if route == "character":
         if step_id == "sheet":
-            log("06–07 · Sheet / views saved. Put each view in the correct slot.")
-            return {"sheet_prompt": proj.get("sheet_prompt"), "views": proj.get("views")}
+            base = ROOT / "examples" / "characters" / name
+            views_dir = base / "views"
+            # If only a concept remains, split again
+            concept = views_dir / "view_front.png"
+            extras = list(views_dir.glob("view_*.png"))
+            if len(extras) <= 1 and concept.exists():
+                sys.path.insert(0, str(ROOT / "scripts" / "tools"))
+                from split_sheet import save_character_views  # type: ignore
+
+                # Prefer original concept.png if present
+                src = concept
+                for cand in (views_dir / "concept.png", base / "references" / "concept.png"):
+                    if cand.exists():
+                        src = cand
+                        break
+                try:
+                    save_character_views(src, views_dir)
+                    log("06–07 · Split sheet into front/right/back slots")
+                except Exception as e:
+                    log(f"sheet split note: {e}")
+            views = {p.name: _rel(p) for p in views_dir.glob("*.png")}
+            log(f"06–07 · {len(views)} view file(s) ready")
+            return {"sheet_prompt": proj.get("sheet_prompt"), "views": views}
         if step_id == "generate":
             raw = ROOT / "examples" / "characters" / name / "exports" / "raw.glb"
             if raw.exists():

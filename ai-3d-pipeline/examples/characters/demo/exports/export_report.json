@@ -1,5 +1,5 @@
 {
-  "fbx": "examples/characters/demo/exports/demo.fbx",
+  "fbx": "examples\\characters\\demo\\exports\\demo.fbx",
   "bones": 24,
   "triangles": 108,
   "height_m": 1.15,

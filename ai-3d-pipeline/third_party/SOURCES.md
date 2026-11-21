@@ -25,9 +25,12 @@
 14. [glTF-Transform](https://github.com/donmccurdy/glTF-Transform) — final GLB optimizer
 
 ## Free character generators (local GPU, $0/model)
-- **[TRELLIS](https://github.com/microsoft/TRELLIS)** — **default**, MIT, ~16 GB VRAM. Windows: `.\scripts\install_trellis.ps1` → `.\scripts\serve_trellis.ps1` (see [TRELLIS#3](https://github.com/microsoft/TRELLIS/issues/3))
-- [TRELLIS.2](https://github.com/microsoft/TRELLIS.2) — higher quality, more VRAM
-- [TripoSR](https://github.com/VAST-AI-Research/TripoSR) — MIT, ~6 GB VRAM
-- [Hunyuan3D-2](https://github.com/Tencent-Hunyuan/Hunyuan3D-2) — Community Licence (fine outside EU/UK/KR)
+Chain used by Studio + CLI (`07_generate_chain.py`): **Hunyuan → TRELLIS → HF TripoSR**.
 
-Point `07_generate_local.py` at a local server via `TRELLIS_URL` / `TRIPOSR_URL` / `HUNYUAN_URL`, or drop a GLB with `--backend import`.
+- **[Hunyuan3D-2-WinPortable](https://github.com/YanWenKun/Hunyuan3D-2-WinPortable)** — Windows pack, NVIDIA. `.\scripts\install_hunyuan_portable.ps1` → extract release → `.\scripts\serve_hunyuan.ps1` (`HUNYUAN_URL`, default `:8080`)
+- [Hunyuan3D-2](https://github.com/Tencent-Hunyuan/Hunyuan3D-2) — Community Licence (fine outside EU/UK/KR)
+- **[TRELLIS](https://github.com/microsoft/TRELLIS)** — MIT, ~16 GB VRAM. `.\scripts\install_trellis.ps1` → `.\scripts\serve_trellis.ps1` (`TRELLIS_URL`, default `:8090`)
+- [TRELLIS.2](https://github.com/microsoft/TRELLIS.2) — higher quality, more VRAM
+- [TripoSR](https://github.com/VAST-AI-Research/TripoSR) / [HF Space](https://huggingface.co/spaces/stabilityai/TripoSR) — MIT; AMD/no-GPU fallback via `gradio_client`
+
+Also: OpenCV sheet split (`scripts/tools/split_sheet.py`) + measure (`measure_parts.py`) → contour extrude in `blender/props/build_part.py`. Clean bake in `blender/characters/clean.py`.

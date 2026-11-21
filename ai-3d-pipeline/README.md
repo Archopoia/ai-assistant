@@ -14,26 +14,31 @@ pip install -r requirements.txt
 npm install
 python3 -m pipeline.cli doctor
 
-# Free prop (crate) — steps 03–05
-python3 -m pipeline.cli prop crate
+# Studio (prompt/picture → route → export)
+.\scripts\start_studio.ps1   # http://127.0.0.1:8787/
+
+# Free prop — measure refs (or split a concept sheet) → Blender build
+python -m pipeline.cli measure crate --width 0.6 --depth 0.6 --height 0.5
+python -m pipeline.cli prop crate
 
 # Procedural buildings
-python3 -m pipeline.cli buildings --count 10
+python -m pipeline.cli buildings --count 10
 
-# Free character path (placeholder mesh → rig → idle/walk → export)
-python3 -m pipeline.cli character demo --demo
+# Character: generator chain (Hunyuan→TRELLIS→HF TripoSR) then 08–15
+python -m pipeline.cli generate hero --force
+python -m pipeline.cli character hero
 
-# TRELLIS image→mesh on your Windows GPU PC (~16 GB+ VRAM)
-# Anaconda PowerShell Prompt:
+# Or placeholder mesh (no generator)
+python -m pipeline.cli character demo --demo
+
+# Optional local NVIDIA servers
+.\scripts\install_hunyuan_portable.ps1   # then extract WinPortable release
+.\scripts\serve_hunyuan.ps1              # :8080
 .\scripts\install_trellis.ps1
-.\scripts\serve_trellis.ps1
-python scripts\characters\07_generate_local.py --backend trellis `
-  --front view_front.png --right view_right.png --back view_back.png `
-  -o examples\characters\demo\exports\raw.glb
-python -m pipeline.cli character demo --glb examples\characters\demo\exports\raw.glb
+.\scripts\serve_trellis.ps1              # :8090
 ```
 
-Linux: `./scripts/install_trellis.sh` then `./scripts/serve_trellis.sh`.
+AMD / no CUDA: leave Hunyuan/TRELLIS down — Studio uses free Hugging Face TripoSR.
 
 ## Layout
 
@@ -44,7 +49,8 @@ Linux: `./scripts/install_trellis.sh` then `./scripts/serve_trellis.sh`.
 | `blender/props/` | Steps 04–05 + buildings |
 | `blender/characters/` | Steps 08–15 |
 | `scripts/characters/` | Step 07 generators (local free / Tripo optional) |
-| `scripts/tools/` | PyMeshLab, xatlas, glTF-Transform |
+| `scripts/tools/` | Sheet split, OpenCV measure, PyMeshLab, xatlas, glTF-Transform |
+| `studio/` | Local web UI (prompt/picture funnel) |
 | `prompts/` | Copy-paste prompts from the article |
 | `examples/` | Working assets (`crate`, `demo`) |
 | `third_party/SOURCES.md` | The 14 GitHub projects + free generators |

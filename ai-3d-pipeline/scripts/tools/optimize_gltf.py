@@ -29,7 +29,8 @@ def main() -> int:
         str(args.texture_size),
     ]
     print("$", " ".join(cmd))
-    return subprocess.call(cmd, cwd=str(ROOT))
+    # Windows needs shell so npx.cmd resolves
+    return subprocess.call(cmd, cwd=str(ROOT), shell=(sys.platform == "win32"))
 
 
 if __name__ == "__main__":
