@@ -78,12 +78,48 @@
     .log-wrap h3 { margin:0; padding:8px 14px; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
     #log { margin:0; padding:0 14px 12px; overflow:auto; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; line-height:1.45; color:#d8cbb8; white-space:pre-wrap; }
     #log .ok{color:var(--ok)} #log .run{color:var(--accent-2)} #log .err{color:var(--danger)}
-    .viewport { position:relative; min-height:0; background:#0c0b09; }
+    .viewport {
+      position:relative; min-height:0; background:#0c0b09;
+      display:grid; grid-template-rows:1fr auto; overflow:hidden;
+    }
+    .stage { position:relative; min-height:0; }
     #c { width:100%; height:100%; display:block; }
-    .empty-3d { position:absolute; inset:0; display:grid; place-items:center; text-align:center; color:var(--muted); padding:24px; z-index:2; pointer-events:none; }
+    .img-stage {
+      position:absolute; inset:0; display:grid; place-items:center;
+      background:#0c0b09; z-index:2; padding:16px;
+    }
+    .img-stage.hidden { display:none !important; }
+    .img-stage img {
+      max-width:100%; max-height:100%; object-fit:contain;
+      border-radius:8px; box-shadow:0 12px 40px rgba(0,0,0,.45);
+      background:#16120e;
+    }
+    .empty-3d { position:absolute; inset:0; display:grid; place-items:center; text-align:center; color:var(--muted); padding:24px; z-index:1; pointer-events:none; }
     .empty-3d strong { display:block; color:var(--fg); font-family:Fraunces,Georgia,serif; font-size:18px; margin-bottom:6px; }
-    .viewport-meta { position:absolute; left:12px; bottom:12px; z-index:3; background:rgba(28,24,20,.88); border:1px solid var(--line); border-radius:10px; padding:10px 12px; max-width:min(420px,90%); }
+    .viewport-meta { position:absolute; left:12px; top:12px; z-index:4; background:rgba(28,24,20,.9); border:1px solid var(--line); border-radius:10px; padding:10px 12px; max-width:min(420px,90%); }
     .viewport-meta strong { display:block; font-size:13px; } .viewport-meta span { color:var(--muted); font-size:12px; }
+    .mode-toggle {
+      position:absolute; right:12px; top:12px; z-index:4; display:flex; gap:6px;
+    }
+    .mode-toggle button { padding:7px 10px; font-size:12px; }
+    .mode-toggle button.active { border-color:var(--accent); color:var(--accent-2); }
+    .filmstrip {
+      display:flex; gap:8px; overflow-x:auto; padding:10px 12px;
+      border-top:1px solid var(--line); background:rgba(20,17,14,.96);
+      min-height:92px; align-items:stretch;
+    }
+    .filmstrip:empty { display:none; }
+    .thumb {
+      flex:0 0 auto; width:108px; border:1px solid var(--line); border-radius:8px;
+      background:#16120e; padding:0; overflow:hidden; cursor:pointer; text-align:left;
+      display:flex; flex-direction:column;
+    }
+    .thumb.active { border-color:var(--accent); }
+    .thumb img { width:108px; height:68px; object-fit:cover; display:block; background:#0c0b09; }
+    .thumb span {
+      display:block; padding:4px 6px; font-size:10px; color:var(--muted);
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
     .hidden { display:none !important; }
     .sheetbox { background:#100e0c; border:1px dashed var(--line); border-radius:8px; padding:10px; font-size:12px; color:var(--muted); white-space:pre-wrap; }
   </style>
@@ -149,17 +185,27 @@
     </section>
 
     <section class="viewport">
-      <div class="empty-3d" id="empty3d">
-        <div>
-          <strong>Model appears here</strong>
-          Start with a prompt or picture on the left.
+      <div class="stage">
+        <div class="empty-3d" id="empty3d">
+          <div>
+            <strong>Visual feedback lives here</strong>
+            Every step shows refs, sheets, QC compares, or the 3D mesh.
+          </div>
+        </div>
+        <canvas id="c"></canvas>
+        <div class="img-stage hidden" id="imgStage">
+          <img id="imgMain" alt="step preview" />
+        </div>
+        <div class="mode-toggle hidden" id="modeToggle">
+          <button type="button" id="btnModeImg" class="active">Images</button>
+          <button type="button" id="btnMode3d">3D</button>
+        </div>
+        <div class="viewport-meta" id="viewMeta" hidden>
+          <strong id="viewTitle">—</strong>
+          <span id="viewDesc">—</span>
         </div>
       </div>
-      <canvas id="c"></canvas>
-      <div class="viewport-meta" id="viewMeta" hidden>
-        <strong id="viewTitle">—</strong>
-        <span id="viewDesc">—</span>
-      </div>
+      <div class="filmstrip" id="filmstrip"></div>
     </section>
   </main>
 
@@ -174,7 +220,10 @@
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-    const state = { project: null, index: -1, statuses: [], busy: false, files: [] };
+    const state = {
+      project: null, index: -1, statuses: [], busy: false, files: [],
+      previews: [], previewIndex: 0, mode: 'images', hasModel: false,
+    };
     const el = {
       log: document.getElementById('log'),
       entry: document.getElementById('entry'),
@@ -196,6 +245,12 @@
       viewDesc: document.getElementById('viewDesc'),
       brandSub: document.getElementById('brandSub'),
       fileChip: document.getElementById('fileChip'),
+      imgStage: document.getElementById('imgStage'),
+      imgMain: document.getElementById('imgMain'),
+      filmstrip: document.getElementById('filmstrip'),
+      modeToggle: document.getElementById('modeToggle'),
+      btnModeImg: document.getElementById('btnModeImg'),
+      btnMode3d: document.getElementById('btnMode3d'),
     };
 
     let mixer = null, root = null;
@@ -263,15 +318,74 @@
     function clearModel() {
       if (root) { scene.remove(root); root = null; }
       mixer = null;
+      state.hasModel = false;
+    }
+
+    function fileUrl(src) {
+      if (!src) return '';
+      if (src.startsWith('assets/') || src.startsWith('http') || src.startsWith('/')) return src;
+      return `/api/file?path=${encodeURIComponent(src)}`;
+    }
+
+    function setMode(mode) {
+      state.mode = mode;
+      el.btnModeImg.classList.toggle('active', mode === 'images');
+      el.btnMode3d.classList.toggle('active', mode === '3d');
+      const showImg = mode === 'images' && state.previews.length;
+      el.imgStage.classList.toggle('hidden', !showImg);
+      document.getElementById('c').style.opacity = showImg ? '0' : '1';
+      document.getElementById('c').style.pointerEvents = showImg ? 'none' : 'auto';
+    }
+
+    function renderFilmstrip() {
+      el.filmstrip.innerHTML = '';
+      state.previews.forEach((p, i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = `thumb${i === state.previewIndex ? ' active' : ''}`;
+        b.innerHTML = `<img src="${fileUrl(p.src)}" alt="" /><span>${p.label || p.src}</span>`;
+        b.onclick = () => selectPreview(i);
+        el.filmstrip.appendChild(b);
+      });
+      el.modeToggle.classList.toggle('hidden', !(state.previews.length || state.hasModel));
+      el.btnMode3d.disabled = !state.hasModel;
+      if (!state.previews.length && state.hasModel) setMode('3d');
+    }
+
+    function selectPreview(i) {
+      if (!state.previews.length) return;
+      state.previewIndex = Math.max(0, Math.min(i, state.previews.length - 1));
+      const p = state.previews[state.previewIndex];
+      el.imgMain.src = fileUrl(p.src);
+      el.empty3d.hidden = true;
+      el.viewMeta.hidden = false;
+      el.viewTitle.textContent = p.label || 'Preview';
+      el.viewDesc.textContent = p.src;
+      setMode('images');
+      renderFilmstrip();
+    }
+
+    function showPreviews(previews, title) {
+      const list = (previews || []).filter(p => p && p.src);
+      state.previews = list;
+      state.previewIndex = 0;
+      if (list.length) {
+        selectPreview(0);
+        if (title) el.viewTitle.textContent = title;
+      } else {
+        el.imgStage.classList.add('hidden');
+        renderFilmstrip();
+      }
     }
 
     async function showModel(url, title, desc) {
       if (!url) return;
       clearModel();
       el.empty3d.hidden = true;
-      const src = url.startsWith('assets/') || url.startsWith('http') ? url : `/api/file?path=${encodeURIComponent(url)}`;
+      const src = fileUrl(url);
       const gltf = await loader.loadAsync(src);
       root = gltf.scene; scene.add(root);
+      state.hasModel = true;
       let tris = 0;
       root.traverse(o => {
         if (o.isMesh && o.geometry) {
@@ -293,6 +407,38 @@
       el.viewMeta.hidden = false;
       el.viewTitle.textContent = title || 'Model';
       el.viewDesc.textContent = desc || `~${Math.round(tris)} tris`;
+      // Prefer images when a step just produced them; otherwise show 3D
+      if (!state.previews.length) setMode('3d');
+      else {
+        el.modeToggle.classList.remove('hidden');
+        el.btnMode3d.disabled = false;
+      }
+      renderFilmstrip();
+    }
+
+    async function showStepVisual(result, step) {
+      const previews = [...(result.previews || [])];
+      if (!previews.length && result.refs) {
+        (Array.isArray(result.refs) ? result.refs : Object.values(result.refs)).forEach((src, i) => {
+          if (src) previews.push({ src, label: `ref ${i + 1}` });
+        });
+      }
+      if (!previews.length && result.views) {
+        Object.entries(result.views).forEach(([k, src]) => {
+          if (src && String(src).match(/\.(png|jpg|jpeg|webp)$/i)) previews.push({ src, label: k });
+        });
+      }
+      showPreviews(previews, step?.title);
+      const model = result.studio_model || result.model || result.raw || result.clean;
+      if (model) {
+        await showModel(model, state.project?.name || 'Model', step?.title || '');
+        if (previews.length) setMode('images');
+      } else if (!previews.length) {
+        el.viewMeta.hidden = false;
+        el.viewTitle.textContent = step?.title || 'Step';
+        el.viewDesc.textContent = 'No image/mesh yet — check the log for details.';
+        el.empty3d.hidden = false;
+      }
     }
 
     function renderSteps() {
@@ -319,7 +465,7 @@
       el.btnAll.disabled = false;
       el.title.textContent = project.route === 'prop' ? 'Prop route (code)' :
         project.route === 'character' ? 'Character route (generator)' : 'Buildings route';
-      el.hint.textContent = 'Same funnel as the article: finish each step, model updates on the right.';
+      el.hint.textContent = 'Each step paints the right panel — refs, sheets, QC, then 3D.';
       el.projectMeta.textContent = `${project.name} · ${project.route}`;
       if (project.sheet_prompt) {
         el.sheetPrompt.classList.remove('hidden');
@@ -336,6 +482,7 @@
         el.btnSaveParts.classList.add('hidden');
       }
       renderSteps();
+      showStepVisual(project, { title: '01 · Project started' });
       logLine(`Started “${project.name}” as ${project.route}.`, 'ok');
     }
 
@@ -345,6 +492,9 @@
       state.statuses[i] = 'running';
       renderSteps();
       logLine(`\n▸ ${step.title}`, 'run');
+      el.viewMeta.hidden = false;
+      el.viewTitle.textContent = step.title;
+      el.viewDesc.textContent = 'Running… watch the log; visuals refresh when done.';
       await api('/api/project/run', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: state.project.name, step: step.id }),
@@ -362,12 +512,10 @@
           result.views ? `Views: ${Object.keys(result.views).join(', ')}` : '',
         ].filter(Boolean).join('\n') || '';
       }
-      if (result.studio_model || result.model || result.raw) {
-        await showModel(result.studio_model || result.model || result.raw, state.project.name, step.title);
-      }
+      await showStepVisual(result, step);
       state.statuses[i] = 'done';
       renderSteps();
-      logLine('  Step complete.', 'ok');
+      logLine(`  Step complete · ${(result.previews || []).length} preview(s)${(result.studio_model || result.model || result.raw) ? ' + 3D' : ''}.`, 'ok');
     }
 
     async function runThrough(target) {
@@ -450,11 +598,16 @@
       if (!state.project) return;
       runThrough(state.project.steps.length - 1);
     };
+    el.btnModeImg.onclick = () => setMode('images');
+    el.btnMode3d.onclick = () => { if (state.hasModel) setMode('3d'); };
+
     document.getElementById('btnReset').onclick = () => {
       state.project = null;
       state.index = -1;
       state.statuses = [];
       state.files = [];
+      state.previews = [];
+      state.hasModel = false;
       el.work.classList.add('hidden');
       el.entry.classList.remove('hidden');
       el.btnAll.disabled = true;
@@ -464,6 +617,10 @@
       clearModel();
       el.empty3d.hidden = false;
       el.viewMeta.hidden = true;
+      el.imgStage.classList.add('hidden');
+      el.modeToggle.classList.add('hidden');
+      el.filmstrip.innerHTML = '';
+      el.qcBox.classList.add('hidden');
       logLine('Ready. Prompt or picture → Auto / Prop / Character / Buildings.', 'ok');
     };
 

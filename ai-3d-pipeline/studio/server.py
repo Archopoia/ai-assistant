@@ -106,6 +106,45 @@ def _sync(src: Path, kind: str, name: str) -> str | None:
     return f"assets/{kind}/{name}/{src.name}"
 
 
+def _preview(path: Path | None, label: str) -> dict | None:
+    if path is None or not Path(path).exists():
+        return None
+    rel = _rel(Path(path))
+    if not rel:
+        return None
+    return {"src": rel, "label": label, "kind": "image" if Path(path).suffix.lower() in {".png", ".jpg", ".jpeg", ".webp"} else "file"}
+
+
+def _previews_from_dir(folder: Path, *, glob: str = "*.png", limit: int = 24, prefix: str = "") -> list[dict]:
+    if not folder.exists():
+        return []
+    items = []
+    for p in sorted(folder.glob(glob), key=lambda x: x.stat().st_mtime, reverse=True)[:limit]:
+        label = f"{prefix}{p.stem}".replace("_", " ")
+        item = _preview(p, label)
+        if item:
+            items.append(item)
+    return items
+
+
+def _with_previews(payload: dict, *groups: list[dict] | None) -> dict:
+    seen = set()
+    previews: list[dict] = []
+    for group in groups:
+        for item in group or []:
+            if not item or not item.get("src") or item["src"] in seen:
+                continue
+            seen.add(item["src"])
+            previews.append(item)
+    # also accept existing list on payload
+    for item in payload.get("previews") or []:
+        if item.get("src") and item["src"] not in seen:
+            seen.add(item["src"])
+            previews.append(item)
+    payload["previews"] = previews
+    return payload
+
+
 def prop_steps() -> list[dict]:
     return [
         {"id": "refs", "title": "02 · Orthographic refs", "blurb": "One reference → caption → front/side/top with QC loop (or split a real sheet)."},
@@ -276,6 +315,7 @@ def start_project(prompt: str, route: str, files: dict[str, bytes], name_overrid
             "refs": saved,
             "steps": steps,
             "done": [],
+            "previews": _previews_from_dir(base / "references", prefix="ref "),
         }
     elif route == "character":
         base = ensure_asset_dirs("characters", name)
@@ -324,6 +364,7 @@ def start_project(prompt: str, route: str, files: dict[str, bytes], name_overrid
             "steps": steps,
             "done": [],
             "has_raw": (base / "exports" / "raw.glb").exists(),
+            "previews": _previews_from_dir(base / "views", prefix=""),
         }
     else:
         base = ensure_asset_dirs("props", "buildings")
@@ -363,7 +404,16 @@ def build_prop(name: str) -> dict:
         except Exception as e:
             log(f"optimize skipped: {e}")
     studio = _sync(opt if opt.exists() else glb, "prop", name)
-    return {"name": name, "model": _rel(opt if opt.exists() else glb), "studio_model": studio}
+    previews = (
+        _previews_from_dir(base / "renders", glob="*_vs_ref*.png", prefix="QC ")
+        + _previews_from_dir(base / "renders", glob="*_side*.png", prefix="")
+        + _previews_from_dir(base / "renders", glob="assemble_*.png", prefix="")
+        + _previews_from_dir(base / "references", prefix="ref ")
+    )
+    return _with_previews(
+        {"name": name, "model": _rel(opt if opt.exists() else glb), "studio_model": studio},
+        previews,
+    )
 
 
 def generate_character_mesh(name: str) -> Path:
@@ -407,19 +457,36 @@ def run_character_step(name: str, step_id: str) -> dict:
             ROOT / "blender/characters/clean.py",
             args={"asset": name, "input": str(raw), **{k: cfg[k] for k in ("height_m", "hero_triangles", "crowd_triangles")}},
         )
-        return {"clean": _rel(base / "exports" / f"{name}_clean.glb")}
+        clean = base / "exports" / f"{name}_clean.glb"
+        return _with_previews(
+            {"clean": _rel(clean), "studio_model": _sync(clean, "character", name)},
+            _previews_from_dir(base / "renders", glob="clean_*.png", prefix="clean "),
+            _previews_from_dir(base / "views", prefix="view "),
+        )
     if step_id == "split":
         log("09 · Tag parts")
         run_blender_script(ROOT / "blender/characters/split_parts.py", args={"asset": name})
-        return {"parts_blend": _rel(base / "exports" / f"{name}_parts.blend")}
+        return _with_previews(
+            {"parts_blend": _rel(base / "exports" / f"{name}_parts.blend"), "studio_model": _sync(base / "exports" / f"{name}_clean.glb", "character", name)},
+            _previews_from_dir(base / "renders", glob="*part*.png", prefix="parts "),
+            _previews_from_dir(base / "renders", glob="split_*.png", prefix="parts "),
+            _previews_from_dir(base / "renders", glob="clean_*.png", prefix="clean "),
+        )
     if step_id == "joints":
         log("10 · Joints")
         run_blender_script(ROOT / "blender/characters/joints.py", args={"asset": name})
-        return {"joints": _rel(base / "exports" / "joints.json")}
+        return _with_previews(
+            {"joints": _rel(base / "exports" / "joints.json"), "studio_model": _sync(base / "exports" / f"{name}_clean.glb", "character", name)},
+            _previews_from_dir(base / "renders", glob="joints_*.png", prefix="joints "),
+        )
     if step_id == "weights":
         log("11 · Rig + weights")
         run_blender_script(ROOT / "blender/characters/rig_weights.py", args={"asset": name})
-        return {"rigged": _rel(base / "exports" / f"{name}_rigged.blend")}
+        return _with_previews(
+            {"rigged": _rel(base / "exports" / f"{name}_rigged.blend"), "studio_model": _sync(base / "exports" / f"{name}_clean.glb", "character", name)},
+            _previews_from_dir(base / "renders", glob="joints_*.png", prefix="joints "),
+            _previews_from_dir(base / "renders", glob="clean_*.png", prefix="clean "),
+        )
     if step_id == "pose":
         log("12 · Pose test (≤3 reweight rounds)")
         for round_i in range(1, 4):
@@ -434,7 +501,10 @@ def run_character_step(name: str, step_id: str) -> dict:
                 break
             log("  re-applying weight rules…")
             run_blender_script(ROOT / "blender/characters/rig_weights.py", args={"asset": name})
-        return {"pose": _rel(base / "exports" / "pose_test_report.json")}
+        return _with_previews(
+            {"pose": _rel(base / "exports" / "pose_test_report.json"), "studio_model": _sync(base / "exports" / f"{name}_clean.glb", "character", name)},
+            _previews_from_dir(base / "renders", glob="pose_*.png", prefix="pose "),
+        )
     if step_id == "clips":
         log("13 · Idle")
         run_blender_script(ROOT / "blender/characters/clips/idle.py", args={"asset": name})
@@ -442,7 +512,15 @@ def run_character_step(name: str, step_id: str) -> dict:
         run_blender_script(ROOT / "blender/characters/clips/walk.py", args={"asset": name})
         log("14 · Clip QC")
         run_blender_script(ROOT / "blender/characters/check_clips.py", args={"asset": name})
-        return {"qc": _rel(base / "exports" / "clip_qc_report.json")}
+        # Prefer animated export if present mid-pipeline
+        glb_cand = base / "exports" / f"{name}_rigged.glb"
+        if not glb_cand.exists():
+            glb_cand = base / "exports" / f"{name}_clean.glb"
+        return _with_previews(
+            {"qc": _rel(base / "exports" / "clip_qc_report.json"), "studio_model": _sync(glb_cand, "character", name) if glb_cand.exists() else None},
+            _previews_from_dir(base / "renders", glob="pose_*.png", prefix="pose "),
+            _previews_from_dir(base / "renders", glob="clip_*.png", prefix="clip "),
+        )
     if step_id == "export":
         log("15 · Export")
         run_blender_script(ROOT / "blender/characters/export_fbx.py", args={"asset": name})
@@ -457,12 +535,16 @@ def run_character_step(name: str, step_id: str) -> dict:
             except Exception as e:
                 log(f"optimize skipped: {e}")
         studio = _sync(opt if opt.exists() else glb, "character", name)
-        return {
-            "name": name,
-            "model": _rel(opt if opt.exists() else glb),
-            "studio_model": studio,
-            "fbx": _rel(base / "exports" / f"{name}.fbx"),
-        }
+        return _with_previews(
+            {
+                "name": name,
+                "model": _rel(opt if opt.exists() else glb),
+                "studio_model": studio,
+                "fbx": _rel(base / "exports" / f"{name}.fbx"),
+            },
+            _previews_from_dir(base / "renders", glob="*.png", limit=16),
+            _previews_from_dir(base / "views", prefix="view "),
+        )
     if step_id == "pipeline":
         # backwards compatible: run 08–15
         result = None
@@ -491,7 +573,10 @@ def run_step(name: str, step_id: str) -> dict:
                 log(f"02 · FLUX generate failed ({e}) — using upload/split/template if present")
             refs = list((base / "references").glob("*.png"))
             log(f"02 · {len(refs)} reference file(s)")
-            return {"studio_model": None, "sheet_prompt": proj.get("sheet_prompt"), "refs": [_rel(r) for r in refs]}
+            return _with_previews(
+                {"studio_model": None, "sheet_prompt": proj.get("sheet_prompt"), "refs": [_rel(r) for r in refs]},
+                _previews_from_dir(base / "references", prefix="ref "),
+            )
         if step_id == "parts":
             path = ROOT / "examples" / "props" / name / "parts.json"
             base = path.parent
@@ -518,7 +603,10 @@ def run_step(name: str, step_id: str) -> dict:
             proj["parts_approved"] = False
             _projects[name] = proj
             (STUDIO / "assets" / "_projects" / f"{name}.json").write_text(json.dumps(proj, indent=2), encoding="utf-8")
-            return {"parts": doc, "needs_approval": True}
+            return _with_previews(
+                {"parts": doc, "needs_approval": True},
+                _previews_from_dir(base / "references", prefix="measure "),
+            )
         if step_id == "build":
             if not proj.get("parts_approved"):
                 log("03→04 · Auto-approving parts.json (Save parts to approve explicitly next time)")
@@ -547,14 +635,29 @@ def run_step(name: str, step_id: str) -> dict:
                     raise
             views = {p.name: _rel(p) for p in views_dir.glob("*.png")}
             log(f"06 · {len(views)} view file(s) ready")
-            return {"sheet_prompt": proj.get("sheet_prompt"), "views": views, "qc": _rel(views_dir / "sheet_qc.json") if (views_dir / "sheet_qc.json").exists() else None}
+            return _with_previews(
+                {
+                    "sheet_prompt": proj.get("sheet_prompt"),
+                    "views": views,
+                    "qc": _rel(views_dir / "sheet_qc.json") if (views_dir / "sheet_qc.json").exists() else None,
+                },
+                [_preview(views_dir / "concept.png", "concept")] if (views_dir / "concept.png").exists() else [],
+                _previews_from_dir(views_dir, prefix=""),
+            )
         if step_id == "generate":
             raw = ROOT / "examples" / "characters" / name / "exports" / "raw.glb"
+            base = ROOT / "examples" / "characters" / name
             if raw.exists():
                 log("07 · Using existing raw.glb")
-                return {"raw": _rel(raw), "studio_model": _sync(raw, "character", name)}
+                return _with_previews(
+                    {"raw": _rel(raw), "studio_model": _sync(raw, "character", name)},
+                    _previews_from_dir(base / "views", prefix="view "),
+                )
             generate_character_mesh(name)
-            return {"raw": _rel(ROOT / "examples" / "characters" / name / "exports" / "raw.glb")}
+            return _with_previews(
+                {"raw": _rel(raw), "studio_model": _sync(raw, "character", name)},
+                _previews_from_dir(base / "views", prefix="view "),
+            )
         if step_id in ("clean", "split", "joints", "weights", "pose", "clips", "export", "pipeline"):
             return run_character_step(name, step_id)
     if route == "buildings" and step_id == "generate":
@@ -679,9 +782,20 @@ class Handler(SimpleHTTPRequestHandler):
                 self.send_error(404)
                 return
             data = path.read_bytes()
+            suf = path.suffix.lower()
+            ctype = {
+                ".glb": "model/gltf-binary",
+                ".gltf": "model/gltf+json",
+                ".png": "image/png",
+                ".jpg": "image/jpeg",
+                ".jpeg": "image/jpeg",
+                ".webp": "image/webp",
+                ".json": "application/json",
+            }.get(suf, "application/octet-stream")
             self.send_response(200)
-            self.send_header("Content-Type", "model/gltf-binary" if path.suffix.lower() == ".glb" else "application/octet-stream")
+            self.send_header("Content-Type", ctype)
             self.send_header("Content-Length", str(len(data)))
+            self.send_header("Cache-Control", "no-store")
             self.end_headers()
             self.wfile.write(data)
             return
