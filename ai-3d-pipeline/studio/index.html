@@ -219,6 +219,7 @@
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 
     const state = {
       project: null, index: -1, statuses: [], busy: false, files: [],
@@ -267,6 +268,7 @@
     const key = new THREE.DirectionalLight(0xffffff, 1.1); key.position.set(2,4,3); scene.add(key);
     scene.add(new THREE.GridHelper(4, 16, 0x3a3229, 0x2a241e));
     const loader = new GLTFLoader();
+    loader.setMeshoptDecoder(MeshoptDecoder);
 
     function resize() {
       const v = document.querySelector('.viewport');
@@ -378,12 +380,26 @@
       }
     }
 
+    async function loadGltf(url) {
+      const src = fileUrl(url);
+      try {
+        return await loader.loadAsync(src);
+      } catch (e) {
+        // Fallback: unoptimized sibling if meshopt/draco surprises us
+        const alt = String(url).replace(/_opt\.glb$/i, '.glb');
+        if (alt !== url) {
+          logLine(`3D load retry without _opt: ${e.message || e}`, 'run');
+          return await loader.loadAsync(fileUrl(alt));
+        }
+        throw e;
+      }
+    }
+
     async function showModel(url, title, desc) {
       if (!url) return;
       clearModel();
       el.empty3d.hidden = true;
-      const src = fileUrl(url);
-      const gltf = await loader.loadAsync(src);
+      const gltf = await loadGltf(url);
       root = gltf.scene; scene.add(root);
       state.hasModel = true;
       let tris = 0;
@@ -407,7 +423,6 @@
       el.viewMeta.hidden = false;
       el.viewTitle.textContent = title || 'Model';
       el.viewDesc.textContent = desc || `~${Math.round(tris)} tris`;
-      // Prefer images when a step just produced them; otherwise show 3D
       if (!state.previews.length) setMode('3d');
       else {
         el.modeToggle.classList.remove('hidden');
