@@ -69,23 +69,69 @@ def caption_reference(path: Path, hint: str = "") -> str:
     return hint.strip() or "game character matching the uploaded reference"
 
 
+class QuotaError(RuntimeError):
+    """HF ZeroGPU / auth quota exhausted."""
+
+
 def _flux_t2i(prompt: str, out: Path, *, width: int, height: int) -> Path:
     from gradio_client import Client
 
-    client = Client("black-forest-labs/FLUX.1-schnell", token=_hf_token())
-    result = client.predict(
-        prompt=prompt,
-        seed=0,
-        randomize_seed=True,
-        width=int(width),
-        height=int(height),
-        num_inference_steps=4,
-        api_name="/infer",
-    )
+    token = _hf_token()
+    if not token:
+        # Fail fast with a clear message — anonymous ZeroGPU depletes quickly
+        print("[flux] No HF_TOKEN set; anonymous ZeroGPU often hits quota.")
+    try:
+        client = Client("black-forest-labs/FLUX.1-schnell", token=token)
+        result = client.predict(
+            prompt=prompt,
+            seed=0,
+            randomize_seed=True,
+            width=int(width),
+            height=int(height),
+            num_inference_steps=4,
+            api_name="/infer",
+        )
+    except Exception as e:
+        msg = str(e)
+        if "ZeroGPU" in msg or "quota" in msg.lower() or "exceeded" in msg.lower():
+            raise QuotaError(
+                "HF ZeroGPU quota exceeded. Set HF_TOKEN (https://huggingface.co/settings/tokens) "
+                "then restart Studio, or continue with offline concept fallback."
+            ) from e
+        raise
     src = result[0] if isinstance(result, (list, tuple)) else result
     if not src or not Path(src).exists():
         raise RuntimeError(f"FLUX returned no image: {result!r}")
     return _save_png(src, out)
+
+
+def _offline_views_from_concept(concept: Path, out_dir: Path, kind: str) -> dict[str, str]:
+    """When cloud image-gen is unavailable: stamp the concept into view slots so the pipeline continues."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    img = Image.open(concept).convert("RGB")
+    names = (
+        ["view_front.png", "view_right.png", "view_back.png"]
+        if kind == "character"
+        else ["front.png", "side.png", "top.png"]
+    )
+    labels = (
+        ["FRONT (offline)", "RIGHT (offline)", "BACK (offline)"]
+        if kind == "character"
+        else ["FRONT (offline)", "SIDE (offline)", "TOP (offline)"]
+    )
+    saved = {}
+    for name, label in zip(names, labels):
+        panel = img.copy()
+        # banner so it's obvious this isn't a real turnaround
+        from PIL import ImageDraw, ImageFont
+
+        draw = ImageDraw.Draw(panel)
+        draw.rectangle((0, 0, panel.width, 36), fill=(20, 20, 20))
+        draw.text((10, 8), f"{label} — set HF_TOKEN for real sheets", fill=(232, 184, 109))
+        path = out_dir / name
+        panel.save(path, format="PNG")
+        saved[name] = str(path)
+    return saved
 
 
 def _try_charactersheet_lora(concept: Path, out_sheet: Path) -> Path | None:
@@ -294,48 +340,60 @@ def generate_views(
     best_avg = -1.0
     w, h = (768, 1024) if kind == "character" else (768, 768)
 
-    for round_i in range(1, max_rounds + 1):
-        log(f"Round {round_i}/{max_rounds}: generate panels via FLUX…")
-        prompts = character_prompts(design, feedback) if kind == "character" else prop_prompts(design, feedback)
-        saved = {}
-        for name, prompt in prompts.items():
-            path = _flux_t2i(prompt, out_dir / name, width=w, height=h)
-            saved[name] = str(path)
+    try:
+        for round_i in range(1, max_rounds + 1):
+            log(f"Round {round_i}/{max_rounds}: generate panels via FLUX…")
+            prompts = character_prompts(design, feedback) if kind == "character" else prop_prompts(design, feedback)
+            saved = {}
+            for name, prompt in prompts.items():
+                path = _flux_t2i(prompt, out_dir / name, width=w, height=h)
+                saved[name] = str(path)
 
-        scores = {}
-        if concept_path:
-            for name, path in saved.items():
-                scores[name] = score_vs_reference(concept_path, Path(path))
-            avg = float(np.mean([s["score"] for s in scores.values()]))
-        else:
-            avg = 1.0  # prompt-only: no reference to score against
-            scores = {n: {"score": 1.0, "hist": 1.0, "sil": 1.0} for n in saved}
+            scores = {}
+            if concept_path:
+                for name, path in saved.items():
+                    scores[name] = score_vs_reference(concept_path, Path(path))
+                avg = float(np.mean([s["score"] for s in scores.values()]))
+            else:
+                avg = 1.0
+                scores = {n: {"score": 1.0, "hist": 1.0, "sil": 1.0} for n in saved}
 
-        round_info = {
-            "round": round_i,
-            "scores": scores,
-            "avg": round(avg, 4),
-            "feedback": feedback,
-            "backend": "flux_schnell",
-        }
-        report["rounds"].append(round_info)
-        log(f"  scores={[ (k, v['score']) for k,v in scores.items() ]} avg={avg:.3f}")
+            round_info = {
+                "round": round_i,
+                "scores": scores,
+                "avg": round(avg, 4),
+                "feedback": feedback,
+                "backend": "flux_schnell",
+            }
+            report["rounds"].append(round_info)
+            log(f"  scores={[ (k, v['score']) for k,v in scores.items() ]} avg={avg:.3f}")
 
-        if avg > best_avg:
-            best_avg = avg
-            best = dict(saved)
-            # keep best copies
-            for name, path in saved.items():
-                shutil.copy2(path, out_dir / f"best_{name}")
+            if avg > best_avg:
+                best_avg = avg
+                best = dict(saved)
+                for name, path in saved.items():
+                    shutil.copy2(path, out_dir / f"best_{name}")
 
-        if avg >= PASS_SCORE or not concept_path:
-            report["passed"] = True
-            break
+            if avg >= PASS_SCORE or not concept_path:
+                report["passed"] = True
+                break
 
-        feedback = critique(scores, design)
-        log(f"  critique → {feedback[:220]}…")
+            feedback = critique(scores, design)
+            log(f"  critique → {feedback[:220]}…")
+    except QuotaError as e:
+        log(str(e))
+        if concept_path and concept_path.exists():
+            log("Offline fallback: using your concept as temporary front/right/back slots.")
+            saved = _offline_views_from_concept(concept_path, out_dir, kind)
+            report["saved"] = saved
+            report["backend"] = "offline_concept"
+            report["passed"] = False
+            report["mode"] = "offline_fallback"
+            report["warning"] = str(e)
+            (out_dir / "sheet_qc.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+            return report
+        raise
 
-    # restore best panels
     if best:
         for name, path in best.items():
             src = out_dir / f"best_{name}"
@@ -344,7 +402,6 @@ def generate_views(
                 report["saved"][name] = str(out_dir / name)
             else:
                 report["saved"][name] = path
-        for name in list(best):
             bp = out_dir / f"best_{name}"
             if bp.exists():
                 bp.unlink()

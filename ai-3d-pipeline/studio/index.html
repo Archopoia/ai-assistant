@@ -106,19 +106,26 @@
     .filmstrip {
       display:flex; gap:8px; overflow-x:auto; padding:10px 12px;
       border-top:1px solid var(--line); background:rgba(20,17,14,.96);
-      min-height:92px; align-items:stretch;
+      min-height:110px; align-items:stretch;
     }
-    .filmstrip:empty { display:none; }
+    .filmstrip:empty::after {
+      content:"No previews yet — run the current step.";
+      color:var(--muted); font-size:12px; align-self:center;
+    }
     .thumb {
-      flex:0 0 auto; width:108px; border:1px solid var(--line); border-radius:8px;
+      flex:0 0 auto; width:120px; border:1px solid var(--line); border-radius:8px;
       background:#16120e; padding:0; overflow:hidden; cursor:pointer; text-align:left;
       display:flex; flex-direction:column;
     }
     .thumb.active { border-color:var(--accent); }
-    .thumb img { width:108px; height:68px; object-fit:cover; display:block; background:#0c0b09; }
+    .thumb img { width:120px; height:78px; object-fit:cover; display:block; background:#0c0b09; }
     .thumb span {
       display:block; padding:4px 6px; font-size:10px; color:var(--muted);
       white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .step.current { border-color:var(--accent-2); box-shadow:inset 3px 0 0 var(--accent); }
+    .img-stage .ph {
+      color:var(--muted); text-align:center; font-size:13px; max-width:360px; line-height:1.45;
     }
     .hidden { display:none !important; }
     .sheetbox { background:#100e0c; border:1px dashed var(--line); border-radius:8px; padding:10px; font-size:12px; color:var(--muted); white-space:pre-wrap; }
@@ -172,9 +179,11 @@
           <textarea id="partsJson" class="mono"></textarea>
         </label>
         <div id="qcBox" class="sheetbox hidden"></div>
+        <div id="exportsBox" class="sheetbox hidden"></div>
         <div class="actions">
           <button type="button" id="btnSaveParts" class="hidden">Save parts.json (approve)</button>
           <button type="button" id="btnNext">Next step</button>
+          <button type="button" id="btnReveal" class="hidden">Open exports folder</button>
         </div>
       </div>
 
@@ -240,6 +249,8 @@
       btnAll: document.getElementById('btnAll'),
       btnNext: document.getElementById('btnNext'),
       qcBox: document.getElementById('qcBox'),
+      exportsBox: document.getElementById('exportsBox'),
+      btnReveal: document.getElementById('btnReveal'),
       empty3d: document.getElementById('empty3d'),
       viewMeta: document.getElementById('viewMeta'),
       viewTitle: document.getElementById('viewTitle'),
@@ -358,7 +369,30 @@
       if (!state.previews.length) return;
       state.previewIndex = Math.max(0, Math.min(i, state.previews.length - 1));
       const p = state.previews[state.previewIndex];
-      el.imgMain.src = fileUrl(p.src);
+      const url = fileUrl(p.src);
+      el.imgMain.onload = () => {
+        el.imgMain.style.display = 'block';
+        el.empty3d.hidden = true;
+      };
+      el.imgMain.onerror = () => {
+        el.imgMain.style.display = 'none';
+        // try next preview
+        if (i + 1 < state.previews.length) selectPreview(i + 1);
+        else {
+          el.imgStage.innerHTML = `<div class="ph">Preview failed to load:<br/>${p.src}<br/>Try Open exports folder or switch to 3D.</div>`;
+        }
+      };
+      // ensure img element still present after prior error wipe
+      if (!el.imgMain.isConnected) {
+        el.imgStage.innerHTML = '';
+        const img = document.createElement('img');
+        img.id = 'imgMain';
+        img.alt = 'step preview';
+        el.imgStage.appendChild(img);
+        el.imgMain = img;
+        el.imgMain.onload = () => { el.imgMain.style.display = 'block'; el.empty3d.hidden = true; };
+      }
+      el.imgMain.src = url;
       el.empty3d.hidden = true;
       el.viewMeta.hidden = false;
       el.viewTitle.textContent = p.label || 'Preview';
@@ -461,14 +495,33 @@
       el.steps.innerHTML = '';
       steps.forEach((s, i) => {
         const st = state.statuses[i] || 'wait';
+        const current = i === state.index;
         const div = document.createElement('div');
-        div.className = `step ${st}`;
+        div.className = `step ${st}${current ? ' current' : ''}`;
+        const status = st === 'done' ? 'Done' : st === 'running' ? 'Running…' : (current ? 'Current' : 'Waiting');
         div.innerHTML = `<div class="badge">${st==='done'?'✓':i+1}</div>
-          <div><h3>${s.title}</h3><p>${s.blurb}</p></div>
-          <button type="button" data-i="${i}" ${state.busy||st==='done'?'disabled':''}>Run</button>`;
-        div.querySelector('button').onclick = () => runThrough(i);
+          <div><h3>${s.title}</h3><p>${s.blurb}</p><p style="margin-top:4px;color:var(--accent-2)">${status}</p></div>
+          <button type="button" data-i="${i}" ${state.busy||st==='done'?'disabled':''}>${st==='done'?'Re-run':'Run'}</button>`;
+        div.querySelector('button').onclick = () => {
+          if (state.statuses[i] === 'done') state.statuses[i] = 'wait';
+          runThrough(i);
+        };
         el.steps.appendChild(div);
       });
+    }
+
+    function showExports(info, doneMessage) {
+      if (!info && !doneMessage) return;
+      el.exportsBox.classList.remove('hidden');
+      const files = (info?.files || []).map(f => `• ${f.name}`).join('\n');
+      el.exportsBox.textContent = [
+        doneMessage || 'Exports',
+        info?.exports_folder ? `Folder:\n${info.exports_folder}` : '',
+        files ? `Files:\n${files}` : '(no glb/fbx yet — finish remaining steps)',
+        'Tip: click “Open exports folder” or browse examples/<route>/<name>/exports/',
+      ].filter(Boolean).join('\n\n');
+      el.btnReveal.classList.remove('hidden');
+      state.exportsInfo = info;
     }
 
     function enterProject(project) {
@@ -480,8 +533,8 @@
       el.btnAll.disabled = false;
       el.title.textContent = project.route === 'prop' ? 'Prop route (code)' :
         project.route === 'character' ? 'Character route (generator)' : 'Buildings route';
-      el.hint.textContent = 'Each step paints the right panel — refs, sheets, QC, then 3D.';
-      el.projectMeta.textContent = `${project.name} · ${project.route}`;
+      el.hint.textContent = 'Run steps in order. Right panel = previews. When finished: Open exports folder.';
+      el.projectMeta.textContent = `${project.name} · ${project.route} · examples/${project.route === 'prop' ? 'props' : project.route === 'buildings' ? 'props/buildings' : 'characters'}/${project.name}/`;
       if (project.sheet_prompt) {
         el.sheetPrompt.classList.remove('hidden');
         el.sheetPrompt.textContent = 'Image-gen prompt (copy if you still need a sheet):\n' + project.sheet_prompt;
@@ -528,9 +581,18 @@
         ].filter(Boolean).join('\n') || '';
       }
       await showStepVisual(result, step);
+      if (result.exports || result.done_message) showExports(result.exports, result.done_message);
+      if (result.warning || (result.qc && String(result.qc).includes('offline'))) {
+        logLine('  Note: offline/HF quota fallback — set HF_TOKEN for real turnaround sheets.', 'run');
+      }
       state.statuses[i] = 'done';
       renderSteps();
-      logLine(`  Step complete · ${(result.previews || []).length} preview(s)${(result.studio_model || result.model || result.raw) ? ' + 3D' : ''}.`, 'ok');
+      const nPrev = (result.previews || []).length;
+      const has3d = !!(result.studio_model || result.model || result.raw || result.clean);
+      logLine(`  ✓ ${step.title} · ${nPrev} preview(s)${has3d ? ' + 3D' : ''}.`, 'ok');
+      if (i === state.project.steps.length - 1) {
+        logLine('Pipeline finished. Use “Open exports folder” — files are under examples/…/exports/.', 'ok');
+      }
     }
 
     async function runThrough(target) {
@@ -583,6 +645,10 @@
         });
         logLine('Creating project…', 'run');
         const project = await api('/api/project/start', { method: 'POST', body: fd });
+        logLine(`Route → ${project.route} · name → ${project.name}`, 'ok');
+        if (project.route === 'prop' && state.files.length && !prompt.toLowerCase().match(/crate|barrel|box|chest|table|prop/)) {
+          logLine('Hint: for a character picture, pick Character (or put “character” in the prompt). Auto now prefers character for picture-only.', 'run');
+        }
         enterProject(project);
       } catch (e) {
         logLine(String(e), 'err');
@@ -615,6 +681,15 @@
     };
     el.btnModeImg.onclick = () => setMode('images');
     el.btnMode3d.onclick = () => { if (state.hasModel) setMode('3d'); };
+    el.btnReveal.onclick = async () => {
+      try {
+        const r = await api('/api/reveal', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: state.project?.name, route: state.project?.route }),
+        });
+        logLine(`Opened ${r.path}`, 'ok');
+      } catch (e) { logLine(String(e), 'err'); }
+    };
 
     document.getElementById('btnReset').onclick = () => {
       state.project = null;

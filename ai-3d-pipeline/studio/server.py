@@ -136,13 +136,32 @@ def _with_previews(payload: dict, *groups: list[dict] | None) -> dict:
                 continue
             seen.add(item["src"])
             previews.append(item)
-    # also accept existing list on payload
     for item in payload.get("previews") or []:
         if item.get("src") and item["src"] not in seen:
             seen.add(item["src"])
             previews.append(item)
     payload["previews"] = previews
     return payload
+
+
+def _exports_info(route: str, name: str) -> dict:
+    if route == "buildings":
+        base = ROOT / "examples" / "props" / "buildings"
+    elif route == "prop":
+        base = ROOT / "examples" / "props" / name
+    else:
+        base = ROOT / "examples" / "characters" / name
+    exports = base / "exports"
+    files = []
+    if exports.exists():
+        for p in sorted(exports.glob("*")):
+            if p.suffix.lower() in {".glb", ".fbx", ".json"}:
+                files.append({"name": p.name, "src": _rel(p), "abs": str(p.resolve())})
+    return {
+        "folder": str(base.resolve()),
+        "exports_folder": str(exports.resolve()) if exports.exists() else str((base / "exports").resolve()),
+        "files": files,
+    }
 
 
 def prop_steps() -> list[dict]:
@@ -229,15 +248,29 @@ def buildings_steps() -> list[dict]:
     ]
 
 
-def start_project(prompt: str, route: str, files: dict[str, bytes], name_override: str | None = None) -> dict:
+def start_project(
+    prompt: str,
+    route: str,
+    files: dict[str, bytes],
+    name_override: str | None = None,
+    filenames: dict[str, str] | None = None,
+) -> dict:
     sys.path.insert(0, str(ROOT / "scripts" / "tools"))
     from measure_parts import measure as measure_parts  # type: ignore
     from split_sheet import save_character_views, save_prop_views  # type: ignore
 
-    brief = parse_brief(prompt, route)
+    has_image = any(k != "glb" and v for k, v in files.items())
+    fname = None
+    if filenames:
+        for k, v in filenames.items():
+            if k != "glb" and v:
+                fname = v
+                break
+    brief = parse_brief(prompt, route, has_image=has_image, filename=fname)
     name = slug(name_override or brief["name"])
     route = brief["route"]
     brief["name"] = name
+    log(f"01 · route={route} name={name} (image={has_image})")
 
     if route == "prop":
         base = ensure_asset_dirs("props", name)
@@ -411,7 +444,13 @@ def build_prop(name: str) -> dict:
         + _previews_from_dir(base / "references", prefix="ref ")
     )
     return _with_previews(
-        {"name": name, "model": _rel(opt if opt.exists() else glb), "studio_model": studio},
+        {
+            "name": name,
+            "model": _rel(opt if opt.exists() else glb),
+            "studio_model": studio,
+            "exports": _exports_info("prop", name),
+            "done_message": f"Prop ready → {base / 'exports'}",
+        },
         previews,
     )
 
@@ -541,6 +580,8 @@ def run_character_step(name: str, step_id: str) -> dict:
                 "model": _rel(opt if opt.exists() else glb),
                 "studio_model": studio,
                 "fbx": _rel(base / "exports" / f"{name}.fbx"),
+                "exports": _exports_info("character", name),
+                "done_message": f"Character ready → {base / 'exports'}",
             },
             _previews_from_dir(base / "renders", glob="*.png", limit=16),
             _previews_from_dir(base / "views", prefix="view "),
@@ -620,6 +661,7 @@ def run_step(name: str, step_id: str) -> dict:
             views_dir = base / "views"
             prompt = (proj.get("brief") or {}).get("prompt") or ""
             has_multi = (views_dir / "view_right.png").exists() and (views_dir / "view_back.png").exists()
+            info = {}
             if not has_multi:
                 try:
                     info = _ensure_sheet_views(kind="character", name=name, prompt=prompt, force=True)
@@ -627,6 +669,8 @@ def run_step(name: str, step_id: str) -> dict:
                         f"06 · sheet done mode={info.get('mode')} backend={info.get('backend')} "
                         f"passed={info.get('passed')} avg={info.get('best_avg')}"
                     )
+                    if info.get("warning"):
+                        log(f"06 · WARNING: {info['warning']}")
                     qc = views_dir / "sheet_qc.json"
                     if qc.exists():
                         log(f"06 · QC report → {qc}")
@@ -640,6 +684,8 @@ def run_step(name: str, step_id: str) -> dict:
                     "sheet_prompt": proj.get("sheet_prompt"),
                     "views": views,
                     "qc": _rel(views_dir / "sheet_qc.json") if (views_dir / "sheet_qc.json").exists() else None,
+                    "warning": info.get("warning"),
+                    "exports": _exports_info("character", name),
                 },
                 [_preview(views_dir / "concept.png", "concept")] if (views_dir / "concept.png").exists() else [],
                 _previews_from_dir(views_dir, prefix=""),
@@ -704,12 +750,12 @@ def start_job(kind: str, fn) -> None:
     threading.Thread(target=worker, daemon=True).start()
 
 
-def _read_multipart(handler) -> tuple[dict, dict[str, bytes]]:
+def _read_multipart(handler) -> tuple[dict, dict[str, bytes], dict[str, str]]:
     ctype = handler.headers.get("Content-Type", "")
     if "multipart/form-data" not in ctype:
         length = int(handler.headers.get("Content-Length", "0"))
         raw = handler.rfile.read(length) if length else b"{}"
-        return json.loads(raw.decode("utf-8") or "{}"), {}
+        return json.loads(raw.decode("utf-8") or "{}"), {}, {}
     boundary = None
     for part in ctype.split(";"):
         part = part.strip()
@@ -719,6 +765,7 @@ def _read_multipart(handler) -> tuple[dict, dict[str, bytes]]:
     body = handler.rfile.read(length)
     fields: dict = {}
     files: dict[str, bytes] = {}
+    filenames: dict[str, str] = {}
     for chunk in body.split(f"--{boundary}".encode()):
         if not chunk or chunk in (b"--\r\n", b"--"):
             continue
@@ -739,9 +786,10 @@ def _read_multipart(handler) -> tuple[dict, dict[str, bytes]]:
         name = name_m.group(1)
         if file_m and file_m.group(1):
             files[name] = data
+            filenames[name] = file_m.group(1)
         else:
             fields[name] = data.decode("utf-8", errors="replace")
-    return fields, files
+    return fields, files, filenames
 
 
 class Handler(SimpleHTTPRequestHandler):
@@ -805,38 +853,61 @@ class Handler(SimpleHTTPRequestHandler):
         parsed = urlparse(self.path)
         try:
             if parsed.path == "/api/project/start":
-                fields, files = _read_multipart(self)
+                fields, files, filenames = _read_multipart(self)
                 # also accept JSON body fields if no multipart
                 if not fields and not files:
                     length = int(self.headers.get("Content-Length", "0"))
                     fields = json.loads((self.rfile.read(length) if length else b"{}").decode() or "{}")
+                    filenames = {}
                 prompt = fields.get("prompt", "")
                 route = fields.get("route", "auto")
                 name = fields.get("name") or None
                 # normalize file keys from multi upload
                 norm_files = {}
+                norm_names: dict[str, str] = {}
                 for k, v in files.items():
-                    key = k
-                    if k.startswith("file"):
-                        # guess slot by order
-                        key = "image"
+                    key = "image"
                     low = k.lower()
-                    if "front" in low:
+                    fn = (filenames.get(k) or "").lower()
+                    if "front" in low or "front" in fn:
                         key = "front"
-                    elif "right" in low or "side" in low:
-                        key = "right" if route == "character" or fields.get("route") == "character" else "side"
-                    elif "back" in low:
+                    elif "right" in low or "right" in fn:
+                        key = "right"
+                    elif ("side" in low or "side" in fn) and "right" not in fn:
+                        key = "side"
+                    elif "back" in low or "back" in fn:
                         key = "back"
-                    elif "top" in low:
+                    elif "top" in low or "top" in fn:
                         key = "top"
-                    elif low.endswith(".glb") or "glb" in low:
+                    elif low.endswith(".glb") or "glb" in low or fn.endswith(".glb"):
                         key = "glb"
+                    elif k in ("sheet", "image", "concept"):
+                        key = "image"
                     norm_files[key] = v
-                # single image
+                    if filenames.get(k):
+                        norm_names[key] = filenames[k]
                 if len(files) == 1 and "image" not in norm_files and "front" not in norm_files and "glb" not in norm_files:
-                    norm_files["image"] = next(iter(files.values()))
-                project = start_project(prompt, route, norm_files, name)
+                    only_k = next(iter(files))
+                    norm_files["image"] = files[only_k]
+                    if filenames.get(only_k):
+                        norm_names["image"] = filenames[only_k]
+                project = start_project(prompt, route, norm_files, name, filenames=norm_names)
                 self._json(200, project)
+                return
+
+            if parsed.path == "/api/reveal":
+                length = int(self.headers.get("Content-Length", "0"))
+                body = json.loads((self.rfile.read(length) if length else b"{}").decode() or "{}")
+                name = slug(body.get("name", ""))
+                route = body.get("route") or (_projects.get(name) or {}).get("route") or "character"
+                folder = ROOT / "examples" / ("props" if route in ("prop", "buildings") else "characters") / name
+                if route == "buildings":
+                    folder = ROOT / "examples" / "props" / "buildings"
+                if folder.exists():
+                    subprocess.Popen(["explorer", str(folder)], shell=False)
+                    self._json(200, {"ok": True, "path": str(folder)})
+                else:
+                    self._json(404, {"error": f"missing {folder}"})
                 return
 
             if parsed.path == "/api/project/save-parts":
