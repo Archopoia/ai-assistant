@@ -66,6 +66,18 @@ Generator meshes are one fused shell. This repo:
 - Roblox: Custom rig, Zero Influence Bones on, ≤4 influences
 - 10 cm `PROBE_10cm` cube included for scale checks
 
+## Studio (watch the whole pipeline)
+
+Non-developer UI — steps on the left, live 3D model on the right:
+
+```bash
+cd studio
+python3 -m http.server 8787 --bind 127.0.0.1
+# open http://127.0.0.1:8787/
+```
+
+Press **Play whole pipeline** (prop crate or character). No terminal commands required after that.
+
 ## View FBX / GLB in Cursor
 
 Workspace recommends these extensions (`.vscode/extensions.json`):
