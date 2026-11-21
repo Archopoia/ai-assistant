@@ -1,0 +1,18 @@
+{
+  "name": "ai-3d-pipeline",
+  "version": "1.0.0",
+  "description": "Free AI 3D modeling pipeline (Blender + OSS tools)",
+  "private": true,
+  "scripts": {
+    "optimize": "gltf-transform optimize",
+    "doctor": "python3 -m pipeline.cli doctor"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@gltf-transform/cli": "^4.5.1",
+    "@gltf-transform/core": "^4.5.1",
+    "@gltf-transform/extensions": "^4.5.1",
+    "@gltf-transform/functions": "^4.5.1",
+    "meshoptimizer": "^1.3.0"
+  }
+}

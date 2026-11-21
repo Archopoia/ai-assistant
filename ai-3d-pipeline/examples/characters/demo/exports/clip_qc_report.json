@@ -1,0 +1,30 @@
+{
+  "idle": {
+    "frames": 60,
+    "foot_slide_L_m": 0.5689,
+    "foot_slide_R_m": 0.5703,
+    "lowest_vertex_z": -0.0037,
+    "hips_z_range": [
+      0.598,
+      0.598
+    ],
+    "loop_delta": 0.0,
+    "failures": [
+      "foot_slide"
+    ]
+  },
+  "walk": {
+    "frames": 30,
+    "foot_slide_L_m": 0.5357,
+    "foot_slide_R_m": 0.5357,
+    "lowest_vertex_z": -0.0037,
+    "hips_z_range": [
+      0.598,
+      0.598
+    ],
+    "loop_delta": 0.00172,
+    "failures": [
+      "foot_slide"
+    ]
+  }
+}

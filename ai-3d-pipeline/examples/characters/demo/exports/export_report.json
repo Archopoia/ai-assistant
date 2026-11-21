@@ -1,0 +1,9 @@
+{
+  "fbx": "examples/characters/demo/exports/demo.fbx",
+  "bones": 24,
+  "triangles": 108,
+  "height_m": 1.15,
+  "probe": "PROBE_10cm cube included for importer scale check",
+  "unity": "Humanoid if biped; set Loop Time on clips",
+  "roblox": "Import 3D, Rig Custom, Zero Influence Bones on, max 4 bones/vertex"
+}

@@ -47,6 +47,15 @@ wheels/
 # Logs
 *.log
 
+# AI 3D pipeline intermediates / heavy artifacts
+ai-3d-pipeline/examples/**/parts/*.blend
+ai-3d-pipeline/examples/**/exports/*.blend
+ai-3d-pipeline/examples/**/exports/*.blend1
+ai-3d-pipeline/**/*.blend1
+ai-3d-pipeline/examples/**/renders/
+ai-3d-pipeline/third_party/repos/
+ai-3d-pipeline/node_modules/
+
 # Node
 node_modules/
 npm-debug.log*
