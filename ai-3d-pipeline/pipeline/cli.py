@@ -80,8 +80,35 @@ def cmd_buildings(count: int = 10) -> None:
     run_step("blender/props/buildings.py", {"count": count})
 
 
+def cmd_sheet(name: str, *, kind: str, prompt: str = "", force: bool = False) -> None:
+    """Step 02/06 — HF FLUX orthographic / turnaround generation."""
+    sys.path.insert(0, str(ROOT / "scripts" / "tools"))
+    from generate_sheet import generate_views  # type: ignore
+
+    if kind == "character":
+        base = ensure_asset_dirs("characters", name)
+        out = base / "views"
+        prompt_path = base / "prompt.txt"
+    else:
+        base = ensure_asset_dirs("props", name)
+        out = base / "references"
+        prompt_path = base / "prompt.txt"
+    if not prompt and prompt_path.exists():
+        prompt = prompt_path.read_text(encoding="utf-8")
+    concept = out / "concept.png"
+    info = generate_views(
+        kind=kind,
+        design=(prompt or "game asset").strip(),
+        out_dir=out,
+        concept=concept if concept.exists() else None,
+        force=force,
+        mode="panels",
+    )
+    print(info)
+
+
 def cmd_generate(name: str, *, force: bool = False) -> None:
-    """Step 06–07: split turnaround sheet + Hunyuan→TRELLIS→HF TripoSR chain."""
+    """Step 06–07: turnaround (FLUX if needed) + Hunyuan→TRELLIS→HF TripoSR chain."""
     sys.path.insert(0, str(ROOT / "scripts" / "tools"))
     sys.path.insert(0, str(ROOT / "scripts" / "characters"))
     from split_sheet import save_character_views  # type: ignore
@@ -91,14 +118,20 @@ def cmd_generate(name: str, *, force: bool = False) -> None:
 
     base = ensure_asset_dirs("characters", name)
     views = base / "views"
-    concept = views / "view_front.png"
-    for cand in (views / "concept.png", base / "references" / "concept.png"):
-        if cand.exists():
-            concept = cand
-            break
-    if concept.exists() and not (views / "view_right.png").exists():
-        print("=== split turnaround → front/right/back ===")
-        save_character_views(concept, views)
+    prompt = (base / "prompt.txt").read_text(encoding="utf-8") if (base / "prompt.txt").exists() else ""
+    if not (views / "view_right.png").exists():
+        try:
+            print("=== generate turnaround via HF FLUX ===")
+            cmd_sheet(name, kind="character", prompt=prompt, force=True)
+        except Exception as e:
+            print(f"FLUX sheet failed ({e}); trying split…")
+            concept = views / "view_front.png"
+            for cand in (views / "concept.png", base / "references" / "concept.png"):
+                if cand.exists():
+                    concept = cand
+                    break
+            if concept.exists():
+                save_character_views(concept, views)
     out = base / "exports" / "raw.glb"
     if out.exists() and not force:
         print(f"raw.glb already exists ({out}); pass --force to regenerate")
@@ -223,9 +256,15 @@ def main(argv: list[str] | None = None) -> int:
     p_c.add_argument("--demo", action="store_true", help="Use built-in free A-pose placeholder")
     p_c.add_argument("--generate", action="store_true", help="Run Hunyuan→TRELLIS→TripoSR chain first")
 
-    p_g = sub.add_parser("generate", help="Split turnaround + generator chain → raw.glb (06–07)")
+    p_g = sub.add_parser("generate", help="Turnaround (FLUX) + mesh chain → raw.glb (06–07)")
     p_g.add_argument("name")
     p_g.add_argument("--force", action="store_true")
+
+    p_s = sub.add_parser("sheet", help="Generate turnaround/ortho views via free HF FLUX (02/06)")
+    p_s.add_argument("name")
+    p_s.add_argument("--kind", choices=("character", "prop"), default="character")
+    p_s.add_argument("--prompt", default="")
+    p_s.add_argument("--force", action="store_true")
 
     sub.add_parser("doctor", help="Check Blender + deps")
 
@@ -245,6 +284,8 @@ def main(argv: list[str] | None = None) -> int:
         )
     elif args.cmd == "generate":
         cmd_generate(args.name, force=args.force)
+    elif args.cmd == "sheet":
+        cmd_sheet(args.name, kind=args.kind, prompt=args.prompt, force=args.force)
     elif args.cmd == "doctor":
         cmd_doctor()
     return 0

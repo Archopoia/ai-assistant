@@ -24,7 +24,8 @@ python -m pipeline.cli prop crate
 # Procedural buildings
 python -m pipeline.cli buildings --count 10
 
-# Character: generator chain (Hunyuan→TRELLIS→HF TripoSR) then 08–15
+# Turnaround from prompt only (free HF FLUX), then mesh chain + 08–15
+python -m pipeline.cli sheet hero --kind character --prompt "fantasy hunter, green coat, A-pose, empty hands" --force
 python -m pipeline.cli generate hero --force
 python -m pipeline.cli character hero
 

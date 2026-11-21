@@ -25,6 +25,8 @@ cd ai-3d-pipeline
 3. **Start project** → run steps (or **Run remaining steps**)  
 4. Model updates on the right  
 
+**Prompt-only / single concept:** step 02 (prop) or 06 (character) calls free **HF FLUX.1-schnell** to generate front/side/top or front/right/back. Optional `HF_TOKEN` raises ZeroGPU quota. Existing multi-view uploads skip generation and are split instead.
+
 Generator chain (step 07): live `HUNYUAN_URL` → `TRELLIS_URL` → free HF TripoSR. AMD Lenovo = TripoSR unless you point at a remote NVIDIA box.
 
-Prop uploads: a single concept sheet is auto-split into front/side/top; `parts.json` gets measured bands + silhouette contour for extrusion.
+Prop path: measure → contour extrude in Blender.

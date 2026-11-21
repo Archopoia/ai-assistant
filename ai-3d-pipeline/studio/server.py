@@ -108,7 +108,7 @@ def _sync(src: Path, kind: str, name: str) -> str | None:
 
 def prop_steps() -> list[dict]:
     return [
-        {"id": "refs", "title": "02 · Measurable references", "blurb": "Orthographic front/side/top — auto-split from a concept sheet if needed."},
+        {"id": "refs", "title": "02 · Orthographic refs", "blurb": "Generate front/side/top via free HF FLUX, or split an uploaded sheet."},
         {"id": "parts", "title": "03 · parts.json", "blurb": "OpenCV measure + silhouette contour. Approve sizes before build."},
         {"id": "build", "title": "04–05 · Build + assemble", "blurb": "Contour extrude / boxes in Blender, then assemble + export."},
     ]
@@ -116,10 +116,59 @@ def prop_steps() -> list[dict]:
 
 def character_steps() -> list[dict]:
     return [
-        {"id": "sheet", "title": "06–07 · Turnaround sheet", "blurb": "Front / right / back A-pose — auto-split from one sheet."},
+        {"id": "sheet", "title": "06 · Turnaround sheet", "blurb": "Generate front/right/back via free HF FLUX from prompt (or split upload)."},
         {"id": "generate", "title": "07 · Generate mesh", "blurb": "Hunyuan → TRELLIS → HF TripoSR (or drop GLB)."},
         {"id": "pipeline", "title": "08–15 · Clean → rig → clips → export", "blurb": "Bake maps when possible, then Mixamo-style free pipeline."},
     ]
+
+
+def _ensure_sheet_views(*, kind: str, name: str, prompt: str, force: bool = False) -> dict:
+    """Create missing orthographic / turnaround images with HF FLUX when needed."""
+    sys.path.insert(0, str(ROOT / "scripts" / "tools"))
+    from generate_sheet import generate_views  # type: ignore
+
+    if kind == "character":
+        base = ROOT / "examples" / "characters" / name
+        out_dir = base / "views"
+        has_multi = (out_dir / "view_right.png").exists() or (out_dir / "view_back.png").exists()
+        if has_multi and not force:
+            return {"skipped": True, "out": str(out_dir)}
+        concept = None
+        for cand in (out_dir / "concept.png", base / "references" / "concept.png"):
+            if cand.exists():
+                concept = cand
+                break
+        design = prompt or (
+            (base / "prompt.txt").read_text(encoding="utf-8") if (base / "prompt.txt").exists() else "game character"
+        )
+        log("06 · Generating turnaround via HF FLUX.1-schnell (free)…")
+        return generate_views(
+            kind="character",
+            design=design.strip(),
+            out_dir=out_dir,
+            concept=concept,
+            force=True,
+            mode="panels",
+        )
+
+    base = ROOT / "examples" / "props" / name
+    out_dir = base / "references"
+    has_ortho = (out_dir / "front.png").exists() and (out_dir / "side.png").exists()
+    if has_ortho and not force:
+        return {"skipped": True, "out": str(out_dir)}
+    concept = out_dir / "concept.png" if (out_dir / "concept.png").exists() else None
+    design = prompt or (
+        (base / "prompt.txt").read_text(encoding="utf-8") if (base / "prompt.txt").exists() else "game prop"
+    )
+    log("02 · Generating orthographic refs via HF FLUX.1-schnell (free)…")
+    return generate_views(
+        kind="prop",
+        design=design.strip(),
+        out_dir=out_dir,
+        concept=concept,
+        force=True,
+        mode="panels",
+    )
 
 
 def buildings_steps() -> list[dict]:
@@ -354,8 +403,15 @@ def run_step(name: str, step_id: str) -> dict:
     if route == "prop":
         if step_id == "refs":
             base = ROOT / "examples" / "props" / name
+            prompt = (proj.get("brief") or {}).get("prompt") or proj.get("sheet_prompt") or ""
+            try:
+                info = _ensure_sheet_views(kind="prop", name=name, prompt=prompt)
+                if not info.get("skipped"):
+                    log(f"02 · FLUX refs ready ({info.get('mode')})")
+            except Exception as e:
+                log(f"02 · FLUX generate failed ({e}) — using upload/split/template if present")
             refs = list((base / "references").glob("*.png"))
-            log(f"02 · {len(refs)} reference file(s). Sheet prompt available for image-gen if views missing.")
+            log(f"02 · {len(refs)} reference file(s)")
             return {"studio_model": None, "sheet_prompt": proj.get("sheet_prompt"), "refs": [_rel(r) for r in refs]}
         if step_id == "parts":
             path = ROOT / "examples" / "props" / name / "parts.json"
@@ -386,26 +442,32 @@ def run_step(name: str, step_id: str) -> dict:
         if step_id == "sheet":
             base = ROOT / "examples" / "characters" / name
             views_dir = base / "views"
-            # If only a concept remains, split again
-            concept = views_dir / "view_front.png"
-            extras = list(views_dir.glob("view_*.png"))
-            if len(extras) <= 1 and concept.exists():
-                sys.path.insert(0, str(ROOT / "scripts" / "tools"))
-                from split_sheet import save_character_views  # type: ignore
-
-                # Prefer original concept.png if present
-                src = concept
-                for cand in (views_dir / "concept.png", base / "references" / "concept.png"):
-                    if cand.exists():
-                        src = cand
-                        break
+            prompt = (proj.get("brief") or {}).get("prompt") or proj.get("sheet_prompt") or ""
+            # Prefer generating a real turnaround when we only have prompt / single concept
+            has_multi = (views_dir / "view_right.png").exists() or (views_dir / "view_back.png").exists()
+            concept_only = (views_dir / "concept.png").exists() or (
+                (views_dir / "view_front.png").exists() and not has_multi
+            )
+            if not has_multi:
                 try:
-                    save_character_views(src, views_dir)
-                    log("06–07 · Split sheet into front/right/back slots")
+                    info = _ensure_sheet_views(kind="character", name=name, prompt=prompt, force=bool(concept_only or prompt))
+                    if not info.get("skipped"):
+                        log(f"06 · FLUX turnaround ready ({info.get('mode')}, {len(info.get('saved') or {})} files)")
                 except Exception as e:
-                    log(f"sheet split note: {e}")
+                    log(f"06 · FLUX generate failed ({e}) — trying split of uploaded sheet")
+                    for cand in (views_dir / "concept.png", views_dir / "view_front.png", base / "references" / "concept.png"):
+                        if cand.exists():
+                            sys.path.insert(0, str(ROOT / "scripts" / "tools"))
+                            from split_sheet import save_character_views  # type: ignore
+
+                            try:
+                                save_character_views(cand, views_dir)
+                                log("06 · Split uploaded sheet into front/right/back")
+                            except Exception as e2:
+                                log(f"sheet split note: {e2}")
+                            break
             views = {p.name: _rel(p) for p in views_dir.glob("*.png")}
-            log(f"06–07 · {len(views)} view file(s) ready")
+            log(f"06 · {len(views)} view file(s) ready")
             return {"sheet_prompt": proj.get("sheet_prompt"), "views": views}
         if step_id == "generate":
             raw = ROOT / "examples" / "characters" / name / "exports" / "raw.glb"
