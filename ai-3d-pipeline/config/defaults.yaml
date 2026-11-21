@@ -12,8 +12,9 @@ props:
   max_fix_rounds: 3
 
 characters:
-  # Free EU-safe generators. Hunyuan3D is intentionally omitted.
-  generator: import  # import | triposr | trellis | tripo
+  # Free local generators ($0/model on your GPU). Default: TRELLIS.
+  # Tripo API is optional paid.
+  generator: trellis  # import | triposr | trellis | hunyuan | tripo
   height_m: 1.15
   hero_triangles: 40000
   crowd_triangles: 3000
