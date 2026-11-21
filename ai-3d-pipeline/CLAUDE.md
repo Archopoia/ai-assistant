@@ -11,12 +11,12 @@ Work in project-relative paths under `examples/` and write outputs next to the a
 | Asset | Route | Cost |
 |-------|-------|------|
 | Props, buildings, vehicles, furniture | Python + bmesh in Blender | Free |
-| Characters / creatures | **TRELLIS** (default) / TripoSR / Hunyuan3D or drop-in GLB | Free on your GPU |
+| Characters / creatures | Demo / import GLB (this AMD PC) · TRELLIS if NVIDIA | Free |
 | Cleanup, retopo assist, UV, LOD, rig, clips, export | Blender + PyMeshLab + xatlas + meshoptimizer + glTF-Transform | Free |
 
-Default generator: TRELLIS on the user’s Windows GPU PC.
-Install/serve: `.\scripts\install_trellis.ps1` → `.\scripts\serve_trellis.ps1` (~16 GB+ VRAM).
-Tripo API is optional paid. Hunyuan3D is fine outside EU/UK/KR.
+**Studio app (preferred):** `.\scripts\start_studio.ps1` → http://127.0.0.1:8787/
+This Lenovo has AMD iGPU only — TRELLIS/CUDA won’t run here. Use demo mesh or drop a GLB.
+On an NVIDIA box (~16 GB+): `.\scripts\install_trellis.ps1` → `.\scripts\serve_trellis.ps1`.
 
 ## Props rules
 

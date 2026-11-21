@@ -120,15 +120,11 @@ def cmd_doctor() -> None:
         except ImportError:
             print(f"py:{pkg} MISSING")
     print("gltf-transform:", shutil.which("npx"))
-    print(
-        "Free character backends: import | triposr | trellis | hunyuan "
-        "(default: trellis — Windows: .\\scripts\\install_trellis.ps1)"
-    )
+    gen = cfg.get("characters", {}).get("generator", "import")
+    print(f"Configured generator: {gen} (import | triposr | trellis | hunyuan)")
     trellis = ROOT / "third_party" / "repos" / "TRELLIS"
-    print(
-        "TRELLIS clone:",
-        "OK" if trellis.is_dir() else "MISSING — run .\\scripts\\install_trellis.ps1 on your Windows GPU PC",
-    )
+    print("TRELLIS clone:", "OK" if trellis.is_dir() else "not installed (needs NVIDIA CUDA)")
+    print("Studio app: python studio/server.py  →  http://127.0.0.1:8787/")
     print("All generators are local/$0 — Tripo API remains optional paid only.")
 
 
