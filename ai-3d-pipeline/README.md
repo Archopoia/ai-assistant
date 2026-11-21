@@ -66,6 +66,24 @@ Generator meshes are one fused shell. This repo:
 - Roblox: Custom rig, Zero Influence Bones on, ≤4 influences
 - 10 cm `PROBE_10cm` cube included for scale checks
 
+## View FBX / GLB in Cursor
+
+Workspace recommends these extensions (`.vscode/extensions.json`):
+
+- **3D Mesh Viewer** — `AssetToolLabs.mesh-viewer-vscode` (FBX + GLB, best all-rounder)
+- **FBX Viewer** — `FiLL.fbx-viewer`
+- **Simple Model Viewer** — `hwanhuh.simple-model-viewer`
+- **3d Preview** — `mohitkumartoshniwal.3d-preview`
+
+In Cursor: Extensions → search those IDs → Install. Then open any `.fbx` / `.glb` (or right-click → Open With…). Reload the window once if the custom editor doesn’t attach.
+
+Fallback (no extension):
+
+```bash
+./scripts/view.sh examples/props/crate/exports/crate.fbx
+# → http://127.0.0.1:8765/viewer/?src=...
+```
+
 ## Claude / Cursor
 
 Put `CLAUDE.md` in context. Drive Blender with the scripts above, or wire [blender-mcp](https://github.com/ahujasid/blender-mcp) + [blender-skills](https://github.com/EL4CTEO/blender-skills).
