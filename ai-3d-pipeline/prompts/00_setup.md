@@ -13,5 +13,5 @@
 ## Free path reminder
 
 - Props / buildings / vehicles → Python in Blender (this repo).
-- Characters → import GLB, or local TripoSR / TRELLIS (MIT). **Not Hunyuan3D in the EU.**
+- Characters → import GLB, or local TripoSR / TRELLIS / Hunyuan3D ($0 on your GPU).
 - Rig / clips / export → Blender scripts here (free).

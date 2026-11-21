@@ -38,9 +38,10 @@ clone https://github.com/armory3d/armorpaint.git armorpaint
 clone https://github.com/zeux/meshoptimizer.git meshoptimizer
 clone https://github.com/donmccurdy/glTF-Transform.git glTF-Transform
 
-# Free EU-safe character generators
+# Free character generators (local GPU, $0/model)
 clone https://github.com/VAST-AI-Research/TripoSR.git TripoSR
 clone https://github.com/microsoft/TRELLIS.git TRELLIS
+clone https://github.com/Tencent-Hunyuan/Hunyuan3D-2.git Hunyuan3D-2
 
 echo "Done. Repos in $DEST"
-echo "NOTE: Hunyuan3D intentionally omitted (licence excludes EU/UK/KR)."
+echo "Generators: TripoSR | TRELLIS | Hunyuan3D-2 (Community Licence — check your region)."

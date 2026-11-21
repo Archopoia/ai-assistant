@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Free character generation client (EU-safe).
+Free character generation client.
 
-Points at a local TripoSR or TRELLIS HTTP server, or copies a provided GLB.
-Hunyuan3D is intentionally unsupported (licence excludes EU/UK/KR).
+Points at a local TripoSR, TRELLIS, or Hunyuan3D HTTP server, or copies a provided GLB.
+All backends are $0/model on your GPU. Tripo API is a separate optional paid script.
 """
 from __future__ import annotations
 
@@ -14,6 +14,20 @@ import sys
 from pathlib import Path
 
 import requests
+
+BACKENDS = ("import", "triposr", "trellis", "hunyuan")
+
+DEFAULT_URLS = {
+    "triposr": "http://127.0.0.1:7860",
+    "trellis": "http://127.0.0.1:8090",
+    "hunyuan": "http://127.0.0.1:8080",
+}
+
+ENV_KEYS = {
+    "triposr": "TRIPOSR_URL",
+    "trellis": "TRELLIS_URL",
+    "hunyuan": "HUNYUAN_URL",
+}
 
 
 def post_multiview(url: str, front: Path, right: Path | None, back: Path | None, out: Path) -> None:
@@ -34,8 +48,10 @@ def post_multiview(url: str, front: Path, right: Path | None, back: Path | None,
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Free local image→3D (TripoSR/TRELLIS) or import GLB")
-    ap.add_argument("--backend", choices=("import", "triposr", "trellis"), default="import")
+    ap = argparse.ArgumentParser(
+        description="Free local image→3D (TripoSR / TRELLIS / Hunyuan3D) or import GLB"
+    )
+    ap.add_argument("--backend", choices=BACKENDS, default="import")
     ap.add_argument("--glb", type=Path, help="Existing GLB to import (backend=import)")
     ap.add_argument("--front", type=Path)
     ap.add_argument("--right", type=Path)
@@ -56,17 +72,14 @@ def main() -> int:
         print("--front required for generator backends", file=sys.stderr)
         return 2
 
-    url = os.environ.get(
-        "TRIPOSR_URL" if args.backend == "triposr" else "TRELLIS_URL",
-        "http://127.0.0.1:7860" if args.backend == "triposr" else "http://127.0.0.1:8090",
-    )
+    url = os.environ.get(ENV_KEYS[args.backend], DEFAULT_URLS[args.backend])
     try:
         post_multiview(url, args.front, args.right, args.back, args.output)
     except requests.RequestException as e:
         print(
             f"Local {args.backend} server not reachable at {url}: {e}\n"
-            "Start TripoSR or TRELLIS locally, or use --backend import --glb path.glb\n"
-            "See third_party/SOURCES.md",
+            "Start TripoSR, TRELLIS, or Hunyuan3D locally, or use --backend import --glb path.glb\n"
+            "See third_party/SOURCES.md and scripts/bootstrap_third_party.sh",
             file=sys.stderr,
         )
         return 1

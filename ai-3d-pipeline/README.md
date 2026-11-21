@@ -4,7 +4,7 @@ End-to-end **free** path from the “Opus + Blender + Tripo” workflow:
 
 **measure / code props → (optional) generate characters → clean → split → joints → weight rules → pose test → clips → FBX/GLB**
 
-Uses Blender headless Python for everything that should stay $0/model. Character *generation* is local MIT models (TripoSR / TRELLIS) or a drop-in GLB — **not Hunyuan3D** (licence excludes EU/UK/KR). Tripo API is optional paid.
+Uses Blender headless Python for everything that should stay $0/model. Character *generation* is local TripoSR / TRELLIS / Hunyuan3D or a drop-in GLB. Tripo API is optional paid only.
 
 ## Quick start
 
@@ -36,14 +36,14 @@ python3 -m pipeline.cli character demo --demo
 | `scripts/tools/` | PyMeshLab, xatlas, glTF-Transform |
 | `prompts/` | Copy-paste prompts from the article |
 | `examples/` | Working assets (`crate`, `demo`) |
-| `third_party/SOURCES.md` | The 14 GitHub projects + EU-safe generators |
+| `third_party/SOURCES.md` | The 14 GitHub projects + free generators |
 
 ## Cost map
 
 | Stage | Tool | Cost |
 |-------|------|------|
 | Props / buildings | Blender bmesh / generator scripts | Free |
-| Character mesh | TripoSR / TRELLIS / import GLB | Free on your GPU |
+| Character mesh | TripoSR / TRELLIS / Hunyuan3D / import GLB | Free on your GPU |
 | Character mesh (optional) | Tripo API | ~$0.20–$0.60 |
 | Cleanup, parts, joints, weights, clips, export | Blender scripts here | Free |
 | LOD / pack | meshoptimizer via glTF-Transform | Free |

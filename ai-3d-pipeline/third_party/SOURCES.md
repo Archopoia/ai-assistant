@@ -24,9 +24,10 @@
 13. [meshoptimizer](https://github.com/zeux/meshoptimizer) — decimate / compress
 14. [glTF-Transform](https://github.com/donmccurdy/glTF-Transform) — final GLB optimizer
 
-## Free character generators (EU-safe MIT)
-- [TripoSR](https://github.com/VAST-AI-Research/TripoSR) — ~6 GB VRAM
-- [TRELLIS](https://github.com/microsoft/TRELLIS) — ~16 GB VRAM, MIT
+## Free character generators (local GPU, $0/model)
+- [TripoSR](https://github.com/VAST-AI-Research/TripoSR) — MIT, ~6 GB VRAM
+- [TRELLIS](https://github.com/microsoft/TRELLIS) — MIT, ~16 GB VRAM
 - [TRELLIS.2](https://github.com/microsoft/TRELLIS.2) — higher quality, more VRAM
+- [Hunyuan3D-2](https://github.com/Tencent-Hunyuan/Hunyuan3D-2) — Community Licence (geographic limits apply in some regions; fine outside EU/UK/KR)
 
-**Not used here:** Hunyuan3D (licence excludes EU / UK / KR).
+Point `07_generate_local.py` at a local server via `TRIPOSR_URL` / `TRELLIS_URL` / `HUNYUAN_URL`, or drop a GLB with `--backend import`.

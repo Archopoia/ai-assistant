@@ -11,11 +11,11 @@ Work in project-relative paths under `examples/` and write outputs next to the a
 | Asset | Route | Cost |
 |-------|-------|------|
 | Props, buildings, vehicles, furniture | Python + bmesh in Blender | Free |
-| Characters / creatures | Local MIT generators (TripoSR / TRELLIS) or drop-in GLB | Free on your GPU |
+| Characters / creatures | Local TripoSR / TRELLIS / Hunyuan3D or drop-in GLB | Free on your GPU |
 | Cleanup, retopo assist, UV, LOD, rig, clips, export | Blender + PyMeshLab + xatlas + meshoptimizer + glTF-Transform | Free |
 
-**Do not use Hunyuan3D in the EU / UK / South Korea** (licence excludes those regions).
-Tripo API is optional paid (~$0.20–$0.60/model). Prefer local / import.
+Tripo API is optional paid (~$0.20–$0.60/model). Prefer local / import — default is $0.
+Hunyuan3D uses Tencent’s Community Licence (restricted in EU/UK/KR); OK when the user is outside those regions.
 
 ## Props rules
 
