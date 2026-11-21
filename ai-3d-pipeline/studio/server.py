@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 """
-Local creator Studio — tutorial workflow on this PC (127.0.0.1 only).
+Local Studio — tutorial funnel on 127.0.0.1:
 
-Props: name + sizes/template → parts.json → Blender build → assemble → GLB/FBX
-Characters: upload photos → free TripoSR (HF Space) or import GLB → clean→rig→clips
+  prompt and/or picture → pick route → one export pipeline
+
+Routes (article step 01):
+  prop       — orthographic refs → parts.json → Blender code (02–05)
+  character  — turnaround sheet → TripoSR/Hunyuan/import → clean→rig→clips (06–15)
+  buildings  — procedural generator (05 buildings)
 """
 from __future__ import annotations
 
@@ -25,18 +29,14 @@ sys.path.insert(0, str(STUDIO))
 
 from pipeline.blender_runner import run_blender_script  # noqa: E402
 from pipeline.config import ensure_asset_dirs, load_config  # noqa: E402
+from prompt_parse import parse_brief  # noqa: E402
 from prop_templates import suggest_parts  # noqa: E402
 
 HOST = "127.0.0.1"
 PORT = 8787
 _lock = threading.Lock()
-_job: dict = {
-    "busy": False,
-    "log": [],
-    "last_error": None,
-    "result": None,
-    "kind": None,
-}
+_job: dict = {"busy": False, "log": [], "last_error": None, "result": None, "kind": None}
+_projects: dict[str, dict] = {}
 
 
 def slug(s: str) -> str:
@@ -81,41 +81,11 @@ def doctor() -> dict:
     nvidia = "nvidia" in gpu.lower()
     return {
         "blender_ok": blender_ok,
-        "blender": blender,
         "blender_version": blender_ver,
         "gpu": gpu,
         "nvidia": nvidia,
-        "triposr": "huggingface://stabilityai/TripoSR (free ZeroGPU)",
-        "note": (
-            "Props: measured parts → Blender (local). "
-            "Characters: photo → free TripoSR on Hugging Face, then Blender rig. "
-            + ("Local TRELLIS available (NVIDIA)." if nvidia else "No NVIDIA — TripoSR uses HF Space.")
-        ),
+        "note": "Prompt or picture → route (prop code / character generator / buildings) → game-ready export.",
     }
-
-
-def list_assets() -> dict:
-    props, chars = [], []
-    pdir = ROOT / "examples" / "props"
-    cdir = ROOT / "examples" / "characters"
-    if pdir.is_dir():
-        for d in sorted(pdir.iterdir()):
-            if d.is_dir() and (d / "parts.json").exists():
-                glb = d / "exports" / f"{d.name}.glb"
-                props.append({"name": d.name, "glb": _rel(glb) if glb.exists() else None})
-    if cdir.is_dir():
-        for d in sorted(cdir.iterdir()):
-            if d.is_dir():
-                glb = d / "exports" / f"{d.name}.glb"
-                raw = d / "exports" / "raw.glb"
-                chars.append(
-                    {
-                        "name": d.name,
-                        "glb": _rel(glb) if glb.exists() else None,
-                        "raw": _rel(raw) if raw.exists() else None,
-                    }
-                )
-    return {"props": props, "characters": chars}
 
 
 def _rel(path: Path | None) -> str | None:
@@ -127,7 +97,7 @@ def _rel(path: Path | None) -> str | None:
         return path.as_posix()
 
 
-def _sync_studio(src: Path, kind: str, name: str) -> str | None:
+def _sync(src: Path, kind: str, name: str) -> str | None:
     if not src.exists():
         return None
     dst = STUDIO / "assets" / kind / name / src.name
@@ -136,23 +106,136 @@ def _sync_studio(src: Path, kind: str, name: str) -> str | None:
     return f"assets/{kind}/{name}/{src.name}"
 
 
+def prop_steps() -> list[dict]:
+    return [
+        {"id": "refs", "title": "02 · Measurable references", "blurb": "Orthographic front/side/top — or paste the image-gen prompt."},
+        {"id": "parts", "title": "03 · parts.json", "blurb": "Numbers before geometry. Approve sizes and attachments."},
+        {"id": "build", "title": "04–05 · Build + assemble", "blurb": "One Blender part at a time, then gap check and export."},
+    ]
+
+
+def character_steps() -> list[dict]:
+    return [
+        {"id": "sheet", "title": "06–07 · Turnaround sheet", "blurb": "Front / right / back A-pose, empty hands, views in correct slots."},
+        {"id": "generate", "title": "07 · Generate mesh", "blurb": "Free TripoSR (HF) or local Hunyuan/TRELLIS / drop GLB."},
+        {"id": "pipeline", "title": "08–15 · Clean → rig → clips → export", "blurb": "Same free Blender pipeline for every character."},
+    ]
+
+
+def buildings_steps() -> list[dict]:
+    return [
+        {"id": "generate", "title": "05 · Procedural buildings", "blurb": "Parametric houses/shops from seeds — not image-to-3D."},
+    ]
+
+
+def start_project(prompt: str, route: str, files: dict[str, bytes], name_override: str | None = None) -> dict:
+    brief = parse_brief(prompt, route)
+    name = slug(name_override or brief["name"])
+    route = brief["route"]
+    brief["name"] = name
+
+    if route == "prop":
+        base = ensure_asset_dirs("props", name)
+        (base / "prompt.txt").write_text(prompt, encoding="utf-8")
+        (base / "sheet_prompt.txt").write_text(brief["sheet_prompt"], encoding="utf-8")
+        # save uploads as references
+        ref_map = {"front": "front.png", "side": "side.png", "top": "top.png", "image": "concept.png", "sheet": "concept.png"}
+        saved = []
+        for key, data in files.items():
+            if not data:
+                continue
+            fname = ref_map.get(key, f"{key}.png")
+            path = base / "references" / fname
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(data)
+            saved.append(_rel(path))
+        doc = suggest_parts(
+            name=name,
+            kind=brief["prop_kind"],
+            width_m=brief["width_m"],
+            depth_m=brief["depth_m"],
+            height_m=brief["height_m"],
+            notes=prompt,
+        )
+        (base / "parts.json").write_text(json.dumps(doc, indent=2), encoding="utf-8")
+        steps = prop_steps()
+        project = {
+            "name": name,
+            "route": route,
+            "brief": brief,
+            "parts": doc,
+            "sheet_prompt": brief["sheet_prompt"],
+            "refs": saved,
+            "steps": steps,
+            "done": [],
+        }
+    elif route == "character":
+        base = ensure_asset_dirs("characters", name)
+        (base / "prompt.txt").write_text(prompt, encoding="utf-8")
+        (base / "sheet_prompt.txt").write_text(brief["sheet_prompt"], encoding="utf-8")
+        saved = {}
+        for key, data in files.items():
+            if not data:
+                continue
+            if key == "glb" or (key.endswith(".glb") if False else False):
+                path = base / "exports" / "raw.glb"
+            elif key in ("front", "right", "back", "left", "sheet", "image"):
+                slot = "front" if key in ("sheet", "image") else key
+                path = base / "views" / f"view_{slot}.png"
+            else:
+                path = base / "views" / f"{key}.png"
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(data)
+            saved[key] = _rel(path)
+            if key == "glb":
+                shutil.copy2(path, base / "exports" / "raw.glb")
+        # if single concept image uploaded as glb? handled above
+        if "glb" in files and files["glb"]:
+            (base / "exports" / "raw.glb").write_bytes(files["glb"])
+            saved["glb"] = _rel(base / "exports" / "raw.glb")
+        steps = character_steps()
+        project = {
+            "name": name,
+            "route": route,
+            "brief": brief,
+            "sheet_prompt": brief["sheet_prompt"],
+            "views": saved,
+            "steps": steps,
+            "done": [],
+            "has_raw": (base / "exports" / "raw.glb").exists(),
+        }
+    else:
+        base = ensure_asset_dirs("props", "buildings")
+        (base / "prompt.txt").write_text(prompt, encoding="utf-8")
+        steps = buildings_steps()
+        project = {
+            "name": "buildings",
+            "route": "buildings",
+            "brief": brief,
+            "count": 5,
+            "steps": steps,
+            "done": [],
+        }
+
+    _projects[name] = project
+    (STUDIO / "assets" / "_projects").mkdir(parents=True, exist_ok=True)
+    (STUDIO / "assets" / "_projects" / f"{name}.json").write_text(json.dumps(project, indent=2), encoding="utf-8")
+    return project
+
+
 def build_prop(name: str) -> dict:
     name = slug(name)
     base = ensure_asset_dirs("props", name)
     parts_path = base / "parts.json"
-    if not parts_path.exists():
-        raise FileNotFoundError(f"Missing {parts_path} — create parts first")
     doc = json.loads(parts_path.read_text(encoding="utf-8"))
-    models = []
     for part in doc["parts"]:
-        log(f"Build part “{part['name']}”…")
+        log(f"04 · Build part “{part['name']}”")
         run_blender_script(
             ROOT / "blender/props/build_part.py",
             args={"asset": name, "part": part["name"], "render_px": 768},
         )
-        glb = base / "parts" / f"{part['name']}.glb"
-        models.append(_sync_studio(glb, "prop", name))
-    log("Assemble + export FBX/GLB…")
+        _sync(base / "parts" / f"{part['name']}.glb", "prop", name)
+    log("05 · Assemble + export")
     run_blender_script(ROOT / "blender/props/assemble.py", args={"asset": name})
     glb = base / "exports" / f"{name}.glb"
     opt = base / "exports" / f"{name}_opt.glb"
@@ -164,55 +247,40 @@ def build_prop(name: str) -> dict:
             )
         except Exception as e:
             log(f"optimize skipped: {e}")
-    studio = _sync_studio(opt if opt.exists() else glb, "prop", name)
-    return {
-        "name": name,
-        "model": _rel(opt if opt.exists() else glb),
-        "studio_model": studio,
-        "parts": models,
-        "report": _rel(base / "exports" / "assemble_report.json"),
-    }
+    studio = _sync(opt if opt.exists() else glb, "prop", name)
+    return {"name": name, "model": _rel(opt if opt.exists() else glb), "studio_model": studio}
 
 
-def generate_character_mesh(name: str, front: Path, right: Path | None = None, back: Path | None = None) -> Path:
-    """Free image→mesh via Hugging Face TripoSR Space (no local NVIDIA needed)."""
+def generate_character_mesh(name: str) -> Path:
     name = slug(name)
     base = ensure_asset_dirs("characters", name)
     out = base / "exports" / "raw.glb"
-    out.parent.mkdir(parents=True, exist_ok=True)
+    front = base / "views" / "view_front.png"
+    if not front.exists():
+        pngs = sorted((base / "views").glob("*.png"))
+        if not pngs:
+            raise FileNotFoundError("No front view — upload a turnaround / concept picture first (step 06–07)")
+        front = pngs[0]
 
-    log("Calling free TripoSR on Hugging Face (stabilityai/TripoSR)…")
-    try:
-        from gradio_client import Client, handle_file
-    except ImportError as e:
-        raise RuntimeError("pip install gradio_client") from e
+    log("07 · Free TripoSR on Hugging Face (stabilityai/TripoSR)…")
+    from gradio_client import Client, handle_file
 
     client = Client("stabilityai/TripoSR")
-    # Single-image feed-forward; use front (best for A-pose sheet). Extra views saved for later.
-    result = client.predict(
-        handle_file(str(front)),
-        True,  # remove background
-        0.85,  # foreground ratio
-        256,  # mc resolution
-        api_name="/generate",
-    )
-    # result typically [obj_path, glb_path] or similar
+    result = client.predict(handle_file(str(front)), True, 0.85, 256, api_name="/generate")
     glb_src = None
     if isinstance(result, (list, tuple)):
         for item in result:
             if isinstance(item, str) and item.lower().endswith(".glb"):
                 glb_src = item
                 break
-            if isinstance(item, dict) and str(item.get("path", "")).lower().endswith(".glb"):
-                glb_src = item["path"]
-                break
     elif isinstance(result, str) and result.lower().endswith(".glb"):
         glb_src = result
     if not glb_src or not Path(glb_src).exists():
         raise RuntimeError(f"TripoSR returned no GLB: {result!r}")
+    out.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(glb_src, out)
-    log(f"Saved raw mesh → {out}")
-    _sync_studio(out, "character", name)
+    _sync(out, "character", name)
+    log(f"Saved raw.glb → {out}")
     return out
 
 
@@ -221,29 +289,21 @@ def run_character_pipeline(name: str) -> dict:
     base = ensure_asset_dirs("characters", name)
     raw = base / "exports" / "raw.glb"
     if not raw.exists():
-        raise FileNotFoundError("No raw.glb — generate from photo or upload a GLB first")
+        raise FileNotFoundError("No raw.glb — run generate (step 07) or upload a GLB")
     cfg = load_config()["characters"]
     steps = [
-        (
-            "clean",
-            "blender/characters/clean.py",
-            {
-                "asset": name,
-                "input": str(raw),
-                **{k: cfg[k] for k in ("height_m", "hero_triangles", "crowd_triangles")},
-            },
-        ),
-        ("split", "blender/characters/split_parts.py", {"asset": name}),
-        ("joints", "blender/characters/joints.py", {"asset": name}),
-        ("rig", "blender/characters/rig_weights.py", {"asset": name}),
-        ("pose", "blender/characters/pose_test.py", {"asset": name}),
-        ("idle", "blender/characters/clips/idle.py", {"asset": name}),
-        ("walk", "blender/characters/clips/walk.py", {"asset": name}),
-        ("qc", "blender/characters/check_clips.py", {"asset": name}),
-        ("export", "blender/characters/export_fbx.py", {"asset": name}),
+        ("08 clean", "blender/characters/clean.py", {"asset": name, "input": str(raw), **{k: cfg[k] for k in ("height_m", "hero_triangles", "crowd_triangles")}}),
+        ("09 split", "blender/characters/split_parts.py", {"asset": name}),
+        ("10 joints", "blender/characters/joints.py", {"asset": name}),
+        ("11 weights", "blender/characters/rig_weights.py", {"asset": name}),
+        ("12 pose", "blender/characters/pose_test.py", {"asset": name}),
+        ("13 idle", "blender/characters/clips/idle.py", {"asset": name}),
+        ("13 walk", "blender/characters/clips/walk.py", {"asset": name}),
+        ("14 qc", "blender/characters/check_clips.py", {"asset": name}),
+        ("15 export", "blender/characters/export_fbx.py", {"asset": name}),
     ]
-    for key, script, args in steps:
-        log(f"Character · {key}")
+    for label, script, args in steps:
+        log(label)
         run_blender_script(ROOT / script, args=args)
     glb = base / "exports" / f"{name}.glb"
     opt = base / "exports" / f"{name}_opt.glb"
@@ -255,13 +315,57 @@ def run_character_pipeline(name: str) -> dict:
             )
         except Exception as e:
             log(f"optimize skipped: {e}")
-    studio = _sync_studio(opt if opt.exists() else glb, "character", name)
-    return {
-        "name": name,
-        "model": _rel(opt if opt.exists() else glb),
-        "studio_model": studio,
-        "fbx": _rel(base / "exports" / f"{name}.fbx"),
-    }
+    studio = _sync(opt if opt.exists() else glb, "character", name)
+    return {"name": name, "model": _rel(opt if opt.exists() else glb), "studio_model": studio, "fbx": _rel(base / "exports" / f"{name}.fbx")}
+
+
+def run_step(name: str, step_id: str) -> dict:
+    proj = _projects.get(name) or json.loads((STUDIO / "assets" / "_projects" / f"{name}.json").read_text(encoding="utf-8"))
+    route = proj["route"]
+    if route == "prop":
+        if step_id == "refs":
+            log("02 · References ready (upload more anytime). Copy sheet_prompt into an image model if you still need orthographic views.")
+            return {"studio_model": None, "sheet_prompt": proj.get("sheet_prompt"), "message": "Refs / prompt saved"}
+        if step_id == "parts":
+            # reload parts from disk if user edited via save
+            path = ROOT / "examples" / "props" / name / "parts.json"
+            doc = json.loads(path.read_text(encoding="utf-8"))
+            log("03 · parts.json loaded — edit in UI then re-save if needed")
+            return {"parts": doc}
+        if step_id == "build":
+            return build_prop(name)
+    if route == "character":
+        if step_id == "sheet":
+            log("06–07 · Sheet / views saved. Put each view in the correct slot.")
+            return {"sheet_prompt": proj.get("sheet_prompt"), "views": proj.get("views")}
+        if step_id == "generate":
+            raw = ROOT / "examples" / "characters" / name / "exports" / "raw.glb"
+            if raw.exists():
+                log("07 · Using existing raw.glb")
+                return {"raw": _rel(raw), "studio_model": _sync(raw, "character", name)}
+            generate_character_mesh(name)
+            return {"raw": _rel(ROOT / "examples" / "characters" / name / "exports" / "raw.glb")}
+        if step_id == "pipeline":
+            return run_character_pipeline(name)
+    if route == "buildings" and step_id == "generate":
+        count = int(proj.get("count", 5))
+        ensure_asset_dirs("props", "buildings")
+        log(f"Buildings × {count}")
+        run_blender_script(ROOT / "blender/props/buildings.py", args={"count": count})
+        models = []
+        for g in sorted((ROOT / "examples" / "props" / "buildings" / "exports").glob("building_*.glb"))[:count]:
+            models.append(_sync(g, "prop", "buildings"))
+        return {"models": models, "studio_model": models[0] if models else None}
+    raise ValueError(f"Unknown step {step_id} for route {route}")
+
+
+def run_all(name: str) -> dict:
+    proj = _projects.get(name) or json.loads((STUDIO / "assets" / "_projects" / f"{name}.json").read_text(encoding="utf-8"))
+    result = None
+    for step in proj["steps"]:
+        result = run_step(name, step["id"])
+        proj.setdefault("done", []).append(step["id"])
+    return result or {}
 
 
 def start_job(kind: str, fn) -> None:
@@ -287,24 +391,17 @@ def start_job(kind: str, fn) -> None:
     threading.Thread(target=worker, daemon=True).start()
 
 
-def _read_json(handler: SimpleHTTPRequestHandler) -> dict:
-    length = int(handler.headers.get("Content-Length", "0"))
-    raw = handler.rfile.read(length) if length else b"{}"
-    return json.loads(raw.decode("utf-8") or "{}")
-
-
-def _read_multipart(handler: SimpleHTTPRequestHandler) -> tuple[dict, dict[str, bytes]]:
-    """Minimal multipart parser for file uploads."""
+def _read_multipart(handler) -> tuple[dict, dict[str, bytes]]:
     ctype = handler.headers.get("Content-Type", "")
     if "multipart/form-data" not in ctype:
-        return _read_json(handler), {}
+        length = int(handler.headers.get("Content-Length", "0"))
+        raw = handler.rfile.read(length) if length else b"{}"
+        return json.loads(raw.decode("utf-8") or "{}"), {}
     boundary = None
     for part in ctype.split(";"):
         part = part.strip()
         if part.startswith("boundary="):
             boundary = part.split("=", 1)[1].strip().strip('"')
-    if not boundary:
-        raise ValueError("no multipart boundary")
     length = int(handler.headers.get("Content-Length", "0"))
     body = handler.rfile.read(length)
     fields: dict = {}
@@ -323,10 +420,11 @@ def _read_multipart(handler: SimpleHTTPRequestHandler) -> tuple[dict, dict[str, 
             data = data[:-2]
         headers = head.decode("utf-8", errors="replace")
         name_m = re.search(r'name="([^"]+)"', headers)
+        file_m = re.search(r'filename="([^"]*)"', headers)
         if not name_m:
             continue
         name = name_m.group(1)
-        if "filename=" in headers:
+        if file_m and file_m.group(1):
             files[name] = data
         else:
             fields[name] = data.decode("utf-8", errors="replace")
@@ -353,17 +451,15 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802
         parsed = urlparse(self.path)
         if parsed.path == "/api/status":
-            self._json(
-                200,
-                {
-                    "job": {
-                        k: _job.get(k)
-                        for k in ("busy", "log", "last_error", "result", "kind")
-                    },
-                    "doctor": doctor(),
-                    "assets": list_assets(),
-                },
-            )
+            self._json(200, {"job": {k: _job.get(k) for k in ("busy", "log", "last_error", "result", "kind")}, "doctor": doctor(), "projects": list(_projects.keys())})
+            return
+        if parsed.path.startswith("/api/project/") and parsed.path.count("/") == 3:
+            name = slug(parsed.path.rsplit("/", 1)[-1])
+            path = STUDIO / "assets" / "_projects" / f"{name}.json"
+            if path.exists():
+                self._json(200, json.loads(path.read_text(encoding="utf-8")))
+            else:
+                self._json(404, {"error": "unknown project"})
             return
         if parsed.path == "/api/file":
             qs = parse_qs(parsed.query)
@@ -373,163 +469,81 @@ class Handler(SimpleHTTPRequestHandler):
                 self.send_error(404)
                 return
             data = path.read_bytes()
-            ctype = (
-                "model/gltf-binary"
-                if path.suffix.lower() == ".glb"
-                else "application/json"
-                if path.suffix.lower() == ".json"
-                else "application/octet-stream"
-            )
             self.send_response(200)
-            self.send_header("Content-Type", ctype)
+            self.send_header("Content-Type", "model/gltf-binary" if path.suffix.lower() == ".glb" else "application/octet-stream")
             self.send_header("Content-Length", str(len(data)))
             self.end_headers()
             self.wfile.write(data)
-            return
-        if parsed.path.startswith("/api/parts/"):
-            name = slug(parsed.path.rsplit("/", 1)[-1])
-            path = ROOT / "examples" / "props" / name / "parts.json"
-            if not path.exists():
-                self._json(404, {"error": "not found"})
-                return
-            self._json(200, json.loads(path.read_text(encoding="utf-8")))
             return
         return super().do_GET()
 
     def do_POST(self) -> None:  # noqa: N802
         parsed = urlparse(self.path)
         try:
-            if parsed.path == "/api/prop/suggest":
-                body = _read_json(self)
-                doc = suggest_parts(
-                    name=slug(body.get("name", "prop")),
-                    kind=body.get("kind", "crate"),
-                    width_m=float(body.get("width_m", 0.6)),
-                    depth_m=float(body.get("depth_m", 0.6)),
-                    height_m=float(body.get("height_m", 0.5)),
-                    notes=body.get("notes", ""),
-                )
-                self._json(200, doc)
+            if parsed.path == "/api/project/start":
+                fields, files = _read_multipart(self)
+                # also accept JSON body fields if no multipart
+                if not fields and not files:
+                    length = int(self.headers.get("Content-Length", "0"))
+                    fields = json.loads((self.rfile.read(length) if length else b"{}").decode() or "{}")
+                prompt = fields.get("prompt", "")
+                route = fields.get("route", "auto")
+                name = fields.get("name") or None
+                # normalize file keys from multi upload
+                norm_files = {}
+                for k, v in files.items():
+                    key = k
+                    if k.startswith("file"):
+                        # guess slot by order
+                        key = "image"
+                    low = k.lower()
+                    if "front" in low:
+                        key = "front"
+                    elif "right" in low or "side" in low:
+                        key = "right" if route == "character" or fields.get("route") == "character" else "side"
+                    elif "back" in low:
+                        key = "back"
+                    elif "top" in low:
+                        key = "top"
+                    elif low.endswith(".glb") or "glb" in low:
+                        key = "glb"
+                    norm_files[key] = v
+                # single image
+                if len(files) == 1 and "image" not in norm_files and "front" not in norm_files and "glb" not in norm_files:
+                    norm_files["image"] = next(iter(files.values()))
+                project = start_project(prompt, route, norm_files, name)
+                self._json(200, project)
                 return
 
-            if parsed.path == "/api/prop/save":
-                body = _read_json(self)
-                name = slug(body.get("name") or body.get("parts", {}).get("name", "prop"))
+            if parsed.path == "/api/project/save-parts":
+                length = int(self.headers.get("Content-Length", "0"))
+                body = json.loads((self.rfile.read(length) if length else b"{}").decode() or "{}")
+                name = slug(body.get("name", "prop"))
                 doc = body.get("parts") or body
                 doc["name"] = name
-                base = ensure_asset_dirs("props", name)
-                path = base / "parts.json"
+                path = ensure_asset_dirs("props", name) / "parts.json"
                 path.write_text(json.dumps(doc, indent=2), encoding="utf-8")
-                self._json(200, {"ok": True, "name": name, "path": _rel(path)})
+                if name in _projects:
+                    _projects[name]["parts"] = doc
+                self._json(200, {"ok": True, "path": _rel(path)})
                 return
 
-            if parsed.path == "/api/prop/build":
+            if parsed.path == "/api/project/run":
                 if _job["busy"]:
                     self._json(409, {"error": "busy"})
                     return
-                body = _read_json(self)
-                name = slug(body.get("name", "prop"))
-                start_job("prop", lambda: build_prop(name))
-                self._json(202, {"ok": True})
-                return
-
-            if parsed.path == "/api/prop/upload-refs":
-                fields, files = _read_multipart(self)
-                name = slug(fields.get("name", "prop"))
-                base = ensure_asset_dirs("props", name)
-                saved = []
-                for key, data in files.items():
-                    if not data:
-                        continue
-                    fname = key if key.endswith(".png") else f"{key}.png"
-                    path = base / "references" / fname
-                    path.parent.mkdir(parents=True, exist_ok=True)
-                    path.write_bytes(data)
-                    saved.append(_rel(path))
-                self._json(200, {"ok": True, "name": name, "saved": saved})
-                return
-
-            if parsed.path == "/api/character/upload":
-                fields, files = _read_multipart(self)
-                name = slug(fields.get("name", "hero"))
-                base = ensure_asset_dirs("characters", name)
-                saved = {}
-                for key in ("front", "right", "back", "glb"):
-                    if key not in files or not files[key]:
-                        continue
-                    if key == "glb":
-                        path = base / "exports" / "raw.glb"
-                    else:
-                        path = base / "views" / f"view_{key}.png"
-                    path.parent.mkdir(parents=True, exist_ok=True)
-                    path.write_bytes(files[key])
-                    saved[key] = _rel(path)
-                    if key != "glb":
-                        # also keep generic names
-                        pass
-                self._json(200, {"ok": True, "name": name, "saved": saved})
-                return
-
-            if parsed.path == "/api/character/generate":
-                if _job["busy"]:
-                    self._json(409, {"error": "busy"})
-                    return
-                body = _read_json(self)
-                name = slug(body.get("name", "hero"))
-                base = ensure_asset_dirs("characters", name)
-                front = base / "views" / "view_front.png"
-                if not front.exists():
-                    # accept any uploaded front
-                    alts = list((base / "views").glob("*front*")) + list((base / "views").glob("*.png"))
-                    if alts:
-                        front = alts[0]
-                if not front.exists():
-                    self._json(400, {"error": "Upload a front view photo first"})
-                    return
-                right = base / "views" / "view_right.png"
-                back = base / "views" / "view_back.png"
+                length = int(self.headers.get("Content-Length", "0"))
+                body = json.loads((self.rfile.read(length) if length else b"{}").decode() or "{}")
+                name = slug(body.get("name", ""))
+                step = body.get("step")
+                all_steps = bool(body.get("all"))
 
                 def job():
-                    generate_character_mesh(
-                        name,
-                        front,
-                        right if right.exists() else None,
-                        back if back.exists() else None,
-                    )
-                    return {"name": name, "raw": _rel(base / "exports" / "raw.glb")}
+                    if all_steps:
+                        return run_all(name)
+                    return run_step(name, step)
 
-                start_job("character_generate", job)
-                self._json(202, {"ok": True})
-                return
-
-            if parsed.path == "/api/character/pipeline":
-                if _job["busy"]:
-                    self._json(409, {"error": "busy"})
-                    return
-                body = _read_json(self)
-                name = slug(body.get("name", "hero"))
-                start_job("character_pipeline", lambda: run_character_pipeline(name))
-                self._json(202, {"ok": True})
-                return
-
-            if parsed.path == "/api/buildings":
-                if _job["busy"]:
-                    self._json(409, {"error": "busy"})
-                    return
-                body = _read_json(self)
-                count = int(body.get("count", 3))
-
-                def job():
-                    ensure_asset_dirs("props", "buildings")
-                    log(f"Procedural buildings × {count}")
-                    run_blender_script(ROOT / "blender/props/buildings.py", args={"count": count})
-                    out = ROOT / "examples" / "props" / "buildings" / "exports"
-                    models = []
-                    for g in sorted(out.glob("building_*.glb"))[:count]:
-                        models.append(_sync_studio(g, "prop", "buildings"))
-                    return {"models": models}
-
-                start_job("buildings", job)
+                start_job(f"{name}:{step or 'all'}", job)
                 self._json(202, {"ok": True})
                 return
 
@@ -542,8 +556,7 @@ def main() -> None:
     httpd = ThreadingHTTPServer((HOST, PORT), Handler)
     info = doctor()
     print(f"Studio → http://{HOST}:{PORT}/")
-    print(f"Blender: {info['blender_version']} ({'OK' if info['blender_ok'] else 'MISSING'})")
-    print(f"GPU: {info['gpu']}")
+    print(info["blender_version"], "|", info["gpu"])
     print(info["note"])
     httpd.serve_forever()
 

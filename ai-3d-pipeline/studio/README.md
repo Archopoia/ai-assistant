@@ -1,31 +1,28 @@
-# 3D Creator Studio
+# 3D Pipeline Studio
 
-Local app that follows the Opus + Blender + Tripo tutorial — **you** make props and characters.
+Local app for the **Create 3D Game Models for Free** tutorial funnel:
+
+**Prompt or picture → pick route → game-ready export**
+
+Three routes in, one pipeline out:
+
+| Route | When | Steps |
+|-------|------|--------|
+| **Prop (code)** | Anything you could measure with a ruler | 02 refs → 03 parts.json → 04–05 Blender build/export |
+| **Character (generator)** | Anything you'd sculpt | 06–07 sheet → TripoSR/GLB → 08–15 clean/rig/clips/export |
+| **Buildings** | Streets / blocks | Procedural generator |
 
 ## Start
 
 ```powershell
 cd ai-3d-pipeline
 .\scripts\start_studio.ps1
-# → http://127.0.0.1:8787/
+# http://127.0.0.1:8787/
 ```
 
-## Props (tutorial steps 02–05)
+1. Type a prompt and/or drop a concept / turnaround / orthographic sheet  
+2. Route: **Auto** (or force Prop / Character / Buildings)  
+3. **Start project** → run steps (or **Run remaining steps**)  
+4. Model updates on the right  
 
-1. Name the object, pick a template (crate / barrel / table / …), set metres
-2. Optional: upload front/side/top reference pics
-3. **Suggest parts.json** → edit sizes/colours → **Save**
-4. **Build in Blender** → assembled GLB/FBX in the viewport
-
-Hard-surface props are measured code, not image-to-3D (as the tutorial says).
-
-## Characters (tutorial steps 06–15)
-
-1. Upload A-pose **front** (plus right/back) — empty hands
-2. **Generate mesh** → free [TripoSR](https://huggingface.co/spaces/stabilityai/TripoSR) on Hugging Face (no local NVIDIA required)
-3. Or drop an existing `.glb`
-4. **Clean → rig → clips → export** runs the Blender pipeline
-
-## Buildings
-
-Parametric houses/shops from seeds (tutorial city route).
+Characters without a local NVIDIA GPU use free Hugging Face TripoSR for step 07.

@@ -1,0 +1,99 @@
+{
+  "name": "desert_town",
+  "route": "prop",
+  "brief": {
+    "route": "prop",
+    "name": "desert_town",
+    "prompt": "wooden oil barrel 50cm wide and 90cm tall for a desert town",
+    "prop_kind": "barrel",
+    "width_m": 0.5,
+    "depth_m": 0.5,
+    "height_m": 0.9,
+    "sheet_prompt": "Orthographic side view of [wooden oil barrel 50cm wide and 90cm tall for a desert town], exactly side-on, no perspective.\nPlain white background, flat colours, no shadows, no reflections.\nSame scale as the front and top views. Nothing cut off at the edges."
+  },
+  "parts": {
+    "name": "desert_town",
+    "units": "meters",
+    "triangle_budget": 2000,
+    "kind": "barrel",
+    "bounding_size_m": {
+      "x": 0.5,
+      "y": 0.5,
+      "z": 0.9
+    },
+    "notes": "wooden oil barrel 50cm wide and 90cm tall for a desert town",
+    "parts": [
+      {
+        "name": "body",
+        "width": 0.5,
+        "depth": 0.5,
+        "height": 0.8400000000000001,
+        "y_start": 0.0,
+        "y_end": 0.5,
+        "x": 0.0,
+        "z": 0.45,
+        "color": [
+          0.42,
+          0.28,
+          0.16
+        ],
+        "attaches_to": null,
+        "bevel_m": 0.01
+      },
+      {
+        "name": "hoop_bottom",
+        "width": 0.52,
+        "depth": 0.52,
+        "height": 0.03,
+        "y_start": 0.0,
+        "y_end": 0.52,
+        "x": 0.0,
+        "z": 0.015,
+        "color": [
+          0.3,
+          0.3,
+          0.32
+        ],
+        "attaches_to": "body",
+        "bevel_m": 0.001
+      },
+      {
+        "name": "hoop_top",
+        "width": 0.52,
+        "depth": 0.52,
+        "height": 0.03,
+        "y_start": 0.0,
+        "y_end": 0.52,
+        "x": 0.0,
+        "z": 0.885,
+        "color": [
+          0.3,
+          0.3,
+          0.32
+        ],
+        "attaches_to": "body",
+        "bevel_m": 0.001
+      }
+    ]
+  },
+  "sheet_prompt": "Orthographic side view of [wooden oil barrel 50cm wide and 90cm tall for a desert town], exactly side-on, no perspective.\nPlain white background, flat colours, no shadows, no reflections.\nSame scale as the front and top views. Nothing cut off at the edges.",
+  "refs": [],
+  "steps": [
+    {
+      "id": "refs",
+      "title": "02 \u00b7 Measurable references",
+      "blurb": "Orthographic front/side/top \u2014 or paste the image-gen prompt."
+    },
+    {
+      "id": "parts",
+      "title": "03 \u00b7 parts.json",
+      "blurb": "Numbers before geometry. Approve sizes and attachments."
+    },
+    {
+      "id": "build",
+      "title": "04\u201305 \u00b7 Build + assemble",
+      "blurb": "One Blender part at a time, then gap check and export."
+    }
+  ],
+  "done": []
+}

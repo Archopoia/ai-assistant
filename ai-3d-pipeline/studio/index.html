@@ -3,186 +3,141 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>3D Creator Studio</title>
+  <title>3D Pipeline Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #14110e; --panel: #1c1814; --panel-2: #241f19; --line: #3a3229;
-      --fg: #f3ebe1; --muted: #a89886; --accent: #d9772c; --accent-2: #e8b86d;
-      --ok: #6f9f6a; --danger: #c45c4a;
+      --bg:#14110e; --panel:#1c1814; --panel-2:#241f19; --line:#3a3229;
+      --fg:#f3ebe1; --muted:#a89886; --accent:#d9772c; --accent-2:#e8b86d;
+      --ok:#6f9f6a; --danger:#c45c4a;
     }
     * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; background: var(--bg); color: var(--fg);
-      font-family: "IBM Plex Sans", system-ui, sans-serif; }
+    html, body { height:100%; margin:0; background:var(--bg); color:var(--fg); font-family:"IBM Plex Sans",system-ui,sans-serif; }
     body {
-      display: grid; grid-template-rows: auto 1fr;
+      display:grid; grid-template-rows:auto 1fr;
       background:
         radial-gradient(1200px 600px at 85% 15%, rgba(217,119,44,.12), transparent 55%),
         radial-gradient(900px 500px at 10% 90%, rgba(232,184,109,.06), transparent 50%),
         var(--bg);
     }
     header {
-      display: flex; align-items: center; justify-content: space-between; gap: 16px;
-      padding: 14px 18px; border-bottom: 1px solid var(--line); background: rgba(28,24,20,.92);
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      padding:14px 18px; border-bottom:1px solid var(--line); background:rgba(28,24,20,.92);
     }
-    .brand strong { font-family: Fraunces, Georgia, serif; font-size: 22px; font-weight: 700; }
-    .brand span { color: var(--muted); font-size: 13px; display: block; }
-    .modes { display: flex; gap: 8px; }
+    .brand strong { font-family:Fraunces,Georgia,serif; font-size:22px; font-weight:700; }
+    .brand span { color:var(--muted); font-size:13px; display:block; }
     button, .filebtn {
-      font: inherit; border: 1px solid var(--line); background: var(--panel-2); color: var(--fg);
-      border-radius: 8px; padding: 10px 14px; cursor: pointer; font-weight: 500;
+      font:inherit; border:1px solid var(--line); background:var(--panel-2); color:var(--fg);
+      border-radius:8px; padding:10px 14px; cursor:pointer; font-weight:500;
     }
-    .modes button.active { border-color: var(--accent); color: var(--accent-2); background: #2a2118; }
-    button.primary { background: var(--accent); border-color: #b86120; color: #1a120a; font-weight: 600; }
-    button:disabled { opacity: .45; cursor: not-allowed; }
-    main { display: grid; grid-template-columns: minmax(340px, 440px) 1fr; min-height: 0; }
-    @media (max-width: 960px) { main { grid-template-columns: 1fr; grid-template-rows: auto 50vh; } }
+    button.primary { background:var(--accent); border-color:#b86120; color:#1a120a; font-weight:600; }
+    button:disabled { opacity:.45; cursor:not-allowed; }
+    main { display:grid; grid-template-columns:minmax(360px,460px) 1fr; min-height:0; }
+    @media (max-width:960px){ main { grid-template-columns:1fr; grid-template-rows:auto 48vh; } }
     .side {
-      border-right: 1px solid var(--line); background: var(--panel);
-      display: grid; grid-template-rows: auto 1fr auto; min-height: 0;
+      border-right:1px solid var(--line); background:var(--panel);
+      display:grid; grid-template-rows:auto 1fr auto; min-height:0;
     }
-    .side h2 {
-      margin: 0; padding: 14px 16px 6px; font-family: Fraunces, Georgia, serif;
-      font-size: 16px; color: var(--accent-2); font-weight: 500;
-    }
-    .hint { padding: 0 16px 12px; color: var(--muted); font-size: 13px; line-height: 1.45; }
-    .form { overflow: auto; padding: 0 14px 14px; display: flex; flex-direction: column; gap: 10px; }
-    label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); }
+    .side h2 { margin:0; padding:14px 16px 6px; font-family:Fraunces,Georgia,serif; font-size:16px; color:var(--accent-2); font-weight:500; }
+    .hint { padding:0 16px 12px; color:var(--muted); font-size:13px; line-height:1.45; }
+    .scroll { overflow:auto; padding:0 14px 14px; display:flex; flex-direction:column; gap:10px; }
+    label { display:flex; flex-direction:column; gap:4px; font-size:12px; color:var(--muted); }
     input, select, textarea {
-      font: inherit; color: var(--fg); background: #100e0c; border: 1px solid var(--line);
-      border-radius: 8px; padding: 9px 10px;
+      font:inherit; color:var(--fg); background:#100e0c; border:1px solid var(--line);
+      border-radius:8px; padding:9px 10px;
     }
-    textarea { min-height: 120px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
-    .row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .actions { display: flex; flex-wrap: wrap; gap: 8px; }
-    .uploads { display: grid; gap: 8px; }
-    .filebtn { display: inline-flex; align-items: center; justify-content: center; }
-    .filebtn input { display: none; }
-    .chip { font-size: 11px; color: var(--ok); }
-    .log-wrap {
-      border-top: 1px solid var(--line); background: #100e0c; min-height: 140px; max-height: 220px;
-      display: grid; grid-template-rows: auto 1fr;
+    textarea { min-height:88px; resize:vertical; }
+    textarea.mono { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; min-height:140px; }
+    .routes { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .routes label.route {
+      flex-direction:row; align-items:center; gap:8px; padding:10px; border:1px solid var(--line);
+      border-radius:8px; background:var(--panel-2); cursor:pointer; color:var(--fg); font-size:13px;
     }
-    .log-wrap h3 {
-      margin: 0; padding: 8px 14px; font-size: 11px; letter-spacing: .06em;
-      text-transform: uppercase; color: var(--muted);
+    .routes label.route:has(input:checked) { border-color:var(--accent); color:var(--accent-2); }
+    .filebtn { display:inline-flex; align-items:center; justify-content:center; }
+    .filebtn input { display:none; }
+    .chip { font-size:11px; color:var(--ok); }
+    .actions { display:flex; flex-wrap:wrap; gap:8px; }
+    .steps { display:flex; flex-direction:column; gap:8px; }
+    .step {
+      border:1px solid var(--line); border-radius:10px; padding:12px; background:var(--panel-2);
+      display:grid; grid-template-columns:28px 1fr auto; gap:10px; align-items:start;
     }
-    #log {
-      margin: 0; padding: 0 14px 12px; overflow: auto;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; line-height: 1.45; color: #d8cbb8;
-      white-space: pre-wrap;
+    .step.done { border-color:#3f5a3c; }
+    .step.running { border-color:var(--accent); }
+    .badge {
+      width:28px; height:28px; border-radius:999px; display:grid; place-items:center;
+      font-size:12px; font-weight:600; background:#2c261f; color:var(--muted); border:1px solid var(--line);
     }
-    #log .ok { color: var(--ok); } #log .run { color: var(--accent-2); } #log .err { color: var(--danger); }
-    .viewport { position: relative; min-height: 0; background: #0c0b09; }
-    #c { width: 100%; height: 100%; display: block; }
-    .empty-3d {
-      position: absolute; inset: 0; display: grid; place-items: center; text-align: center;
-      color: var(--muted); padding: 24px; pointer-events: none; z-index: 2;
-    }
-    .empty-3d strong { display: block; color: var(--fg); font-family: Fraunces, Georgia, serif; font-size: 18px; margin-bottom: 6px; }
-    .viewport-meta {
-      position: absolute; left: 12px; bottom: 12px; z-index: 3;
-      background: rgba(28,24,20,.88); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px;
-      max-width: min(420px, 90%);
-    }
-    .viewport-meta strong { display: block; font-size: 13px; margin-bottom: 2px; }
-    .viewport-meta span { color: var(--muted); font-size: 12px; }
-    .panel { display: none; } .panel.active { display: contents; }
+    .step.done .badge { background:#243222; color:var(--ok); border-color:#3f5a3c; }
+    .step h3 { margin:0 0 4px; font-size:14px; }
+    .step p { margin:0; color:var(--muted); font-size:12px; line-height:1.4; }
+    .log-wrap { border-top:1px solid var(--line); background:#100e0c; min-height:130px; max-height:200px; display:grid; grid-template-rows:auto 1fr; }
+    .log-wrap h3 { margin:0; padding:8px 14px; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+    #log { margin:0; padding:0 14px 12px; overflow:auto; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; line-height:1.45; color:#d8cbb8; white-space:pre-wrap; }
+    #log .ok{color:var(--ok)} #log .run{color:var(--accent-2)} #log .err{color:var(--danger)}
+    .viewport { position:relative; min-height:0; background:#0c0b09; }
+    #c { width:100%; height:100%; display:block; }
+    .empty-3d { position:absolute; inset:0; display:grid; place-items:center; text-align:center; color:var(--muted); padding:24px; z-index:2; pointer-events:none; }
+    .empty-3d strong { display:block; color:var(--fg); font-family:Fraunces,Georgia,serif; font-size:18px; margin-bottom:6px; }
+    .viewport-meta { position:absolute; left:12px; bottom:12px; z-index:3; background:rgba(28,24,20,.88); border:1px solid var(--line); border-radius:10px; padding:10px 12px; max-width:min(420px,90%); }
+    .viewport-meta strong { display:block; font-size:13px; } .viewport-meta span { color:var(--muted); font-size:12px; }
+    .hidden { display:none !important; }
+    .sheetbox { background:#100e0c; border:1px dashed var(--line); border-radius:8px; padding:10px; font-size:12px; color:var(--muted); white-space:pre-wrap; }
   </style>
 </head>
 <body>
   <header>
     <div class="brand">
-      <strong>3D Creator Studio</strong>
-      <span id="brandSub">Make your own props & characters — tutorial workflow</span>
+      <strong>3D Pipeline Studio</strong>
+      <span id="brandSub">Prompt or picture → same 15-step game pipeline</span>
     </div>
-    <div class="modes">
-      <button type="button" id="modeProp" class="active">Props</button>
-      <button type="button" id="modeChar">Characters</button>
-      <button type="button" id="modeBuild">Buildings</button>
+    <div class="actions">
+      <button type="button" id="btnReset">Start over</button>
+      <button type="button" id="btnAll" class="primary" disabled>Run remaining steps</button>
     </div>
   </header>
 
   <main>
     <section class="side">
       <div>
-        <h2 id="routeTitle">Prop from measurements</h2>
-        <p class="hint" id="routeHint">Tutorial route: name the object → write parts.json → Blender builds each piece → assemble GLB/FBX.</p>
+        <h2 id="title">01 · Pick the route</h2>
+        <p class="hint" id="hint">Three routes in, one export out. Start with a prompt and/or a picture — like the article.</p>
       </div>
 
-      <div class="form" id="formProp">
-        <label>Asset name
-          <input id="propName" value="my_crate" />
+      <div class="scroll" id="entry">
+        <label>Prompt
+          <textarea id="prompt" placeholder="e.g. wooden oil barrel 50cm wide and 90cm tall&#10;or: fantasy hunter girl, green coat, empty hands, A-pose&#10;or: row of medieval shops"></textarea>
         </label>
-        <label>Template
-          <select id="propKind">
-            <option value="crate">Crate / chest</option>
-            <option value="box">Simple box</option>
-            <option value="barrel">Barrel</option>
-            <option value="table">Table</option>
-            <option value="block">Stone block</option>
-          </select>
+        <label>Picture(s) — concept sheet, orthographic refs, or character turnaround
+          <span class="filebtn">Choose files
+            <input id="files" type="file" accept="image/*,.glb" multiple />
+          </span>
+          <span class="chip" id="fileChip"></span>
         </label>
-        <div class="row">
-          <label>Width m<input id="propW" type="number" step="0.01" value="0.6" /></label>
-          <label>Depth m<input id="propD" type="number" step="0.01" value="0.6" /></label>
-          <label>Height m<input id="propH" type="number" step="0.01" value="0.5" /></label>
-        </div>
-        <label>Notes (optional)
-          <input id="propNotes" placeholder="e.g. wooden ammo crate for desert level" />
-        </label>
-        <div class="uploads">
-          <label class="filebtn">Upload reference pics (front/side/top)
-            <input id="propRefs" type="file" accept="image/*" multiple />
-          </label>
-          <span class="chip" id="propRefChip"></span>
+        <div class="routes">
+          <label class="route"><input type="radio" name="route" value="auto" checked /> Auto</label>
+          <label class="route"><input type="radio" name="route" value="prop" /> Prop (code)</label>
+          <label class="route"><input type="radio" name="route" value="character" /> Character (generator)</label>
+          <label class="route"><input type="radio" name="route" value="buildings" /> Buildings</label>
         </div>
         <div class="actions">
-          <button type="button" id="btnSuggest">1. Suggest parts.json</button>
-          <button type="button" id="btnSaveParts">2. Save parts</button>
-          <button type="button" id="btnBuildProp" class="primary">3. Build in Blender</button>
-        </div>
-        <label>parts.json (edit freely — tutorial step 03)
-          <textarea id="partsJson" spellcheck="false"></textarea>
-        </label>
-      </div>
-
-      <div class="form" id="formChar" hidden>
-        <label>Character name
-          <input id="charName" value="hero" />
-        </label>
-        <p class="hint" style="padding:0">Upload orthographic turnaround (front required). Empty hands, A-pose. Then generate mesh with free TripoSR, then rig.</p>
-        <div class="uploads">
-          <label class="filebtn">Front view (required)
-            <input id="charFront" type="file" accept="image/*" />
-          </label>
-          <label class="filebtn">Right view
-            <input id="charRight" type="file" accept="image/*" />
-          </label>
-          <label class="filebtn">Back view
-            <input id="charBack" type="file" accept="image/*" />
-          </label>
-          <label class="filebtn">Or drop existing GLB
-            <input id="charGlb" type="file" accept=".glb,.gltf" />
-          </label>
-          <span class="chip" id="charChip"></span>
-        </div>
-        <div class="actions">
-          <button type="button" id="btnUploadChar">1. Upload views / GLB</button>
-          <button type="button" id="btnGenChar" class="primary">2. Generate mesh (TripoSR free)</button>
-          <button type="button" id="btnRigChar">3. Clean → rig → clips → export</button>
+          <button type="button" id="btnStart" class="primary">Start project</button>
         </div>
       </div>
 
-      <div class="form" id="formBuild" hidden>
-        <label>How many buildings
-          <input id="buildCount" type="number" min="1" max="20" value="3" />
+      <div class="scroll hidden" id="work">
+        <div class="chip" id="projectMeta"></div>
+        <div class="sheetbox hidden" id="sheetPrompt"></div>
+        <div class="steps" id="steps"></div>
+        <label id="partsWrap" class="hidden">03 · parts.json (edit, then save)
+          <textarea id="partsJson" class="mono"></textarea>
         </label>
         <div class="actions">
-          <button type="button" id="btnBuildings" class="primary">Generate street props</button>
+          <button type="button" id="btnSaveParts" class="hidden">Save parts.json</button>
+          <button type="button" id="btnNext">Next step</button>
         </div>
       </div>
 
@@ -195,8 +150,8 @@
     <section class="viewport">
       <div class="empty-3d" id="empty3d">
         <div>
-          <strong>Your model appears here</strong>
-          Create a prop or character on the left, then drag to orbit.
+          <strong>Model appears here</strong>
+          Start with a prompt or picture on the left.
         </div>
       </div>
       <canvas id="c"></canvas>
@@ -208,37 +163,40 @@
   </main>
 
   <script type="importmap">
-  {
-    "imports": {
+  { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
       "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
-    }
-  }
+  }}
   </script>
   <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+    const state = { project: null, index: -1, statuses: [], busy: false, files: [] };
     const el = {
       log: document.getElementById('log'),
+      entry: document.getElementById('entry'),
+      work: document.getElementById('work'),
+      steps: document.getElementById('steps'),
+      title: document.getElementById('title'),
+      hint: document.getElementById('hint'),
+      projectMeta: document.getElementById('projectMeta'),
+      sheetPrompt: document.getElementById('sheetPrompt'),
+      partsWrap: document.getElementById('partsWrap'),
+      partsJson: document.getElementById('partsJson'),
+      btnSaveParts: document.getElementById('btnSaveParts'),
+      btnAll: document.getElementById('btnAll'),
+      btnNext: document.getElementById('btnNext'),
       empty3d: document.getElementById('empty3d'),
       viewMeta: document.getElementById('viewMeta'),
       viewTitle: document.getElementById('viewTitle'),
       viewDesc: document.getElementById('viewDesc'),
       brandSub: document.getElementById('brandSub'),
-      routeTitle: document.getElementById('routeTitle'),
-      routeHint: document.getElementById('routeHint'),
-      formProp: document.getElementById('formProp'),
-      formChar: document.getElementById('formChar'),
-      formBuild: document.getElementById('formBuild'),
-      partsJson: document.getElementById('partsJson'),
-      propRefChip: document.getElementById('propRefChip'),
-      charChip: document.getElementById('charChip'),
+      fileChip: document.getElementById('fileChip'),
     };
 
-    let busy = false;
-    let mixer = null;
+    let mixer = null, root = null;
     const clock = new THREE.Clock();
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('#0c0b09');
@@ -249,11 +207,8 @@
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     scene.add(new THREE.HemisphereLight(0xfff0dd, 0x2a2218, 1.1));
-    const key = new THREE.DirectionalLight(0xffffff, 1.1);
-    key.position.set(2, 4, 3); scene.add(key);
-    const grid = new THREE.GridHelper(4, 16, 0x3a3229, 0x2a241e);
-    grid.position.y = 0; scene.add(grid);
-    let root = null;
+    const key = new THREE.DirectionalLight(0xffffff, 1.1); key.position.set(2,4,3); scene.add(key);
+    scene.add(new THREE.GridHelper(4, 16, 0x3a3229, 0x2a241e));
     const loader = new GLTFLoader();
 
     function resize() {
@@ -263,10 +218,9 @@
       camera.updateProjectionMatrix();
       renderer.setSize(w, h, false);
     }
-    window.addEventListener('resize', resize);
-    resize();
+    addEventListener('resize', resize); resize();
 
-    function logLine(msg, cls = '') {
+    function logLine(msg, cls='') {
       const d = document.createElement('div');
       if (cls) d.className = cls;
       d.textContent = msg;
@@ -309,29 +263,15 @@
       mixer = null;
     }
 
-    function frameObject(obj) {
-      const box = new THREE.Box3().setFromObject(obj);
-      const size = box.getSize(new THREE.Vector3());
-      const center = box.getCenter(new THREE.Vector3());
-      const max = Math.max(size.x, size.y, size.z, 0.01);
-      controls.target.copy(center);
-      camera.position.copy(center).add(new THREE.Vector3(max * 1.4, max * 1.0, max * 1.6));
-      controls.update();
-      return Math.round(size.x * size.y * size.z > 0 ? (obj.userData.tris || 0) : 0);
-    }
-
     async function showModel(url, title, desc) {
       if (!url) return;
       clearModel();
       el.empty3d.hidden = true;
-      const src = url.startsWith('assets/') || url.startsWith('http')
-        ? url
-        : `/api/file?path=${encodeURIComponent(url)}`;
+      const src = url.startsWith('assets/') || url.startsWith('http') ? url : `/api/file?path=${encodeURIComponent(url)}`;
       const gltf = await loader.loadAsync(src);
-      root = gltf.scene;
-      scene.add(root);
+      root = gltf.scene; scene.add(root);
       let tris = 0;
-      root.traverse((o) => {
+      root.traverse(o => {
         if (o.isMesh && o.geometry) {
           const idx = o.geometry.index;
           tris += idx ? idx.count / 3 : o.geometry.attributes.position.count / 3;
@@ -341,180 +281,178 @@
         mixer = new THREE.AnimationMixer(root);
         mixer.clipAction(gltf.animations[0]).play();
       }
-      frameObject(root);
+      const box = new THREE.Box3().setFromObject(root);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      const max = Math.max(size.x, size.y, size.z, 0.01);
+      controls.target.copy(center);
+      camera.position.copy(center).add(new THREE.Vector3(max*1.4, max*1.0, max*1.6));
+      controls.update();
       el.viewMeta.hidden = false;
       el.viewTitle.textContent = title || 'Model';
-      el.viewDesc.textContent = desc || `~${Math.round(tris)} tris · drag to orbit`;
+      el.viewDesc.textContent = desc || `~${Math.round(tris)} tris`;
     }
 
-    function setMode(mode) {
-      document.getElementById('modeProp').classList.toggle('active', mode === 'prop');
-      document.getElementById('modeChar').classList.toggle('active', mode === 'char');
-      document.getElementById('modeBuild').classList.toggle('active', mode === 'build');
-      el.formProp.hidden = mode !== 'prop';
-      el.formChar.hidden = mode !== 'char';
-      el.formBuild.hidden = mode !== 'build';
-      if (mode === 'prop') {
-        el.routeTitle.textContent = 'Prop from measurements';
-        el.routeHint.textContent = 'Tutorial: suggest/edit parts.json → Blender builds each piece → assemble for the game.';
-      } else if (mode === 'char') {
-        el.routeTitle.textContent = 'Character from pictures';
-        el.routeHint.textContent = 'Tutorial: front/right/back A-pose sheet → free TripoSR mesh → clean, parts, Mixamo rig, idle/walk, FBX.';
+    function renderSteps() {
+      const steps = state.project?.steps || [];
+      el.steps.innerHTML = '';
+      steps.forEach((s, i) => {
+        const st = state.statuses[i] || 'wait';
+        const div = document.createElement('div');
+        div.className = `step ${st}`;
+        div.innerHTML = `<div class="badge">${st==='done'?'✓':i+1}</div>
+          <div><h3>${s.title}</h3><p>${s.blurb}</p></div>
+          <button type="button" data-i="${i}" ${state.busy||st==='done'?'disabled':''}>Run</button>`;
+        div.querySelector('button').onclick = () => runThrough(i);
+        el.steps.appendChild(div);
+      });
+    }
+
+    function enterProject(project) {
+      state.project = project;
+      state.index = -1;
+      state.statuses = project.steps.map(() => 'wait');
+      el.entry.classList.add('hidden');
+      el.work.classList.remove('hidden');
+      el.btnAll.disabled = false;
+      el.title.textContent = project.route === 'prop' ? 'Prop route (code)' :
+        project.route === 'character' ? 'Character route (generator)' : 'Buildings route';
+      el.hint.textContent = 'Same funnel as the article: finish each step, model updates on the right.';
+      el.projectMeta.textContent = `${project.name} · ${project.route}`;
+      if (project.sheet_prompt) {
+        el.sheetPrompt.classList.remove('hidden');
+        el.sheetPrompt.textContent = 'Image-gen prompt (copy if you still need a sheet):\n' + project.sheet_prompt;
       } else {
-        el.routeTitle.textContent = 'Procedural buildings';
-        el.routeHint.textContent = 'Tutorial city route: parametric houses/shops from seeds — not image-to-3D.';
+        el.sheetPrompt.classList.add('hidden');
+      }
+      if (project.route === 'prop' && project.parts) {
+        el.partsWrap.classList.remove('hidden');
+        el.btnSaveParts.classList.remove('hidden');
+        el.partsJson.value = JSON.stringify(project.parts, null, 2);
+      } else {
+        el.partsWrap.classList.add('hidden');
+        el.btnSaveParts.classList.add('hidden');
+      }
+      renderSteps();
+      logLine(`Started “${project.name}” as ${project.route}.`, 'ok');
+    }
+
+    async function runStep(i) {
+      const step = state.project.steps[i];
+      state.index = i;
+      state.statuses[i] = 'running';
+      renderSteps();
+      logLine(`\n▸ ${step.title}`, 'run');
+      await api('/api/project/run', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: state.project.name, step: step.id }),
+      });
+      const result = await waitJob();
+      if (result.parts) {
+        el.partsJson.value = JSON.stringify(result.parts, null, 2);
+      }
+      if (result.studio_model || result.model || result.raw) {
+        await showModel(result.studio_model || result.model || result.raw, state.project.name, step.title);
+      }
+      state.statuses[i] = 'done';
+      renderSteps();
+      logLine('  Step complete.', 'ok');
+    }
+
+    async function runThrough(target) {
+      if (state.busy || !state.project) return;
+      state.busy = true;
+      el.btnAll.disabled = true;
+      el.btnNext.disabled = true;
+      try {
+        for (let i = state.index + 1; i <= target; i++) {
+          if (state.statuses[i] === 'done') continue;
+          await runStep(i);
+        }
+      } catch (e) {
+        logLine(String(e), 'err');
+      } finally {
+        state.busy = false;
+        el.btnAll.disabled = false;
+        el.btnNext.disabled = false;
+        renderSteps();
       }
     }
 
-    document.getElementById('modeProp').onclick = () => setMode('prop');
-    document.getElementById('modeChar').onclick = () => setMode('char');
-    document.getElementById('modeBuild').onclick = () => setMode('build');
-
-    document.getElementById('btnSuggest').onclick = async () => {
-      try {
-        const doc = await api('/api/prop/suggest', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: document.getElementById('propName').value,
-            kind: document.getElementById('propKind').value,
-            width_m: +document.getElementById('propW').value,
-            depth_m: +document.getElementById('propD').value,
-            height_m: +document.getElementById('propH').value,
-            notes: document.getElementById('propNotes').value,
-          }),
-        });
-        el.partsJson.value = JSON.stringify(doc, null, 2);
-        logLine('Suggested parts.json — edit sizes/colours, then Save.', 'ok');
-      } catch (e) { logLine(String(e), 'err'); }
+    document.getElementById('files').onchange = (ev) => {
+      state.files = [...ev.target.files];
+      el.fileChip.textContent = state.files.length ? `${state.files.length} file(s)` : '';
     };
 
-    document.getElementById('btnSaveParts').onclick = async () => {
+    document.getElementById('btnStart').onclick = async () => {
+      const prompt = document.getElementById('prompt').value.trim();
+      const route = document.querySelector('input[name=route]:checked').value;
+      if (!prompt && !state.files.length) {
+        logLine('Enter a prompt and/or add a picture.', 'err');
+        return;
+      }
+      try {
+        const fd = new FormData();
+        fd.append('prompt', prompt || 'asset from picture');
+        fd.append('route', route);
+        state.files.forEach((f, i) => {
+          const n = f.name.toLowerCase();
+          let key = 'image';
+          if (n.endsWith('.glb') || n.endsWith('.gltf')) key = 'glb';
+          else if (n.includes('front')) key = 'front';
+          else if (n.includes('right') || n.includes('side')) key = route === 'character' || n.includes('right') ? 'right' : 'side';
+          else if (n.includes('back')) key = 'back';
+          else if (n.includes('top')) key = 'top';
+          else if (i === 0) key = 'image';
+          else key = `image_${i}`;
+          fd.append(key, f, f.name);
+        });
+        logLine('Creating project…', 'run');
+        const project = await api('/api/project/start', { method: 'POST', body: fd });
+        enterProject(project);
+      } catch (e) {
+        logLine(String(e), 'err');
+      }
+    };
+
+    el.btnSaveParts.onclick = async () => {
       try {
         const parts = JSON.parse(el.partsJson.value);
-        const name = document.getElementById('propName').value;
-        const res = await api('/api/prop/save', {
+        await api('/api/project/save-parts', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, parts }),
+          body: JSON.stringify({ name: state.project.name, parts }),
         });
-        logLine(`Saved parts → examples/props/${res.name}/parts.json`, 'ok');
+        logLine('parts.json saved.', 'ok');
       } catch (e) { logLine(String(e), 'err'); }
     };
 
-    document.getElementById('propRefs').onchange = async (ev) => {
-      const files = [...ev.target.files];
-      if (!files.length) return;
-      const fd = new FormData();
-      fd.append('name', document.getElementById('propName').value);
-      files.forEach((f, i) => fd.append(i === 0 ? 'front.png' : i === 1 ? 'side.png' : 'top.png', f));
-      try {
-        const res = await api('/api/prop/upload-refs', { method: 'POST', body: fd });
-        el.propRefChip.textContent = `Saved ${res.saved.length} reference(s)`;
-        logLine('Reference images uploaded (tutorial step 02).', 'ok');
-      } catch (e) { logLine(String(e), 'err'); }
-    };
-
-    document.getElementById('btnBuildProp').onclick = async () => {
-      if (busy) return;
-      busy = true;
-      try {
-        // auto-save current JSON
-        const parts = JSON.parse(el.partsJson.value || '{}');
-        const name = document.getElementById('propName').value;
-        if (parts.parts) {
-          await api('/api/prop/save', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, parts }),
-          });
-        }
-        logLine(`Building prop “${name}” in Blender…`, 'run');
-        await api('/api/prop/build', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name }),
-        });
-        const result = await waitJob();
-        await showModel(result.studio_model || result.model, result.name, 'Assembled prop');
-        logLine('Prop ready.', 'ok');
-      } catch (e) { logLine(String(e), 'err'); }
-      finally { busy = false; }
-    };
-
-    document.getElementById('btnUploadChar').onclick = async () => {
-      const name = document.getElementById('charName').value;
-      const fd = new FormData();
-      fd.append('name', name);
-      const map = [
-        ['charFront', 'front'],
-        ['charRight', 'right'],
-        ['charBack', 'back'],
-        ['charGlb', 'glb'],
-      ];
-      let n = 0;
-      for (const [id, key] of map) {
-        const f = document.getElementById(id).files?.[0];
-        if (f) { fd.append(key, f); n++; }
+    el.btnNext.onclick = () => {
+      const next = state.index + 1;
+      if (!state.project || next >= state.project.steps.length) {
+        logLine('Pipeline finished. Start over for a new asset.', 'ok');
+        return;
       }
-      if (!n) { logLine('Pick at least a front image or a GLB.', 'err'); return; }
-      try {
-        const res = await api('/api/character/upload', { method: 'POST', body: fd });
-        el.charChip.textContent = `Uploaded: ${Object.keys(res.saved).join(', ')}`;
-        logLine(`Saved character inputs for “${res.name}”.`, 'ok');
-        if (res.saved.glb) await showModel(res.saved.glb, res.name, 'Imported GLB');
-      } catch (e) { logLine(String(e), 'err'); }
+      runThrough(next);
     };
-
-    document.getElementById('btnGenChar').onclick = async () => {
-      if (busy) return;
-      busy = true;
-      try {
-        // ensure uploads first if files selected
-        const front = document.getElementById('charFront').files?.[0];
-        if (front) await document.getElementById('btnUploadChar').onclick();
-        const name = document.getElementById('charName').value;
-        logLine('Generating mesh via free Hugging Face TripoSR (may take 1–2 min)…', 'run');
-        await api('/api/character/generate', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name }),
-        });
-        const result = await waitJob();
-        await showModel(result.raw, name, 'Raw generator mesh');
-        logLine('Mesh ready. Next: Clean → rig → clips.', 'ok');
-      } catch (e) { logLine(String(e), 'err'); }
-      finally { busy = false; }
+    el.btnAll.onclick = () => {
+      if (!state.project) return;
+      runThrough(state.project.steps.length - 1);
     };
-
-    document.getElementById('btnRigChar').onclick = async () => {
-      if (busy) return;
-      busy = true;
-      try {
-        const name = document.getElementById('charName').value;
-        logLine(`Running character pipeline for “${name}”…`, 'run');
-        await api('/api/character/pipeline', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name }),
-        });
-        const result = await waitJob();
-        await showModel(result.studio_model || result.model, name, 'Rigged + clips');
-        logLine(`Exported ${result.fbx || 'FBX'}`, 'ok');
-      } catch (e) { logLine(String(e), 'err'); }
-      finally { busy = false; }
-    };
-
-    document.getElementById('btnBuildings').onclick = async () => {
-      if (busy) return;
-      busy = true;
-      try {
-        const count = +document.getElementById('buildCount').value || 3;
-        logLine(`Generating ${count} buildings…`, 'run');
-        await api('/api/buildings', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ count }),
-        });
-        const result = await waitJob();
-        const first = (result.models || []).find(Boolean);
-        if (first) await showModel(first, 'Buildings', `${count} variants`);
-        logLine('Buildings exported.', 'ok');
-      } catch (e) { logLine(String(e), 'err'); }
-      finally { busy = false; }
+    document.getElementById('btnReset').onclick = () => {
+      state.project = null;
+      state.index = -1;
+      state.statuses = [];
+      state.files = [];
+      el.work.classList.add('hidden');
+      el.entry.classList.remove('hidden');
+      el.btnAll.disabled = true;
+      el.title.textContent = '01 · Pick the route';
+      el.hint.textContent = 'Three routes in, one export out. Start with a prompt and/or a picture — like the article.';
+      el.log.innerHTML = '';
+      clearModel();
+      el.empty3d.hidden = false;
+      el.viewMeta.hidden = true;
+      logLine('Ready. Prompt or picture → Auto / Prop / Character / Buildings.', 'ok');
     };
 
     (function tick() {
@@ -524,17 +462,10 @@
       renderer.render(scene, camera);
     })();
 
-    // boot
-    api('/api/status').then((st) => {
-      if (st.doctor) {
-        el.brandSub.textContent = `${st.doctor.blender_version || 'Blender'} · ${st.doctor.gpu} · ${st.doctor.note}`;
-      }
-      logLine('Ready. Props = measured Blender parts. Characters = photo → TripoSR → rig.', 'ok');
-      // seed a starter parts.json
-      document.getElementById('btnSuggest').click();
-    }).catch(() => {
-      logLine('Start with .\\scripts\\start_studio.ps1', 'err');
-    });
+    api('/api/status').then(st => {
+      if (st.doctor) el.brandSub.textContent = `${st.doctor.blender_version || ''} · ${st.doctor.note || ''}`;
+      logLine('Ready. Same path as the article: start with a prompt or picture.', 'ok');
+    }).catch(() => logLine('Start Studio with .\\scripts\\start_studio.ps1', 'err'));
   </script>
 </body>
 </html>
