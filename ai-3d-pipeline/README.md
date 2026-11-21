@@ -22,7 +22,18 @@ python3 -m pipeline.cli buildings --count 10
 
 # Free character path (placeholder mesh → rig → idle/walk → export)
 python3 -m pipeline.cli character demo --demo
+
+# TRELLIS image→mesh on your Windows GPU PC (~16 GB+ VRAM)
+# Anaconda PowerShell Prompt:
+.\scripts\install_trellis.ps1
+.\scripts\serve_trellis.ps1
+python scripts\characters\07_generate_local.py --backend trellis `
+  --front view_front.png --right view_right.png --back view_back.png `
+  -o examples\characters\demo\exports\raw.glb
+python -m pipeline.cli character demo --glb examples\characters\demo\exports\raw.glb
 ```
+
+Linux: `./scripts/install_trellis.sh` then `./scripts/serve_trellis.sh`.
 
 ## Layout
 

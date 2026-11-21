@@ -25,9 +25,9 @@
 14. [glTF-Transform](https://github.com/donmccurdy/glTF-Transform) — final GLB optimizer
 
 ## Free character generators (local GPU, $0/model)
-- [TripoSR](https://github.com/VAST-AI-Research/TripoSR) — MIT, ~6 GB VRAM
-- [TRELLIS](https://github.com/microsoft/TRELLIS) — MIT, ~16 GB VRAM
+- **[TRELLIS](https://github.com/microsoft/TRELLIS)** — **default**, MIT, ~16 GB VRAM. Windows: `.\scripts\install_trellis.ps1` → `.\scripts\serve_trellis.ps1` (see [TRELLIS#3](https://github.com/microsoft/TRELLIS/issues/3))
 - [TRELLIS.2](https://github.com/microsoft/TRELLIS.2) — higher quality, more VRAM
-- [Hunyuan3D-2](https://github.com/Tencent-Hunyuan/Hunyuan3D-2) — Community Licence (geographic limits apply in some regions; fine outside EU/UK/KR)
+- [TripoSR](https://github.com/VAST-AI-Research/TripoSR) — MIT, ~6 GB VRAM
+- [Hunyuan3D-2](https://github.com/Tencent-Hunyuan/Hunyuan3D-2) — Community Licence (fine outside EU/UK/KR)
 
-Point `07_generate_local.py` at a local server via `TRIPOSR_URL` / `TRELLIS_URL` / `HUNYUAN_URL`, or drop a GLB with `--backend import`.
+Point `07_generate_local.py` at a local server via `TRELLIS_URL` / `TRIPOSR_URL` / `HUNYUAN_URL`, or drop a GLB with `--backend import`.

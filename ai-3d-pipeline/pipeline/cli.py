@@ -122,7 +122,12 @@ def cmd_doctor() -> None:
     print("gltf-transform:", shutil.which("npx"))
     print(
         "Free character backends: import | triposr | trellis | hunyuan "
-        "(see scripts/characters/07_generate_local.py)"
+        "(default: trellis — Windows: .\\scripts\\install_trellis.ps1)"
+    )
+    trellis = ROOT / "third_party" / "repos" / "TRELLIS"
+    print(
+        "TRELLIS clone:",
+        "OK" if trellis.is_dir() else "MISSING — run .\\scripts\\install_trellis.ps1 on your Windows GPU PC",
     )
     print("All generators are local/$0 — Tripo API remains optional paid only.")
 
