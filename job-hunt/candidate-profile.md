@@ -16,7 +16,7 @@ Assistant d’architecte chez Studios Arcas Paris (William Pesson) — MPhil ét
 Architectural assistant at Studios Arcas Paris (William Pesson) — MPhil ethics, MBA Foresight Summa Cum Laude, triple bachelor (neuroscience / biology / anthropology), measured drawing, historical research; Swiss national.
 
 ## Credential stack (lead with these)
-1. **Studios Arcas, Paris** — since **5 November 2026** (do **not** advertise planned end date) under William Pesson — Gallieni historical study, elevations, Villa Caroline archives; neo–Art Deco / classical / modernist heritage culture
+1. **Studios Arcas, Paris** — since **5 November 2026** (do **not** advertise planned end date) under William Pesson — architectural assistant (research, drawing, documentation); neo–Art Deco / classical / modernist heritage culture. **Never name client/project deliverables** (no Gallieni, Villa Caroline, or similar) in CV, site, or outreach.
 2. **MPhil Applied Ethics**, Linköping (2023–2025) — thesis *BIOCRACY* (DiVA)
 3. **MBA Foresight & Strategic Governance**, KSU Vilnius — 9.73/10, Summa Cum Laude, thesis
 4. **B.S. Neuroscience · B.S. Biology · B.A. Anthropology**, University of Montana
@@ -50,4 +50,5 @@ Architectural assistant at Studios Arcas Paris (William Pesson) — MPhil ethics
 ## Outreach tone
 - Confidence, specificity, Arcas prestige, research seriousness
 - Never apologise; never volunteer “I don’t have an architecture diploma”
-- **Never** write soft tool-gap lines: “apprentissage CAD/BIM”, “apprentissage rapide”, “actively learning CAD/BIM”, etc. Omit CAD/BIM until it’s a real deliverable; lead with measured drawing, elevations, archives, research.
+- **Never** write soft tool-gap lines: “apprentissage CAD/BIM”, “apprentissage rapide”, “actively learning CAD/BIM”, etc. Omit CAD/BIM until it’s a real deliverable; lead with measured drawing and research at a general level.
+- **Never** name Arcas project/client specifics in outreach or CV.
