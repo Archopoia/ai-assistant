@@ -8,10 +8,10 @@
 
 ## Target
 - **Country:** Switzerland (Romandie preferred; open Deutschschweiz / Ticino)
-- **Roles:** Assistant d'architecte, dessinateur en architecture, collaborateur bureau, stagiaire architecture/patrimoine, assistant recherche/patrimoine
-- **Themes that fit:** patrimoine / restauration, Art Déco / classicisme / traditionalisme, dessin mesuré, documentation historique, concours, architecture contextuelle
-- **Do NOT claim:** architecture diploma, CFC dessinateur, years of licensed practice
-- **Lead proof:** Studios Arcas Paris (William Pesson) — Gallieni study, elevations, Villa Caroline archives; neo–Art Deco / 20th-c. heritage culture
+- **Roles:** Assistant d'architecte, collaborateur bureau, stagiaire architecture/patrimoine, assistant recherche/patrimoine, dessin / documentation historique
+- **Themes that fit:** patrimoine / restauration, Art Déco / classicisme / traditionalisme, dessin mesuré, documentation historique, concours, architecture contextuelle, research-adjacent offices
+- **Sell stack:** Arcas Paris (William Pesson) + MPhil/MBA/triple bachelor + measured drawing (Table Ronde) + Cognitive Evolutionary Architectonics
+- **Never lead with gaps.** Do not volunteer missing architecture diploma / CFC. If asked directly, answer briefly and pivot to credentials + studio deliverables.
 - **Citizenship:** Swiss — no work permit required
 - **Languages:** FR native, EN fluent, DE basic (willing to improve), IT basic
 
@@ -21,6 +21,7 @@
 - Draft **one** tailored cold email per target (cold-email-writer skill)
 - **Gmail drafts first** — human approves before send (kelly-jobhunt loop)
 - Attach / link CV URL once published; until then portfolio + dossier links
+- Tone: high-worth, specific, zero apology
 
 ## Channels
 - Office websites / carrière pages
