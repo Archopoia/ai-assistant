@@ -1,0 +1,13 @@
+{
+  "name": "kelly-jobhunt",
+  "private": true,
+  "type": "module",
+  "description": "Trusted scripts for the Kelly JobHunt skill: lead import and approved-outreach sending.",
+  "dependencies": {
+    "busabase-sdk": "0.99.1",
+    "nodemailer": "9.0.3"
+  },
+  "engines": {
+    "node": ">=24.18.0"
+  }
+}

@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hugues de Pingon - CV Architecture · Suisse</title>
+  <meta name="description" content="CV architecture - Hugues de Pingon. Studios Arcas Paris (William Pesson). Triple bachelor (neuroscience, biology, anthropology), MBA Foresight Summa Cum Laude, MPhil Applied Ethics (BIOCRACY). Cognitive evolutionary architectonics. Swiss national." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --swiss: #ff0000;
+      --swiss-deep: #d40000;
+      --white: #ffffff;
+      --snow: #f5f5f5;
+      --mist: #e6e6e6;
+      --steel: #7a7a7a;
+      --ink: #111111;
+      --ink-2: #2c2c2c;
+      --max: 1080px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --deco-step: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "IBM Plex Sans", sans-serif;
+      font-weight: 300;
+      color: var(--ink);
+      background: var(--white);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-underline-offset: 3px; }
+    a:hover { color: var(--swiss-deep); }
+
+    .bar {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; padding: 0.7rem 1.25rem;
+      background: var(--white);
+      border-bottom: 1px solid var(--mist);
+    }
+    .bar-mark {
+      display: flex; align-items: center; gap: 0.65rem;
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .cross {
+      width: 16px; height: 16px; background: var(--swiss); position: relative; flex-shrink: 0;
+    }
+    .cross::before, .cross::after {
+      content: ""; position: absolute; background: #fff;
+      left: 50%; top: 50%; transform: translate(-50%, -50%);
+    }
+    .cross::before { width: 10px; height: 2.4px; }
+    .cross::after { width: 2.4px; height: 10px; }
+    .bar-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .btn {
+      appearance: none; border: 1px solid var(--ink);
+      background: transparent; color: var(--ink);
+      font: inherit; font-size: 0.68rem; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.5rem 0.75rem; cursor: pointer;
+      transition: background 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease);
+      text-decoration: none; display: inline-flex; align-items: center;
+    }
+    .btn:hover { background: var(--ink); color: var(--white); }
+    .btn-red { background: var(--swiss); border-color: var(--swiss); color: #fff; }
+    .btn-red:hover { background: var(--swiss-deep); border-color: var(--swiss-deep); color: #fff; }
+    .lang { display: inline-flex; border: 1px solid var(--ink); }
+    .lang .btn { border: 0; border-right: 1px solid var(--ink); }
+    .lang .btn:last-child { border-right: 0; }
+    .lang .btn.active { background: var(--ink); color: #fff; }
+
+    .wrap { width: min(100% - 2.4rem, var(--max)); margin: 0 auto; }
+
+    .hero {
+      position: relative;
+      background: var(--ink);
+      color: var(--white);
+      overflow: hidden;
+      min-height: min(92vh, 860px);
+      display: grid;
+      align-items: stretch;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      min-height: inherit;
+    }
+    .hero-copy {
+      padding: clamp(2.5rem, 6vw, 5rem) clamp(1.4rem, 4vw, 3.5rem);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      position: relative; z-index: 2;
+      border-right: 1px solid rgba(255,255,255,0.12);
+    }
+    .hero-copy::before {
+      content: ""; position: absolute; top: 0; left: 0;
+      width: 72px; height: 72px;
+      background:
+        linear-gradient(var(--swiss), var(--swiss)) top left / 72px 8px no-repeat,
+        linear-gradient(var(--swiss), var(--swiss)) top left / 8px 72px no-repeat;
+    }
+    .hero-kicker {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase;
+      font-weight: 500; color: #ffb3b3; margin-bottom: 1.4rem;
+    }
+    .hero h1 {
+      font-family: "Bodoni Moda", "IBM Plex Sans", serif;
+      font-weight: 600;
+      font-size: clamp(2.6rem, 7vw, 5.4rem);
+      line-height: 1.08;
+      letter-spacing: -0.01em;
+      margin-bottom: 1.1rem;
+    }
+    .hero-role {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      max-width: 30ch;
+      color: #dcdcdc;
+      margin-bottom: 1.6rem;
+    }
+    .hero-role a,
+    .arcas-rail a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 0.18em;
+      text-decoration-thickness: 1px;
+    }
+    .hero-role a:hover,
+    .arcas-rail a:hover { color: #fff; }
+    .hero-proof {
+      display: grid; gap: 0.35rem;
+      padding: 1rem 0 0;
+      border-top: 1px solid rgba(255,255,255,0.18);
+      max-width: 38ch;
+    }
+    .hero-proof strong {
+      font-family: "Bodoni Moda", serif;
+      font-size: 1.35rem; font-weight: 600; color: #fff;
+    }
+    .hero-proof span { font-size: 0.9rem; color: #bdbdbd; }
+    .hero-visual {
+      position: relative; background: #0a0a0a;
+      min-height: 420px;
+    }
+    .hero-visual img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: grayscale(100%) contrast(1.08);
+      opacity: 0.88;
+    }
+    .hero-visual::after {
+      content: ""; position: absolute; inset: 0;
+      background:
+        linear-gradient(90deg, rgba(17,17,17,0.55), transparent 35%),
+        linear-gradient(0deg, rgba(17,17,17,0.5), transparent 40%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      position: absolute; z-index: 3; right: 1.25rem; bottom: 1.25rem;
+      background: var(--swiss); color: #fff;
+      padding: 0.85rem 1rem;
+      clip-path: var(--deco-step);
+      font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+      font-weight: 500; max-width: 16rem;
+    }
+    .hero-ctas { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.6rem; }
+    .hero .btn { border-color: #fff; color: #fff; }
+    .hero .btn:hover { background: #fff; color: var(--ink); }
+    .hero .btn-red:hover { background: #fff; color: var(--swiss); border-color: #fff; }
+
+    .arcas {
+      background: var(--snow);
+      border-bottom: 1px solid var(--mist);
+    }
+    .arcas-inner {
+      display: grid; grid-template-columns: 140px 1fr;
+      gap: 2rem; padding: 4rem 0;
+    }
+    .arcas-rail {
+      writing-mode: vertical-rl; transform: rotate(180deg);
+      font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase;
+      font-weight: 500; color: var(--swiss);
+      border-right: 3px solid var(--swiss);
+      padding-right: 0.85rem;
+      height: fit-content;
+    }
+    .section-title {
+      font-family: "Bodoni Moda", "IBM Plex Sans", serif;
+      font-size: clamp(1.8rem, 3.4vw, 2.7rem);
+      font-weight: 600; line-height: 1.15;
+      letter-spacing: -0.01em; margin-bottom: 0.85rem;
+      font-kerning: normal;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    .section-title a { color: inherit; text-decoration: none; }
+    .section-title a:hover { color: var(--swiss-deep); }
+    .edu .school a { color: var(--swiss-deep); }
+    .job .org a { color: inherit; }
+    .lede { max-width: 62ch; color: var(--ink-2); font-size: 1.02rem; }
+    .arcas-meta {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 0; margin: 1.75rem 0 1.5rem;
+      border: 1px solid var(--mist); background: var(--white);
+    }
+    .arcas-meta div {
+      padding: 0.9rem 1rem;
+      border-right: 1px solid var(--mist);
+    }
+    .arcas-meta div:last-child { border-right: 0; }
+    .arcas-meta strong {
+      display: block; font-size: 0.65rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--steel); font-weight: 500; margin-bottom: 0.25rem;
+    }
+    .arcas-meta span { font-size: 0.92rem; color: var(--ink); font-weight: 400; }
+    .deliverables {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+    @media (max-width: 700px) {
+      .deliverables { grid-template-columns: 1fr; }
+    }
+    .deliv {
+      background: var(--white);
+      border: 1px solid var(--mist);
+      border-top: 3px solid var(--swiss);
+      padding: 1.1rem 1rem;
+    }
+    .deliv h3 {
+      font-family: "Bodoni Moda", serif;
+      font-size: 1.15rem; font-weight: 600; margin-bottom: 0.4rem;
+    }
+    .deliv p { font-size: 0.9rem; color: var(--ink-2); }
+
+    section { padding: 4rem 0; }
+    .profile {
+      display: grid; grid-template-columns: 150px 1fr; gap: 2rem; align-items: start;
+    }
+    .portrait {
+      width: 150px; aspect-ratio: 1; object-fit: cover;
+      border: 1px solid var(--mist);
+    }
+    .honesty {
+      margin-top: 1.4rem; padding: 1rem 1.1rem;
+      background: var(--snow);
+      border-left: 4px solid var(--swiss);
+      font-size: 0.92rem; color: var(--ink-2); max-width: 68ch;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.1rem; }
+    .chip {
+      font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase;
+      border: 1px solid var(--mist); padding: 0.3rem 0.55rem; color: var(--steel);
+      background: var(--white);
+      text-decoration: none;
+    }
+    a.chip:hover { color: var(--swiss); border-color: var(--swiss); }
+    .chip-red { border-color: var(--swiss); color: var(--swiss); }
+
+    .job {
+      display: grid; grid-template-columns: 130px 1fr; gap: 1.4rem;
+      padding: 1.4rem 0; border-top: 1px solid var(--mist);
+    }
+    .job:last-child { border-bottom: 1px solid var(--mist); }
+    .job-when { font-size: 0.78rem; color: var(--steel); padding-top: 0.3rem; }
+    .job h3 {
+      font-family: "Bodoni Moda", serif; font-size: 1.3rem; font-weight: 600; margin-bottom: 0.15rem;
+    }
+    .job .org { color: var(--swiss-deep); font-weight: 500; font-size: 0.92rem; margin-bottom: 0.55rem; }
+    .job ul { padding-left: 1.05rem; color: var(--ink-2); }
+    .job li { margin: 0.25rem 0; }
+
+    .work-grid {
+      display: grid; grid-template-columns: 1.3fr 1fr; gap: 0.65rem; margin-top: 1.75rem;
+    }
+    .tile {
+      position: relative; overflow: hidden; background: #1a1a1a; color: #fff; min-height: 260px;
+      text-decoration: none;
+      display: block;
+    }
+    .tile img {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+      opacity: 1;
+      transition: transform 0.7s var(--ease), opacity 0.35s;
+    }
+    .tile:hover img { transform: scale(1.03); }
+    .tile:hover { color: #fff; }
+    .tile-body {
+      position: relative; z-index: 1; height: 100%; min-height: inherit;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 1.2rem;
+      background: linear-gradient(transparent 35%, rgba(0,0,0,0.72));
+      pointer-events: none;
+    }
+    .tile h3 { font-family: "Bodoni Moda", serif; font-size: 1.3rem; margin-bottom: 0.3rem; }
+    .tile p { font-size: 0.88rem; color: #ddd; max-width: 36ch; }
+    .tile.tall { grid-row: span 2; min-height: 540px; }
+    .ltra-feature {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-top: 1.25rem;
+    }
+    .ltra-feature.ltra-hero {
+      grid-template-columns: 1fr;
+      max-width: 520px;
+    }
+    .ltra-feature figure {
+      margin: 0; display: flex; flex-direction: column; gap: 0.35rem;
+    }
+    .ltra-feature .feat img {
+      width: 100%; height: auto; min-height: 320px; max-height: 520px;
+      object-fit: contain; display: block; background: #111;
+    }
+    .ltra-feature figcaption {
+      font-size: 0.7rem; color: var(--ink-2); letter-spacing: 0.04em;
+    }
+    .strip {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; margin-top: 0.65rem;
+    }
+    .strip figure { margin: 0; display: flex; flex-direction: column; gap: 0.3rem; }
+    .strip img {
+      width: 100%; aspect-ratio: 3/4; object-fit: contain; background: #111; display: block;
+    }
+    .strip figcaption { font-size: 0.7rem; color: var(--ink-2); letter-spacing: 0.04em; }
+
+    .research {
+      background: var(--ink); color: #eee; padding: 4rem 0;
+    }
+    .research .section-title { color: #fff; }
+    .research .lede { color: #c8c8c8; }
+    .research-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem; margin-top: 1.6rem; }
+    .r-card {
+      border: 1px solid rgba(255,255,255,0.16); padding: 1.25rem;
+    }
+    .r-card h3 { font-family: "Bodoni Moda", serif; font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff; }
+    .r-card p { color: #c4c4c4; font-size: 0.94rem; }
+    .r-card a { color: #fff; }
+    .research a { color: #fff; text-decoration: underline; text-underline-offset: 0.15em; }
+    .research a:hover { color: #ffb3b3; }
+
+    .transfer {
+      background: var(--snow);
+      border-top: 1px solid var(--mist);
+      border-bottom: 1px solid var(--mist);
+    }
+    .transfer-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: 1.5rem;
+    }
+    a.t-card {
+      display: block; text-decoration: none; color: inherit;
+      background: var(--white);
+      border: 1px solid var(--mist);
+      padding: 1.15rem 1rem;
+      border-top: 3px solid var(--ink);
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+    a.t-card:hover { border-top-color: var(--swiss); transform: translateY(-1px); }
+    a.t-card h3 {
+      font-family: "Bodoni Moda", serif;
+      font-size: 1.1rem; margin-bottom: 0.45rem; color: var(--ink);
+    }
+    a.t-card p { font-size: 0.9rem; color: var(--ink-2); }
+    a.t-card .t-url {
+      display: block; margin-top: 0.55rem;
+      font-size: 0.68rem; letter-spacing: 0.04em; color: var(--swiss-deep);
+      word-break: break-all;
+    }
+
+    .split { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 2.4rem; }
+    .edu { padding: 0.95rem 0; border-top: 1px solid var(--mist); }
+    .edu:last-child { border-bottom: 1px solid var(--mist); }
+    .edu h3 { font-family: "Bodoni Moda", serif; font-size: 1.1rem; margin-bottom: 0.15rem; }
+    .edu .school { color: var(--swiss-deep); font-size: 0.88rem; margin-bottom: 0.25rem; }
+    .edu p { color: var(--ink-2); font-size: 0.9rem; }
+    .skill-h {
+      font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--steel); font-weight: 500; margin: 0 0 0.5rem;
+    }
+    .skill-row { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.85rem; }
+    .skill-row:last-child { margin-bottom: 0; }
+    .skill-row span {
+      background: var(--snow); border: 1px solid var(--mist);
+      padding: 0.35rem 0.55rem; font-size: 0.8rem; color: var(--ink-2);
+    }
+
+    .contact {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+      padding: 3rem 0 4.5rem; border-top: 1px solid var(--mist);
+    }
+    .contact-list { list-style: none; display: grid; gap: 0.45rem; margin-top: 1rem; }
+    .contact-list a { font-weight: 500; }
+    .pitch {
+      background: var(--snow); border: 1px solid var(--mist);
+      border-top: 4px solid var(--swiss); padding: 1.4rem;
+    }
+    .pitch h3 { font-family: "Bodoni Moda", serif; font-size: 1.25rem; margin-bottom: 0.55rem; }
+    .pitch p { color: var(--ink-2); font-size: 0.94rem; }
+
+    footer {
+      border-top: 1px solid var(--mist);
+      padding: 1.1rem 0 2rem; color: var(--steel); font-size: 0.75rem;
+      display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    }
+
+    .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.65s var(--ease), transform 0.65s var(--ease); }
+    .reveal.in { opacity: 1; transform: none; }
+
+    .lang-block { display: none; }
+    html[lang="fr"] .lang-block.fr,
+    html[lang="en"] .lang-block.en,
+    html[lang="de"] .lang-block.de { display: revert; }
+    .lang-block[hidden] { display: none !important; }
+
+    @media (max-width: 900px) {
+      .hero-grid, .arcas-inner, .profile, .job, .work-grid, .research-grid, .split, .contact, .deliverables, .arcas-meta, .strip, .transfer-grid, .ltra-feature {
+        grid-template-columns: 1fr;
+      }
+      .arcas-rail { writing-mode: horizontal-tb; transform: none; border-right: 0; border-bottom: 3px solid var(--swiss); padding: 0 0 0.5rem; margin-bottom: 0.5rem; }
+      .tile.tall { grid-row: auto; min-height: 320px; }
+      .strip { grid-template-columns: repeat(2, 1fr); }
+      .ltra-feature .feat img { min-height: 240px; max-height: 360px; }
+      .hero-copy { border-right: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .tile img { transition: none; }
+    }
+
+    @media print {
+      .bar, .hero-ctas, .no-print { display: none !important; }
+      .hero { min-height: auto; color: var(--ink); background: #fff; }
+      .hero-visual { display: none; }
+      .hero h1 { color: var(--ink); font-size: 2rem; }
+      .hero-role, .hero-proof span { color: var(--ink-2); }
+      .hero-proof strong { color: var(--ink); }
+      .research { background: #fff; color: var(--ink); border: 1px solid #ccc; }
+      .research .section-title, .r-card h3, .r-card p, .research .lede, .research a { color: var(--ink); }
+      a { text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bar no-print">
+    <div class="bar-mark">
+      <span class="cross" aria-hidden="true"></span>
+      <span>CV · Architecture · CH</span>
+    </div>
+    <div class="bar-actions">
+      <div class="lang" role="group" aria-label="Language">
+        <button class="btn active" type="button" data-set-lang="fr">FR</button>
+        <button class="btn" type="button" data-set-lang="en">EN</button>
+        <button class="btn" type="button" data-set-lang="de">DE</button>
+      </div>
+      <button class="btn" type="button" onclick="window.print()">PDF</button>
+      <a class="btn btn-red" href="#contact">Contact</a>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <div class="hero-kicker">
+          <span class="cross" aria-hidden="true"></span>
+          <span class="lang-block fr">Ressortissant suisse · Disponible en Suisse</span>
+          <span class="lang-block en" hidden>Swiss national · Available in Switzerland</span>
+          <span class="lang-block de" hidden>Schweizer Staatsangehöriger · Verfügbar in der Schweiz</span>
+        </div>
+        <h1>Hugues<br />de Pingon</h1>
+        <p class="hero-role lang-block fr">
+          Architecture &amp; urbanisme · IA intégrée au projet<br />
+          Assistant d’architecte · <a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas</a>, Paris
+        </p>
+        <p class="hero-role lang-block en" hidden>
+          Architecture &amp; urbanism · AI integrated into project work<br />
+          Architectural assistant · <a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas</a>, Paris
+        </p>
+        <p class="hero-role lang-block de" hidden>
+          Architektur &amp; Städtebau · KI im Projekt integriert<br />
+          Architekturassistent · <a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas</a>, Paris
+        </p>
+        <p class="hero-proof lang-block fr">
+          <strong>MPhil</strong> éthique · <strong>MBA</strong> foresight · <strong>B.S./B.A.</strong> neurosciences, biologie, anthropologie
+        </p>
+        <p class="hero-proof lang-block en" hidden>
+          <strong>MPhil</strong> ethics · <strong>MBA</strong> foresight · <strong>B.S./B.A.</strong> neuroscience, biology, anthropology
+        </p>
+        <p class="hero-proof lang-block de" hidden>
+          <strong>MPhil</strong> Ethik · <strong>MBA</strong> Foresight · <strong>B.S./B.A.</strong> Neurowissenschaft, Biologie, Anthropologie
+        </p>
+        <div class="hero-ctas no-print">
+          <a class="btn btn-red" href="#arcas">Arcas</a>
+          <a class="btn" href="mailto:hugues.ii.w.b.depingon@gmail.com">Email</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="assets/ideal-city.jpg" alt="Ideal City - dessin à l’encre, vernaculaire suisse" />
+      </div>
+    </div>
+  </header>
+
+  <section class="arcas" id="arcas">
+    <div class="wrap arcas-inner reveal">
+      <div class="arcas-rail"><a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas</a> · 8 rue Boissonade · Paris 14e</div>
+      <div>
+        <h2 class="section-title"><a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas · Paris</a></h2>
+        <p class="lede lang-block fr">
+          Sous <a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener"><strong>William Pesson</strong></a>&nbsp;: études, monographies, élévations, livrables - avec intégration de solutions IA dans l’urbanisme, l’architecture et le patrimoine.
+        </p>
+        <p class="lede lang-block en" hidden>
+          Under <a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener"><strong>William Pesson</strong></a>&nbsp;: studies, monographs, elevations, deliverables - integrating AI solutions into urbanism, architecture and heritage.
+        </p>
+        <p class="lede lang-block de" hidden>
+          Unter <a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener"><strong>William Pesson</strong></a>&nbsp;: Studien, Monografien, Aufrisse, Lieferungen - mit Integration von KI-Lösungen in Städtebau, Architektur und Denkmalpflege.
+        </p>
+
+        <div class="deliverables">
+          <article class="deliv">
+            <h3 class="lang-block fr">Études urbaines historiques</h3>
+            <h3 class="lang-block en" hidden>Historical urban studies</h3>
+            <h3 class="lang-block de" hidden>Historische Stadtstudien</h3>
+            <p class="lang-block fr">Corpus cadastres / archives / aériennes, élévations, intentions plan-guide, hypothèses d’aménagement, album HTML + exports PDF/PPTX/DOCX, rebuild scripté.</p>
+            <p class="lang-block en" hidden>Cadastre / archive / aerial corpora, elevations, plan-guide intentions, design hypotheses, HTML album + PDF/PPTX/DOCX exports, scripted rebuild.</p>
+            <p class="lang-block de" hidden>Kataster- / Archiv- / Luftbild-Korpora, Aufrisse, Plan-Guide, Entwurfshypothesen, HTML-Album + PDF/PPTX/DOCX, skriptierter Rebuild.</p>
+          </article>
+          <article class="deliv">
+            <h3 class="lang-block fr">Élévations de rue mètre-vraies</h3>
+            <h3 class="lang-block en" hidden>Meter-true street elevations</h3>
+            <h3 class="lang-block de" hidden>Metergenaue Straßenaufrisse</h3>
+            <p class="lang-block fr">Composition locale sous gabarit réglementaire verrouillé (SVG/raster, serveur local)&nbsp;; façades IA optionnelles sous contrainte projet.</p>
+            <p class="lang-block en" hidden>Local composition under a locked regulatory envelope (SVG/raster, local server)&nbsp;; optional AI façades under project constraints.</p>
+            <p class="lang-block de" hidden>Lokale Komposition unter gesperrtem Regelgabarit (SVG/Raster, lokaler Server)&nbsp;; optionale KI-Fassaden unter Projektzwang.</p>
+          </article>
+          <article class="deliv">
+            <h3 class="lang-block fr">Monographies patrimoniales</h3>
+            <h3 class="lang-block en" hidden>Heritage monographs</h3>
+            <h3 class="lang-block de" hidden>Baudenkmal-Monografien</h3>
+            <p class="lang-block fr">Identification, chronologie, acteurs, iconographie&nbsp;; livrable HTML + pack archives.</p>
+            <p class="lang-block en" hidden>Identification, chronology, actors, iconography&nbsp;; HTML delivery + archive pack.</p>
+            <p class="lang-block de" hidden>Identifikation, Chronologie, Akteure, Ikonografie&nbsp;; HTML + Archivpack.</p>
+          </article>
+          <article class="deliv">
+            <h3 class="lang-block fr">Sites &amp; livrables HTML</h3>
+            <h3 class="lang-block en" hidden>HTML sites &amp; deliverables</h3>
+            <h3 class="lang-block de" hidden>HTML-Sites &amp; Lieferungen</h3>
+            <p class="lang-block fr">Sites agence / monographie et exports documentaires depuis une source canonique.</p>
+            <p class="lang-block en" hidden>Agency / monograph sites and document exports from a canonical source.</p>
+            <p class="lang-block de" hidden>Agentur- / Monografie-Sites und Dokumentenexports aus einer kanonischen Quelle.</p>
+          </article>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <section class="wrap reveal" id="profil">
+      <div class="profile">
+        <img class="portrait" src="assets/portrait.webp" alt="Hugues William Brenthone de Pingon" />
+        <div>
+          <h2 class="section-title lang-block fr">Profil</h2>
+          <h2 class="section-title lang-block en" hidden>Profile</h2>
+          <h2 class="section-title lang-block de" hidden>Profil</h2>
+          <p class="lede lang-block fr">
+            Architecte / urbaniste&nbsp;: études, monographies, élévations, livrables. Je sais utiliser l’IA et intégrer des solutions IA dans l’urbanisme, l’architecture et le patrimoine. Aujourd’hui chez <a href="https://arcas.be/about/" target="_blank" rel="noopener"><strong>Studios Arcas Paris</strong></a> (<a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener">William Pesson</a>). MPhil éthique · MBA Foresight Summa Cum Laude · triple bachelor (Montana). Suisse.
+          </p>
+          <p class="lede lang-block en" hidden>
+            Architect / urbanist&nbsp;: studies, monographs, elevations, deliverables. I know how to use AI and integrate AI solutions into urbanism, architecture and heritage. Now at <a href="https://arcas.be/about/" target="_blank" rel="noopener"><strong>Studios Arcas Paris</strong></a> (<a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener">William Pesson</a>). MPhil ethics · MBA Foresight Summa Cum Laude · triple bachelor (Montana). Swiss.
+          </p>
+          <p class="lede lang-block de" hidden>
+            Architekt / Städtebauer&nbsp;: Studien, Monografien, Aufrisse, Lieferungen. Ich kann KI nutzen und KI-Lösungen in Städtebau, Architektur und Denkmalpflege integrieren. Heute bei <a href="https://arcas.be/about/" target="_blank" rel="noopener"><strong>Studios Arcas Paris</strong></a> (<a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener">William Pesson</a>). MPhil Ethik · MBA Foresight Summa Cum Laude · Triple Bachelor (Montana). Schweizer.
+          </p>
+          <div class="chips">
+            <span class="chip chip-red">FR · EN · DE</span>
+            <a class="chip" href="https://arcas.be/about/" target="_blank" rel="noopener">Arcas Paris</a>
+            <span class="chip">Summa Cum Laude</span>
+            <span class="chip lang-block fr">Permis non requis</span>
+            <span class="chip lang-block en" hidden>No work permit needed</span>
+            <span class="chip lang-block de" hidden>Keine Bewilligung nötig</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="transfer reveal" id="transfert">
+      <div class="wrap">
+        <h2 class="section-title lang-block fr">Production - espaces, projets, systèmes</h2>
+        <h2 class="section-title lang-block en" hidden>Production - spaces, projects, systems</h2>
+        <h2 class="section-title lang-block de" hidden>Produktion - Räume, Projekte, Systeme</h2>
+        <p class="lede lang-block fr">
+          Direction de production, foresight, stratégie&nbsp;: même exigence qu’un bâtiment&nbsp;- ce que l’environnement fait à l’humain.
+        </p>
+        <p class="lede lang-block en" hidden>
+          Production leadership, foresight, strategy&nbsp;: the same demand as a building&nbsp;- what the environment does to the human.
+        </p>
+        <p class="lede lang-block de" hidden>
+          Produktionsleitung, Foresight, Strategie&nbsp;: dieselbe Anforderung wie ein Bauwerk&nbsp;- was die Umgebung dem Menschen antut.
+        </p>
+        <div class="transfer-grid">
+          <a class="t-card" href="https://www.oncelostgames.com/" target="_blank" rel="noopener">
+            <h3>OnceLost Games · The Wayward Realms</h3>
+            <p class="lang-block fr">Lead Game Designer&nbsp;- RPG, mécanique, UX, worldbuilding (Steam).</p>
+            <p class="lang-block en" hidden>Lead Game Designer&nbsp;- RPG, systems, UX, worldbuilding (Steam).</p>
+            <p class="lang-block de" hidden>Lead Game Designer&nbsp;- RPG, Systeme, UX, Worldbuilding (Steam).</p>
+            <span class="t-url">oncelostgames.com</span>
+          </a>
+          <a class="t-card" href="https://www.thediscordingtales.com/" target="_blank" rel="noopener">
+            <h3>The Discording Tales</h3>
+            <p class="lang-block fr">Creative Director · Archopoia&nbsp;- fiction philosophique, monde, équipe.</p>
+            <p class="lang-block en" hidden>Creative Director · Archopoia&nbsp;- philosophical fiction, world, team.</p>
+            <p class="lang-block de" hidden>Creative Director · Archopoia&nbsp;- philosophische Fiction, Welt, Team.</p>
+            <span class="t-url">thediscordingtales.com</span>
+          </a>
+          <a class="t-card" href="https://www.routledge.com/Towards-Principles-for-Responsible-Futures/Fuller-Roubelat-Marchais-Roubelat-Ward-Heraclide/p/book/9781032732411" target="_blank" rel="noopener">
+            <h3>UNESCO · Responsible Futures</h3>
+            <p class="lang-block fr">Chap.&nbsp;3&nbsp;- <em>Moral Conflicts, Hindrances &amp; Benefits…</em> (Routledge).</p>
+            <p class="lang-block en" hidden>Ch.&nbsp;3&nbsp;- <em>Moral Conflicts, Hindrances &amp; Benefits…</em> (Routledge).</p>
+            <p class="lang-block de" hidden>Kap.&nbsp;3&nbsp;- <em>Moral Conflicts, Hindrances &amp; Benefits…</em> (Routledge).</p>
+            <span class="t-url">routledge.com · buy</span>
+          </a>
+          <a class="t-card" href="https://psychostrategie.ch/" target="_blank" rel="noopener">
+            <h3>PsychoStratégie SA</h3>
+            <p class="lang-block fr">Product / game design &amp; management&nbsp;- Lausanne.</p>
+            <p class="lang-block en" hidden>Product / game design &amp; management&nbsp;- Lausanne.</p>
+            <p class="lang-block de" hidden>Product / Game Design &amp; Management&nbsp;- Lausanne.</p>
+            <span class="t-url">psychostrategie.ch</span>
+          </a>
+          <a class="t-card" href="https://kood.tech/en/locations/kood-johvi/" target="_blank" rel="noopener">
+            <h3>kood/Jõhvi · Full Stack / IA</h3>
+            <p class="lang-block fr">Full Stack Software Development, AI Specialization&nbsp;- Estonie.</p>
+            <p class="lang-block en" hidden>Full Stack Software Development, AI Specialization&nbsp;- Estonia.</p>
+            <p class="lang-block de" hidden>Full Stack Software Development, AI Specialization&nbsp;- Estland.</p>
+            <span class="t-url">kood.tech/jõhvi</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap reveal" id="experience">
+      <h2 class="section-title lang-block fr">Autres expériences architecture</h2>
+      <h2 class="section-title lang-block en" hidden>Other architecture experience</h2>
+      <h2 class="section-title lang-block de" hidden>Weitere Architekturerfahrung</h2>
+      <div class="timeline">
+        <article class="job">
+          <div class="job-when">
+            <span>2026</span>
+          </div>
+          <div>
+            <h3 class="lang-block fr">Atelier historique - voyage en architecture alsacienne</h3>
+            <h3 class="lang-block en" hidden>Historical workshop - journey through Alsatian architecture</h3>
+            <h3 class="lang-block de" hidden>Historischer Workshop - Reise durch die elsässische Architektur</h3>
+            <p class="org"><a href="https://www.latablerondearchitecture.com/" target="_blank" rel="noopener">La Table Ronde de l’Architecture</a> · Alsace · Nadia &amp; Noé Morin</p>
+            <ul class="lang-block fr">
+              <li>Dessin mesuré et recherche historique sur le terrain.</li>
+              <li>Architecture vernaculaire à colombage, ornements, fenêtres, portails.</li>
+              <li>Eguisheim, Kaysersberg, Turckheim, Riquewihr, Colmar (Koifhus), Haut-Koenigsbourg.</li>
+            </ul>
+            <ul class="lang-block en" hidden>
+              <li>Measured drawing and on-site historical research.</li>
+              <li>Vernacular half-timbered (colombage) architecture, ornament, windows, portals.</li>
+              <li>Eguisheim, Kaysersberg, Turckheim, Riquewihr, Colmar (Koifhus), Haut-Koenigsbourg.</li>
+            </ul>
+            <ul class="lang-block de" hidden>
+              <li>Aufmasszeichnung und historische Forschung vor Ort.</li>
+              <li>Vernakulare Fachwerkarchitektur (colombage), Ornament, Fenster, Portale.</li>
+              <li>Eguisheim, Kaysersberg, Turckheim, Riquewihr, Colmar (Koifhus), Haut-Koenigsbourg.</li>
+            </ul>
+            <div class="ltra-feature ltra-hero">
+              <figure class="feat">
+                <img src="assets/ltra-koenigsbourg.webp" alt="Château du Haut-Koenigsbourg - dessin mesuré" />
+                <figcaption>Château du Haut-Koenigsbourg</figcaption>
+              </figure>
+            </div>
+            <div class="strip">
+              <figure>
+                <img src="assets/ltra-turckheim.webp" alt="Turckheim - Hôtel des Deux Clefs, dessin à colombage" />
+                <figcaption>Turckheim · Hôtel des Deux Clefs</figcaption>
+              </figure>
+              <figure>
+                <img src="assets/ltra-riquewihr.webp" alt="Riquewihr - portail mesuré" />
+                <figcaption>Riquewihr · portail</figcaption>
+              </figure>
+              <figure>
+                <img src="assets/ltra-kaysersberg.webp" alt="Kaysersberg - fenêtre mesurée" />
+                <figcaption>Kaysersberg · fenêtre</figcaption>
+              </figure>
+              <figure>
+                <img src="assets/ltra-koifhus.webp" alt="Colmar Koifhus - ornement" />
+                <figcaption>Colmar · Koïfhus</figcaption>
+              </figure>
+              <figure>
+                <img src="assets/ltra-eguisheim.webp" alt="Eguisheim - croquis de rue" />
+                <figcaption>Eguisheim</figcaption>
+              </figure>
+            </div>
+          </div>
+        </article>
+        <article class="job">
+          <div class="job-when">2025 - </div>
+          <div>
+            <h3 class="lang-block fr">Étude - architecture traditionnelle</h3>
+            <h3 class="lang-block en" hidden>Study - traditional architecture</h3>
+            <h3 class="lang-block de" hidden>Studium - traditionelle Architektur</h3>
+            <p class="org">
+              <a href="https://www.intbau.org/" target="_blank" rel="noopener">INTBAU</a>
+              · <a href="https://www.mortier.eu/" target="_blank" rel="noopener">Dirk Mortier</a>
+              · <a href="https://www.idealspaces.org/" target="_blank" rel="noopener">Ideal Spaces</a>
+            </p>
+            <ul class="lang-block fr">
+              <li><a href="https://www.latablerondearchitecture.com/en/charpenterie-dirk-mortier" target="_blank" rel="noopener">Atelier charpente Mortier</a> - premier design architectural mesuré à la main (<a href="https://www.instagram.com/p/Da57dqbIlpz/" target="_blank" rel="noopener">Cattle Bridge</a>).</li>
+              <li><a href="https://www.idealspaces.org/projects/loss-of-cultural-heritage/" target="_blank" rel="noopener">Ideal Spaces · Loss of Cultural Heritage</a> (sept.&nbsp;2026) avec <a href="https://architecture.nd.edu/about/directory/ettore-mazzola/" target="_blank" rel="noopener">Ettore Mazzola</a> - <em>Ideal City</em>.</li>
+            </ul>
+            <ul class="lang-block en" hidden>
+              <li><a href="https://www.latablerondearchitecture.com/en/charpenterie-dirk-mortier" target="_blank" rel="noopener">Mortier timber workshop</a> - first hand-drawn measured architectural design (<a href="https://www.instagram.com/p/Da57dqbIlpz/" target="_blank" rel="noopener">Cattle Bridge</a>).</li>
+              <li><a href="https://www.idealspaces.org/projects/loss-of-cultural-heritage/" target="_blank" rel="noopener">Ideal Spaces · Loss of Cultural Heritage</a> (Sep 2026) with <a href="https://architecture.nd.edu/about/directory/ettore-mazzola/" target="_blank" rel="noopener">Ettore Mazzola</a> - <em>Ideal City</em>.</li>
+            </ul>
+            <ul class="lang-block de" hidden>
+              <li><a href="https://www.latablerondearchitecture.com/en/charpenterie-dirk-mortier" target="_blank" rel="noopener">Zimmerei-Workshop Mortier</a> - erster handgezeichneter architektonischer Entwurf (<a href="https://www.instagram.com/p/Da57dqbIlpz/" target="_blank" rel="noopener">Cattle Bridge</a>).</li>
+              <li><a href="https://www.idealspaces.org/projects/loss-of-cultural-heritage/" target="_blank" rel="noopener">Ideal Spaces · Loss of Cultural Heritage</a> (Sept.&nbsp;2026) mit <a href="https://architecture.nd.edu/about/directory/ettore-mazzola/" target="_blank" rel="noopener">Ettore Mazzola</a> - <em>Ideal City</em>.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="job">
+          <div class="job-when">2020</div>
+          <div>
+            <h3 class="lang-block fr">Alpage - bâtiments ruraux</h3>
+            <h3 class="lang-block en" hidden>Alpine pasturing - rural buildings</h3>
+            <h3 class="lang-block de" hidden>Alpwirtschaft - ländliche Bauten</h3>
+            <p class="org lang-block fr"><a href="https://www.vd.ch/economie/agriculture-et-viticulture/agrilogie/agrilogie-grange-verney-1" target="_blank" rel="noopener">Agrilogie Grange-Verney</a> · Moudon, Suisse</p>
+            <p class="org lang-block en" hidden><a href="https://www.vd.ch/economie/agriculture-et-viticulture/agrilogie/agrilogie-grange-verney-1" target="_blank" rel="noopener">Agrilogie Grange-Verney</a> · Moudon, Switzerland</p>
+            <p class="org lang-block de" hidden><a href="https://www.vd.ch/economie/agriculture-et-viticulture/agrilogie/agrilogie-grange-verney-1" target="_blank" rel="noopener">Agrilogie Grange-Verney</a> · Moudon, Schweiz</p>
+            <ul class="lang-block fr">
+              <li>Entretien de bâtiments ruraux&nbsp;; vernaculaire alpin.</li>
+            </ul>
+            <ul class="lang-block en" hidden>
+              <li>Rural building maintenance; alpine vernacular.</li>
+            </ul>
+            <ul class="lang-block de" hidden>
+              <li>Unterhalt ländlicher Bauten; alpine Vernakulararchitektur.</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="wrap reveal" id="projets">
+      <h2 class="section-title lang-block fr">Dessins</h2>
+      <h2 class="section-title lang-block en" hidden>Drawings</h2>
+      <h2 class="section-title lang-block de" hidden>Zeichnungen</h2>
+      <div class="work-grid">
+        <a class="tile tall" href="https://www.idealspaces.org/projects/loss-of-cultural-heritage/" target="_blank" rel="noopener">
+          <img src="assets/ideal-city.jpg" alt="Ideal City" />
+          <div class="tile-body">
+            <h3>Ideal City</h3>
+            <p class="lang-block fr">Encre, A3 - vernaculaire suisse. Ideal Spaces · Loss of Cultural Heritage, sept.&nbsp;2026.</p>
+            <p class="lang-block en" hidden>Ink, A3 - Swiss vernacular. Ideal Spaces · Loss of Cultural Heritage, Sep 2026.</p>
+            <p class="lang-block de" hidden>Tusche, A3 - schweizerische Vernakular. Ideal Spaces · Loss of Cultural Heritage, Sept.&nbsp;2026.</p>
+          </div>
+        </a>
+        <a class="tile" href="https://www.instagram.com/p/Da57dqbIlpz/" target="_blank" rel="noopener">
+          <img src="assets/bridge1.jpg" alt="Cattle Bridge" />
+          <div class="tile-body">
+            <h3>Cattle Bridge Fantaisie</h3>
+            <p class="lang-block fr">Premier design mesuré, à la main - atelier Dirk Mortier.</p>
+            <p class="lang-block en" hidden>First measured design, hand-drawn - Dirk Mortier workshop.</p>
+            <p class="lang-block de" hidden>Erster Aufmass-Entwurf, Handzeichnung - Workshop Dirk Mortier.</p>
+          </div>
+        </a>
+        <div class="tile">
+          <img src="assets/bridge2.jpg" alt="Élévation" />
+          <div class="tile-body">
+            <h3 class="lang-block fr">Élévation latérale</h3>
+            <h3 class="lang-block en" hidden>Side elevation</h3>
+            <h3 class="lang-block de" hidden>Seitenaufriss</h3>
+            <p class="lang-block fr">Portée, membres, chemin de charge.</p>
+            <p class="lang-block en" hidden>Span, members, load path.</p>
+            <p class="lang-block de" hidden>Spannweite, Stäbe, Lastpfad.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="research reveal" id="recherche">
+      <div class="wrap">
+        <h2 class="section-title lang-block fr">Cognitive Evolutionary Architectonics</h2>
+        <h2 class="section-title lang-block en" hidden>Cognitive Evolutionary Architectonics</h2>
+        <h2 class="section-title lang-block de" hidden>Cognitive Evolutionary Architectonics</h2>
+        <p class="lede lang-block fr" style="font-style:italic;color:#ddd;max-width:72ch;">
+          <em>Architecture as a Cognitive and Selective Niche: Toward an Evolutionary Architectonics</em>
+        </p>
+        <p class="lede lang-block en" hidden style="font-style:italic;color:#ddd;max-width:72ch;">
+          <em>Architecture as a Cognitive and Selective Niche: Toward an Evolutionary Architectonics</em>
+        </p>
+        <p class="lede lang-block de" hidden style="font-style:italic;color:#ddd;max-width:72ch;">
+          <em>Architecture as a Cognitive and Selective Niche: Toward an Evolutionary Architectonics</em>
+        </p>
+        <div class="research-grid">
+          <div>
+            <p class="lede lang-block fr">
+              Cadre interdisciplinaire (biologie évolutive, anthropologie, archéologie, sciences cognitives, neurosciences, théorie architecturale)&nbsp;: les configurations architecturales organisent des demandes perceptives, cognitives et comportementales récurrentes&nbsp;- perception spatiale, attention, mémoire, navigation, coordination corporelle, interaction sociale. L’environnement construit n’exprime pas seulement les capacités humaines&nbsp;: il participe à leur développement, leur maintien et, potentiellement, leur transformation. Article en cours avec <a href="https://snl.salk.edu/~gepshtein/" target="_blank" rel="noopener"><strong>Sergei Gepshtein</strong></a> et <a href="https://anfarch.org/users/tiziana-proietti" target="_blank" rel="noopener"><strong>Tiziana Proietti</strong></a>.
+            </p>
+            <p class="lede lang-block en" hidden>
+              Interdisciplinary framework (evolutionary biology, anthropology, archaeology, cognitive science, neuroscience, architectural theory): architectural configurations organise recurrent perceptual, cognitive and behavioural demands&nbsp;- spatial perception, attention, memory, navigation, bodily coordination, social interaction. Built environments are not only expressions of human capacities; they are active components of the environments through which those capacities are developed, maintained, and potentially transformed. Article in progress with <a href="https://snl.salk.edu/~gepshtein/" target="_blank" rel="noopener"><strong>Sergei Gepshtein</strong></a> and <a href="https://anfarch.org/users/tiziana-proietti" target="_blank" rel="noopener"><strong>Tiziana Proietti</strong></a>.
+            </p>
+            <p class="lede lang-block de" hidden>
+              Interdisziplinärer Rahmen (Evolutionsbiologie, Anthropologie, Archäologie, Kognitionswissenschaft, Neurowissenschaft, Architekturtheorie): architektonische Konfigurationen organisieren wiederkehrende perzeptive, kognitive und verhaltenbezogene Anforderungen&nbsp;- Raumwahrnehmung, Aufmerksamkeit, Gedächtnis, Navigation, körperliche Koordination, soziale Interaktion. Gebaute Umwelten sind nicht nur Ausdruck menschlicher Kapazitäten; sie sind aktive Bestandteile der Umwelten, in denen diese entwickelt, erhalten und potenziell transformiert werden. Artikel in Arbeit mit <a href="https://snl.salk.edu/~gepshtein/" target="_blank" rel="noopener"><strong>Sergei Gepshtein</strong></a> und <a href="https://anfarch.org/users/tiziana-proietti" target="_blank" rel="noopener"><strong>Tiziana Proietti</strong></a>.
+            </p>
+            <p class="lede" style="margin-top:1rem;">
+              <a href="https://docs.google.com/document/d/1KSX66SI9jgffBmZbjePYuwq5FL5QL85tiRzk7Xqd0V8/edit?tab=t.83c74dys11xb" target="_blank" rel="noopener">Abstract</a>
+               · 
+              <a href="https://liu.diva-portal.org/smash/record.jsf?pid=diva2:2034306" target="_blank" rel="noopener">BIOCRACY (DiVA)</a>
+            </p>
+          </div>
+          <div>
+            <p class="lede lang-block fr" style="font-size:0.92rem;color:#bdbdbd;">
+              Chaîne&nbsp;: architecture -> perception -> comportement -> interaction répétée -> développement et sélection. Prolongement de <em>BIOCRACY</em>&nbsp;: l’architecture comme environnement sélectif plus lent que la technique.
+            </p>
+            <p class="lede lang-block en" hidden style="font-size:0.92rem;color:#bdbdbd;">
+              Chain: architecture -> perception -> behaviour -> repeated interaction -> development and selection. Extends <em>BIOCRACY</em>: architecture as a slower selective environment than technology.
+            </p>
+            <p class="lede lang-block de" hidden style="font-size:0.92rem;color:#bdbdbd;">
+              Kette: Architektur -> Wahrnehmung -> Verhalten -> wiederholte Interaktion -> Entwicklung und Selektion. Fortsetzung von <em>BIOCRACY</em>: Architektur als langsamere selektive Umwelt als Technik.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap reveal" id="formation">
+      <div class="split">
+        <div>
+          <h2 class="section-title lang-block fr">Formation</h2>
+          <h2 class="section-title lang-block en" hidden>Education</h2>
+          <h2 class="section-title lang-block de" hidden>Ausbildung</h2>
+          <div class="edu">
+            <h3 class="lang-block fr">Parcours architectural</h3>
+            <h3 class="lang-block en" hidden>Architectural path</h3>
+            <h3 class="lang-block de" hidden>Architekturischer Weg</h3>
+            <p class="school"><a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas Paris</a> · <a href="https://www.latablerondearchitecture.com/" target="_blank" rel="noopener">Table Ronde</a> · <a href="https://www.intbau.org/" target="_blank" rel="noopener">INTBAU</a> · 2025-</p>
+          </div>
+          <div class="edu">
+            <h3>MPhil Applied Ethics</h3>
+            <p class="school lang-block fr"><a href="https://liu.se/" target="_blank" rel="noopener">Linköping</a> · 2023-2025 · thèse <a href="https://liu.diva-portal.org/smash/record.jsf?pid=diva2:2034306" target="_blank" rel="noopener"><em>BIOCRACY</em> · DiVA</a></p>
+            <p class="school lang-block en" hidden><a href="https://liu.se/" target="_blank" rel="noopener">Linköping</a> · 2023-2025 · thesis <a href="https://liu.diva-portal.org/smash/record.jsf?pid=diva2:2034306" target="_blank" rel="noopener"><em>BIOCRACY</em> · DiVA</a></p>
+            <p class="school lang-block de" hidden><a href="https://liu.se/" target="_blank" rel="noopener">Linköping</a> · 2023-2025 · These <a href="https://liu.diva-portal.org/smash/record.jsf?pid=diva2:2034306" target="_blank" rel="noopener"><em>BIOCRACY</em> · DiVA</a></p>
+          </div>
+          <div class="edu">
+            <h3>MBA Foresight &amp; Strategic Governance</h3>
+            <p class="school"><a href="https://ksu.lt/en/" target="_blank" rel="noopener">KSU Vilnius</a> · 9.73/10 · Summa Cum Laude · thèse 10/10&nbsp;: <em>Evaluation of morality as a factor of creativity in foresight</em></p>
+          </div>
+          <div class="edu">
+            <h3 class="lang-block fr"><a href="https://www.lincoln.ac.uk/chair-in-responsible-foresight/" target="_blank" rel="noopener">UNESCO Chair</a> · chapitre Routledge</h3>
+            <h3 class="lang-block en" hidden><a href="https://www.lincoln.ac.uk/chair-in-responsible-foresight/" target="_blank" rel="noopener">UNESCO Chair</a> · Routledge chapter</h3>
+            <h3 class="lang-block de" hidden><a href="https://www.lincoln.ac.uk/chair-in-responsible-foresight/" target="_blank" rel="noopener">UNESCO Chair</a> · Routledge-Kapitel</h3>
+            <p class="school"><a href="https://www.routledge.com/Towards-Principles-for-Responsible-Futures/Fuller-Roubelat-Marchais-Roubelat-Ward-Heraclide/p/book/9781032732411" target="_blank" rel="noopener"><em>Towards Principles for Responsible Futures</em></a> · ch.&nbsp;3 Moral Conflicts…</p>
+          </div>
+          <div class="edu">
+            <h3>B.S. Neuroscience · B.S. Biology · B.A. Anthropology</h3>
+            <p class="school"><a href="https://www.umt.edu/" target="_blank" rel="noopener">University of Montana</a> · 2015-2019</p>
+          </div>
+          <div class="edu">
+            <h3 class="lang-block fr">Full Stack Software Development, AI Specialization</h3>
+            <h3 class="lang-block en" hidden>Full Stack Software Development, AI Specialization</h3>
+            <h3 class="lang-block de" hidden>Full Stack Software Development, AI Specialization</h3>
+            <p class="school lang-block fr"><a href="https://kood.tech/en/locations/kood-johvi/" target="_blank" rel="noopener">kood/Jõhvi</a> · MTÜ Tuleviku Tehnoloogiaharidus · mai&nbsp;2024-mars&nbsp;2026</p>
+            <p class="school lang-block en" hidden><a href="https://kood.tech/en/locations/kood-johvi/" target="_blank" rel="noopener">kood/Jõhvi</a> · MTÜ Tuleviku Tehnoloogiaharidus · May&nbsp;2024-March&nbsp;2026</p>
+            <p class="school lang-block de" hidden><a href="https://kood.tech/en/locations/kood-johvi/" target="_blank" rel="noopener">kood/Jõhvi</a> · MTÜ Tuleviku Tehnoloogiaharidus · Mai&nbsp;2024-März&nbsp;2026</p>
+          </div>
+          <div class="edu">
+            <h3 class="lang-block fr">Diplôme d’alpagisme / bâtiments ruraux</h3>
+            <h3 class="lang-block en" hidden>Diploma in Traditional Alpine Pasturing</h3>
+            <h3 class="lang-block de" hidden>Diplom traditionelle Alpwirtschaft</h3>
+            <p class="school lang-block fr"><a href="https://www.vd.ch/economie/agriculture-et-viticulture/agrilogie/agrilogie-grange-verney-1" target="_blank" rel="noopener">Agrilogie Grange-Verney</a> · Moudon · mai-août&nbsp;2020</p>
+            <p class="school lang-block en" hidden><a href="https://www.vd.ch/economie/agriculture-et-viticulture/agrilogie/agrilogie-grange-verney-1" target="_blank" rel="noopener">Agrilogie Grange-Verney</a> · Moudon · May-Aug&nbsp;2020</p>
+            <p class="school lang-block de" hidden><a href="https://www.vd.ch/economie/agriculture-et-viticulture/agrilogie/agrilogie-grange-verney-1" target="_blank" rel="noopener">Agrilogie Grange-Verney</a> · Moudon · Mai-Aug.&nbsp;2020</p>
+          </div>
+        </div>
+        <div>
+          <h2 class="section-title lang-block fr">Compétences</h2>
+          <h2 class="section-title lang-block en" hidden>Skills</h2>
+          <h2 class="section-title lang-block de" hidden>Kompetenzen</h2>
+
+          <p class="skill-h lang-block fr">Urbanisme &amp; patrimoine</p>
+          <p class="skill-h lang-block en" hidden>Urbanism &amp; heritage</p>
+          <p class="skill-h lang-block de" hidden>Städtebau &amp; Denkmalpflege</p>
+          <div class="skill-row">
+            <span class="lang-block fr">Études urbaines historiques</span><span class="lang-block en" hidden>Historical urban studies</span><span class="lang-block de" hidden>Historische Stadtstudien</span>
+            <span class="lang-block fr">Cadastres / archives / aériennes</span><span class="lang-block en" hidden>Cadastres / archives / aerials</span><span class="lang-block de" hidden>Kataster / Archive / Luftbilder</span>
+            <span class="lang-block fr">Lecture PLU / OAP / plan-guide</span><span class="lang-block en" hidden>PLU / OAP / plan-guide</span><span class="lang-block de" hidden>PLU / OAP / Plan-Guide</span>
+            <span class="lang-block fr">Élévations de rue (existant / couleur / graphite)</span><span class="lang-block en" hidden>Street elevations (existing / color / graphite)</span><span class="lang-block de" hidden>Straßenaufrisse (Bestand / Farbe / Graphit)</span>
+            <span class="lang-block fr">Monographies patrimoniales</span><span class="lang-block en" hidden>Heritage monographs</span><span class="lang-block de" hidden>Baudenkmal-Monografien</span>
+            <span class="lang-block fr">Archives (AD, Gallica, IGN, DVF)</span><span class="lang-block en" hidden>Archives (AD, Gallica, IGN, DVF)</span><span class="lang-block de" hidden>Archive (AD, Gallica, IGN, DVF)</span>
+          </div>
+
+          <p class="skill-h lang-block fr">Outils</p>
+          <p class="skill-h lang-block en" hidden>Tools</p>
+          <p class="skill-h lang-block de" hidden>Tools</p>
+          <div class="skill-row">
+            <span>Python</span><span>HTML/CSS/JS</span><span>SVG</span>
+            <span>Photoshop</span><span>InDesign</span>
+            <span class="lang-block fr">Composition façade &amp; exports</span><span class="lang-block en" hidden>Façade composition &amp; exports</span><span class="lang-block de" hidden>Fassadenkomposition &amp; Exports</span>
+            <span class="lang-block fr">IA en urbanisme / architecture / patrimoine</span><span class="lang-block en" hidden>AI in urbanism / architecture / heritage</span><span class="lang-block de" hidden>KI in Städtebau / Architektur / Denkmalpflege</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap contact reveal" id="contact">
+      <div>
+        <h2 class="section-title">Contact</h2>
+        <ul class="contact-list">
+          <li><a href="mailto:hugues.ii.w.b.depingon@gmail.com">hugues.ii.w.b.depingon@gmail.com</a></li>
+          <li>
+            <a href="https://ch.linkedin.com/in/hugues-ii-w-b-de-pingon" target="_blank" rel="noopener">LinkedIn</a>
+            · <a href="https://archopoia.github.io/Hugues.W.B.dePingon/" target="_blank" rel="noopener">Portfolio</a>
+          </li>
+          <li><a href="https://arcas.be/about/" target="_blank" rel="noopener">arcas.be</a></li>
+        </ul>
+      </div>
+      <div class="pitch">
+        <h3 class="lang-block fr">Prochaine étape</h3>
+        <h3 class="lang-block en" hidden>Next step</h3>
+        <h3 class="lang-block de" hidden>Nächster Schritt</h3>
+        <p class="lang-block fr">Un échange court suffit - je m’adapte à vos outils.</p>
+        <p class="lang-block en" hidden>A short conversation is enough - I’ll adapt to your tools.</p>
+        <p class="lang-block de" hidden>Ein kurzes Gespräch reicht - ich passe auf Ihre Tools.</p>
+        <p style="margin-top:1rem">
+          <a class="btn btn-red" href="mailto:hugues.ii.w.b.depingon@gmail.com?subject=Candidature%20architecture%20-%20Hugues%20de%20Pingon%20(Arcas%20Paris)">
+            <span class="lang-block fr">Écrire</span>
+            <span class="lang-block en" hidden>Write</span>
+            <span class="lang-block de" hidden>Schreiben</span>
+          </a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <span>Hugues William Brenthone de Pingon · CV Architecture · CH</span>
+    <span class="lang-block fr">Rouge / gris / blanc · FR · EN · DE</span>
+    <span class="lang-block en" hidden>Red / gray / white · FR · EN · DE</span>
+    <span class="lang-block de" hidden>Rot / Grau / Weiss · FR · EN · DE</span>
+  </footer>
+
+  <script>
+    (function () {
+      const root = document.documentElement;
+      const buttons = document.querySelectorAll("[data-set-lang]");
+      const blocks = () => document.querySelectorAll(".lang-block");
+      function setLang(lang) {
+        root.lang = lang;
+        buttons.forEach((b) => b.classList.toggle("active", b.dataset.setLang === lang));
+        blocks().forEach((el) => {
+          if (el.classList.contains(lang)) el.removeAttribute("hidden");
+          else el.setAttribute("hidden", "");
+        });
+        try { localStorage.setItem("cv-lang", lang); } catch (_) {}
+      }
+      buttons.forEach((b) => b.addEventListener("click", () => setLang(b.dataset.setLang)));
+      let initial = "fr";
+      try {
+        const saved = localStorage.getItem("cv-lang");
+        if (saved === "en" || saved === "fr" || saved === "de") initial = saved;
+      } catch (_) {}
+      setLang(initial);
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("in"); });
+      }, { threshold: 0.12 });
+      document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>
