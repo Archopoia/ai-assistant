@@ -20,7 +20,7 @@ Assistant d’architecte chez Studios Arcas Paris (William Pesson) - MPhil éthi
 Architectural assistant at Studios Arcas Paris (William Pesson) - MPhil ethics, MBA Foresight Summa Cum Laude, triple bachelor (neuroscience / biology / anthropology), measured drawing, historical research; Swiss national.
 
 ## Credential stack (lead with these)
-1. **Studios Arcas, Paris** - since **5 November 2026** (do **not** advertise planned end date) under William Pesson - architectural assistant (research, drawing, documentation); neo-Art Deco / classical / modernist heritage culture. **Never name client/project deliverables** (no Gallieni, Villa Caroline, or similar) in CV, site, or outreach.
+1. **Studios Arcas, Paris** - architectural assistant **now** under William Pesson (research, drawing, documentation); neo-Art Deco / classical / modernist heritage culture. **Do not put start date in emails** (avoids "just started" worry). Do **not** advertise planned end date. **Never name client/project deliverables** (no Gallieni, Villa Caroline, or similar) in CV, site, or outreach.
 2. **MPhil Applied Ethics**, Linköping (2023-2025) - thesis *BIOCRACY* (DiVA)
 3. **MBA Foresight & Strategic Governance**, KSU Vilnius - 9.73/10, Summa Cum Laude, thesis
 4. **B.S. Neuroscience · B.S. Biology · B.A. Anthropology**, University of Montana
@@ -68,4 +68,4 @@ Architectural assistant at Studios Arcas Paris (William Pesson) - MPhil ethics, 
 - Typography: ASCII hyphen `-` only.
 
 ## Standard email bio (reuse verbatim)
-Je suis Suisse. Depuis novembre 2026, je suis assistant d'architecte chez Studios Arcas Paris (William Pesson). Formation : MPhil Applied Ethics, MBA Foresight Summa Cum Laude, et triple bachelor (neurosciences, biologie, anthropologie). En pratique : recherche et documentation, production visuelle (Photoshop, outillage logiciel, IA appliquée), plans d'élévation, cadastre et dessin à la main.
+Je suis Suisse. Je suis actuellement assistant d'architecte chez Studios Arcas Paris (William Pesson). Formation : MPhil Applied Ethics, MBA Foresight Summa Cum Laude, et triple bachelor (neurosciences, biologie, anthropologie). En pratique : recherche et documentation, production visuelle (Photoshop, outillage logiciel, IA appliquée), plans d'élévation, cadastre et dessin à la main.
