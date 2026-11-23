@@ -10,7 +10,7 @@
 **Sell strength. Never lead with what is missing.** Do not mention absence of an architecture diploma / CFC in outreach, CV, or drafts unless a form field forces a yes/no - then answer factually without apology and pivot to Arcas + credential stack.
 
 ## Typography rule (standing)
-**ASCII hyphen only (`-`).** Never use em dashes (`—`), en dashes (`–`), or other typographic dashes in emails, CV copy, lettres, or outreach. Ranges and breaks use `-` (e.g. `50-60%`, `May 2024-March 2026`).
+**ASCII hyphen only (`-`).** Never use em dashes, en dashes, or other typographic dashes in emails, CV copy, lettres, or outreach. Ranges and breaks use `-` (e.g. `50-60%`, `May 2024-March 2026`).
 
 
 ## One-liner (FR)
