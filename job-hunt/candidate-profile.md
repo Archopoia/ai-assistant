@@ -32,10 +32,12 @@ Architectural assistant at Studios Arcas Paris (William Pesson) — MPhil ethics
 
 ## Research — Cognitive Evolutionary Architectonics
 - Paper in progress: *Architecture as a Cognitive and Selective Niche: Toward an Evolutionary Architectonics*
-- Architecture as cognitive/selective niche (niche construction × perception × development)
-- Collaboration with **Sergei Gepshtein** (neuroscience) & **Tiziana Proietti** (architecture)
+- Full abstract: `job-hunt/research-abstract.md` (synced from Google Doc Abstract tab)
+- Built environments structure development/adaptation; organise perceptual, cognitive, behavioural demands (attention, memory, navigation, social interaction…)
+- Chain: architecture → perception → behaviour → repeated interaction → development and selection
+- Collaboration with **Sergei Gepshtein** & **Tiziana Proietti**
 - Extends BIOCRACY: technologies (and buildings) as selective environments on human capacities
-- Abstract: https://docs.google.com/document/d/1KSX66SI9jgffBmZbjePYuwq5FL5QL85tiRzk7Xqd0V8/
+- Abstract: https://docs.google.com/document/d/1KSX66SI9jgffBmZbjePYuwq5FL5QL85tiRzk7Xqd0V8/edit?tab=t.83c74dys11xb
 - Dossier: https://archopoia.github.io/Hugues.W.B.dePingon/dossier/
 
 ## Production / systems (asset, not apology)
