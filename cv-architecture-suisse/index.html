@@ -274,21 +274,23 @@
       display: grid; grid-template-columns: 1.3fr 1fr; gap: 0.65rem; margin-top: 1.75rem;
     }
     .tile {
-      position: relative; overflow: hidden; background: #111; color: #fff; min-height: 260px;
+      position: relative; overflow: hidden; background: #1a1a1a; color: #fff; min-height: 260px;
       text-decoration: none;
+      display: block;
     }
     .tile img {
       position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-      filter: grayscale(30%); opacity: 0.8;
+      opacity: 1;
       transition: transform 0.7s var(--ease), opacity 0.35s;
     }
-    .tile:hover img { transform: scale(1.04); opacity: 0.92; }
+    .tile:hover img { transform: scale(1.03); }
     .tile:hover { color: #fff; }
     .tile-body {
-      position: relative; z-index: 1; height: 100%;
+      position: relative; z-index: 1; height: 100%; min-height: inherit;
       display: flex; flex-direction: column; justify-content: flex-end;
       padding: 1.2rem;
-      background: linear-gradient(transparent 25%, rgba(0,0,0,0.78));
+      background: linear-gradient(transparent 35%, rgba(0,0,0,0.72));
+      pointer-events: none;
     }
     .tile h3 { font-family: "Bodoni Moda", serif; font-size: 1.3rem; margin-bottom: 0.3rem; }
     .tile p { font-size: 0.88rem; color: #ddd; max-width: 36ch; }
@@ -485,7 +487,7 @@
         </div>
       </div>
       <div class="hero-visual">
-        <img src="assets/ideal-city.webp" alt="Ideal City - dessin à l’encre, vernaculaire suisse" />
+        <img src="assets/ideal-city.jpg" alt="Ideal City - dessin à l’encre, vernaculaire suisse" />
       </div>
     </div>
   </header>
@@ -729,7 +731,7 @@
       <h2 class="section-title lang-block de" hidden>Zeichnungen</h2>
       <div class="work-grid">
         <a class="tile tall" href="https://www.idealspaces.org/projects/loss-of-cultural-heritage/" target="_blank" rel="noopener">
-          <img src="assets/ideal-city.webp" alt="Ideal City" />
+          <img src="assets/ideal-city.jpg" alt="Ideal City" />
           <div class="tile-body">
             <h3>Ideal City</h3>
             <p class="lang-block fr">Encre, A3 - vernaculaire suisse. Ideal Spaces · Loss of Cultural Heritage, sept.&nbsp;2026.</p>
@@ -738,7 +740,7 @@
           </div>
         </a>
         <a class="tile" href="https://www.instagram.com/p/Da57dqbIlpz/" target="_blank" rel="noopener">
-          <img src="assets/bridge1.webp" alt="Cattle Bridge" />
+          <img src="assets/bridge1.jpg" alt="Cattle Bridge" />
           <div class="tile-body">
             <h3>Cattle Bridge Fantaisie</h3>
             <p class="lang-block fr">Premier design mesuré, à la main - atelier Dirk Mortier.</p>
@@ -747,7 +749,7 @@
           </div>
         </a>
         <div class="tile">
-          <img src="assets/bridge2.webp" alt="Élévation" />
+          <img src="assets/bridge2.jpg" alt="Élévation" />
           <div class="tile-body">
             <h3 class="lang-block fr">Élévation latérale</h3>
             <h3 class="lang-block en" hidden>Side elevation</h3>
