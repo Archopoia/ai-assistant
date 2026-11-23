@@ -286,11 +286,23 @@
     .tile h3 { font-family: "Bodoni Moda", serif; font-size: 1.3rem; margin-bottom: 0.3rem; }
     .tile p { font-size: 0.88rem; color: #ddd; max-width: 36ch; }
     .tile.tall { grid-row: span 2; min-height: 540px; }
+    .ltra-feature {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-top: 1.25rem;
+    }
+    .ltra-feature figure {
+      margin: 0; background: #111; overflow: hidden;
+    }
+    .ltra-feature .feat img {
+      width: 100%; height: auto; min-height: 320px; max-height: 440px; object-fit: contain; display: block;
+    }
+    .ltra-feature figcaption {
+      font-size: 0.65rem; color: var(--steel); margin-top: 0.35rem; letter-spacing: 0.04em;
+    }
     .strip {
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-top: 0.65rem;
     }
-    .strip figure { margin: 0; background: var(--mist); aspect-ratio: 4/3; overflow: hidden; }
-    .strip img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(20%); }
+    .strip figure { margin: 0; background: #111; aspect-ratio: 3/4; overflow: hidden; }
+    .strip img { width: 100%; height: 100%; object-fit: contain; }
     .strip figcaption { font-size: 0.65rem; color: var(--steel); margin-top: 0.3rem; letter-spacing: 0.04em; }
 
     .research {
@@ -371,12 +383,13 @@
     .lang-block[hidden] { display: none !important; }
 
     @media (max-width: 900px) {
-      .hero-grid, .arcas-inner, .profile, .job, .work-grid, .research-grid, .split, .contact, .deliverables, .arcas-meta, .strip, .transfer-grid {
+      .hero-grid, .arcas-inner, .profile, .job, .work-grid, .research-grid, .split, .contact, .deliverables, .arcas-meta, .strip, .transfer-grid, .ltra-feature {
         grid-template-columns: 1fr;
       }
       .arcas-rail { writing-mode: horizontal-tb; transform: none; border-right: 0; border-bottom: 3px solid var(--swiss); padding: 0 0 0.5rem; margin-bottom: 0.5rem; }
       .tile.tall { grid-row: auto; min-height: 320px; }
       .strip { grid-template-columns: repeat(2, 1fr); }
+      .ltra-feature .feat img { min-height: 240px; max-height: 360px; }
       .hero-copy { border-right: 0; }
     }
 
@@ -536,24 +549,59 @@
       <h2 class="section-title lang-block de" hidden>Weitere Architekturerfahrung</h2>
       <div class="timeline">
         <article class="job">
-          <div class="job-when">Été / Sommer 2026</div>
+          <div class="job-when">
+            <span class="lang-block fr">2 semaines · 2026</span>
+            <span class="lang-block en" hidden>2 weeks · 2026</span>
+            <span class="lang-block de" hidden>2 Wochen · 2026</span>
+          </div>
           <div>
-            <h3 class="lang-block fr">Dessin mesuré</h3>
-            <h3 class="lang-block en" hidden>Measured drawing</h3>
-            <h3 class="lang-block de" hidden>Aufmasszeichnung</h3>
+            <h3 class="lang-block fr">Atelier historique <span class="punct">—</span> voyage en architecture alsacienne</h3>
+            <h3 class="lang-block en" hidden>Historical workshop <span class="punct">—</span> journey through Alsatian architecture</h3>
+            <h3 class="lang-block de" hidden>Historischer Workshop <span class="punct">—</span> Reise durch die elsässische Architektur</h3>
             <p class="org">La Table Ronde de l’Architecture · Alsace · Nadia &amp; Noé Morin</p>
             <ul class="lang-block fr">
-              <li>Plans, coupes, élévations et recherche historique sur le terrain.</li>
-              <li>Eguisheim, Kaysersberg, Colmar (Koifhus), Haut-Koenigsbourg.</li>
+              <li>Deux semaines de dessin mesuré et de recherche historique sur le terrain.</li>
+              <li>Architecture vernaculaire à colombage, ornements, fenêtres, portails.</li>
+              <li>Eguisheim, Kaysersberg, Turckheim, Riquewihr, Colmar (Koifhus), Haut-Koenigsbourg.</li>
             </ul>
             <ul class="lang-block en" hidden>
-              <li>Plans, sections, elevations and on-site historical research.</li>
-              <li>Eguisheim, Kaysersberg, Colmar (Koifhus), Haut-Koenigsbourg.</li>
+              <li>Two weeks of measured drawing and on-site historical research.</li>
+              <li>Vernacular half-timbered (colombage) architecture, ornament, windows, portals.</li>
+              <li>Eguisheim, Kaysersberg, Turckheim, Riquewihr, Colmar (Koifhus), Haut-Koenigsbourg.</li>
             </ul>
             <ul class="lang-block de" hidden>
-              <li>Grundrisse, Schnitte, Aufrisse und historische Forschung vor Ort.</li>
-              <li>Eguisheim, Kaysersberg, Colmar (Koifhus), Haut-Koenigsbourg.</li>
+              <li>Zwei Wochen Aufmasszeichnung und historische Forschung vor Ort.</li>
+              <li>Vernakulare Fachwerkarchitektur (colombage), Ornament, Fenster, Portale.</li>
+              <li>Eguisheim, Kaysersberg, Turckheim, Riquewihr, Colmar (Koifhus), Haut-Koenigsbourg.</li>
             </ul>
+            <div class="ltra-feature">
+              <figure class="feat">
+                <img src="assets/ltra-turckheim.webp" alt="Turckheim — Hôtel des Deux Clefs, dessin à colombage" />
+                <figcaption>Turckheim · Hôtel des Deux Clefs · colombage</figcaption>
+              </figure>
+              <figure class="feat">
+                <img src="assets/ltra-riquewihr.webp" alt="Riquewihr — portail mesuré" />
+                <figcaption>Riquewihr · 12 rue du Général de Gaulle · portail</figcaption>
+              </figure>
+            </div>
+            <div class="strip">
+              <figure>
+                <img src="assets/ltra-kaysersberg.webp" alt="Kaysersberg — fenêtre mesurée" />
+                <figcaption>Kaysersberg · fenêtre</figcaption>
+              </figure>
+              <figure>
+                <img src="assets/ltra-koifhus.webp" alt="Colmar Koifhus — ornement" />
+                <figcaption>Colmar · Koïfhus</figcaption>
+              </figure>
+              <figure>
+                <img src="assets/ltra-eguisheim.webp" alt="Eguisheim — croquis de rue" />
+                <figcaption>Eguisheim</figcaption>
+              </figure>
+              <figure>
+                <img src="assets/ltra-koenigsbourg.webp" alt="Haut-Koenigsbourg" />
+                <figcaption>Haut-Koenigsbourg</figcaption>
+              </figure>
+            </div>
           </div>
         </article>
         <article class="job">
@@ -634,12 +682,6 @@
             <p class="lang-block de" hidden>Spannweite, Stäbe, Lastpfad.</p>
           </div>
         </a>
-      </div>
-      <div class="strip">
-        <figure><img src="assets/ltra1.webp" alt="" /><figcaption>LTRA</figcaption></figure>
-        <figure><img src="assets/ltra2.webp" alt="" /><figcaption>LTRA</figcaption></figure>
-        <figure><img src="assets/ltra3.webp" alt="" /><figcaption>LTRA</figcaption></figure>
-        <figure><img src="assets/ltra4.webp" alt="" /><figcaption>LTRA</figcaption></figure>
       </div>
     </section>
 
