@@ -27,7 +27,7 @@ Architectural assistant trained at Studios Arcas Paris (William Pesson) — hist
 - Agrilogie Granges-Verney (2020) — alpine rural buildings
 
 ## Research
-- Evolutionary architectonics — article with Sergei Gepshtein (neuroscience) & Tiziana (architecture, PhD); potential PhD
+- Evolutionary architectonics — article with Sergei Gepshtein (neuroscience) & Tiziana Proietti (architecture, PhD); potential PhD
 - Dossier: https://archopoia.github.io/Hugues.W.B.dePingon/dossier/
 
 ## Education (no architecture diploma)
