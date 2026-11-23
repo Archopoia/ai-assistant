@@ -61,6 +61,10 @@ Architectural assistant at Studios Arcas Paris (William Pesson) - MPhil ethics, 
 - Never apologise; never volunteer “I don’t have an architecture diploma”
 - **Never** write soft tool-gap lines: “apprentissage CAD/BIM”, “apprentissage rapide”, “actively learning CAD/BIM”, etc. Do not name BIM packages you do not own.
 - **Ask:** research, documentation, archives, coordination, heritage assistance, visual/production support - not a pure draftsman seat.
-- Hand-measured drawing stays on the CV as craft/eye. Digital side: Photoshop, IA image gen, tooling, élévations, cadastre - stated generally.
+- **Write for strangers:** they do not know your workshops or obscure labels. In emails: no Table Ronde, no Ideal Spaces, no kood/Jõhvi, no BIOCRACY, no research paper titles. Keep **Studios Arcas Paris (William Pesson)** + plain credentials (MPhil, MBA Summa Cum Laude, triple bachelor) + plain skills (Photoshop, tooling, IA appliquée, élévations, cadastre, dessin à la main). Same experience block across all drafts.
+- Hand-measured drawing stays on the CV; emails say “dessin à la main” without naming ateliers.
 - **Never** name Arcas project/client specifics in outreach or CV.
 - Typography: ASCII hyphen `-` only.
+
+## Standard email bio (reuse verbatim)
+Je suis Suisse. Depuis novembre 2026, je suis assistant d'architecte chez Studios Arcas Paris (William Pesson). Formation : MPhil Applied Ethics, MBA Foresight Summa Cum Laude, et triple bachelor (neurosciences, biologie, anthropologie). En pratique : recherche et documentation, production visuelle (Photoshop, outillage logiciel, IA appliquée), plans d'élévation, cadastre et dessin à la main.
