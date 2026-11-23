@@ -51,10 +51,16 @@ Architectural assistant at Studios Arcas Paris (William Pesson) - MPhil ethics, 
 - kood/Jõhvi full-stack / AI: https://kood.tech/en/locations/kood-johvi/ (source of truth: https://archopoia.github.io/Hugues.W.B.dePingon/#education)
 - In architecture outreach, frame as spatial production + coordination capacity
 
+## Tooling posture (true)
+- Photoshop, AI image gen, ad-hoc software tooling to get tasks done; cadastre work; elevation plans; visual production.
+- **Not** an AI researcher / ML specialist. **Not** claiming Revit / ArchiCAD / BIM autonomy.
+- Frame as: **tooling + AI as production lever** - I use tools (and AI) to ship documentation, visuals, plans, coordination. Adapt to the office stack.
+
 ## Outreach tone
 - Confidence, specificity, Arcas prestige, research seriousness
 - Never apologise; never volunteer “I don’t have an architecture diploma”
-- **Never** write soft tool-gap lines: “apprentissage CAD/BIM”, “apprentissage rapide”, “actively learning CAD/BIM”, etc. Omit CAD/BIM until it’s a real deliverable.
-- **Never** pitch a drawing / draftsman seat in emails. Hand-measured drawing stays on the CV and as proof of eye; the ask is research, documentation, archives, coordination, heritage assistance - not production dessin without CAD.
+- **Never** write soft tool-gap lines: “apprentissage CAD/BIM”, “apprentissage rapide”, “actively learning CAD/BIM”, etc. Do not name BIM packages you do not own.
+- **Ask:** research, documentation, archives, coordination, heritage assistance, visual/production support - not a pure draftsman seat.
+- Hand-measured drawing stays on the CV as craft/eye. Digital side: Photoshop, IA image gen, tooling, élévations, cadastre - stated generally.
 - **Never** name Arcas project/client specifics in outreach or CV.
 - Typography: ASCII hyphen `-` only.
