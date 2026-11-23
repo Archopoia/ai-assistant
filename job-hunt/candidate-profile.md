@@ -20,7 +20,7 @@ Assistant d’architecte chez Studios Arcas Paris (William Pesson) - MPhil éthi
 Architectural assistant at Studios Arcas Paris (William Pesson) - MPhil ethics, MBA Foresight Summa Cum Laude, triple bachelor (neuroscience / biology / anthropology), measured drawing, historical research; Swiss national.
 
 ## Credential stack (lead with these)
-1. **Studios Arcas, Paris** - architectural assistant **now** under William Pesson (research, drawing, documentation); neo-Art Deco / classical / modernist heritage culture. **Do not put start date in emails** (avoids "just started" worry). Do **not** advertise planned end date. **Never name client/project deliverables** (no Gallieni, Villa Caroline, or similar) in CV, site, or outreach.
+1. **Studios Arcas, Paris** - architectural assistant **now** under William Pesson; neo-Art Deco / classical / modernist heritage culture. **Do not put start date in emails.** Do **not** advertise planned end date. **Capabilities (from studio week):** étude historique urbaine + archives; **ElevAItion** (in-house AI elevation tool); **PlanMaker** (in-house plans tool); façade elevation dossiers. **Never name client codes / sites** (no Bondy, Gallieni, Villa Caroline, Argenson street address) in CV, site, or outreach - sell the capability, not the client folder.
 2. **MPhil Applied Ethics**, Linköping (2023-2025) - thesis *BIOCRACY* (DiVA)
 3. **MBA Foresight & Strategic Governance**, KSU Vilnius - 9.73/10, Summa Cum Laude, thesis
 4. **B.S. Neuroscience · B.S. Biology · B.A. Anthropology**, University of Montana
@@ -52,16 +52,16 @@ Architectural assistant at Studios Arcas Paris (William Pesson) - MPhil ethics, 
 - In architecture outreach, frame as spatial production + coordination capacity
 
 ## Tooling posture (true)
-- Photoshop, AI image gen, ad-hoc software tooling to get tasks done; cadastre work; elevation plans; visual production.
+- Photoshop, AI image gen; **ElevAItion** (custom AI-assisted elevations); **PlanMaker** (custom plans); étude historique / archives; façade elevations; cadastre; visual production.
 - **Not** an AI researcher / ML specialist. **Not** claiming Revit / ArchiCAD / BIM autonomy.
-- Frame as: **tooling + AI as production lever** - I use tools (and AI) to ship documentation, visuals, plans, coordination. Adapt to the office stack.
+- Frame as: **I build and use tooling (incl. AI) to ship** documentation, elevations, plans, coordination - fast. Adapt to the office stack.
 
 ## Outreach tone
 - Confidence, specificity, Arcas prestige, research seriousness
 - Never apologise; never volunteer “I don’t have an architecture diploma”
 - **Never** write soft tool-gap lines: “apprentissage CAD/BIM”, “apprentissage rapide”, “actively learning CAD/BIM”, etc. Do not name BIM packages you do not own.
 - **Ask:** research, documentation, archives, coordination, heritage assistance, visual/production support - not a pure draftsman seat.
-- **Write for strangers:** they do not know your workshops or obscure labels. In emails: no Table Ronde, no Ideal Spaces, no kood/Jõhvi, no BIOCRACY, no research paper titles. Keep **Studios Arcas Paris (William Pesson)** + plain credentials (MPhil, MBA Summa Cum Laude, triple bachelor) + plain skills (Photoshop, tooling, IA appliquée, élévations, cadastre, dessin à la main). Same experience block across all drafts.
+- **Write for strangers:** no Table Ronde, Ideal Spaces, kood, BIOCRACY, paper titles, or client folder names. Keep **Studios Arcas Paris (William Pesson)** + credentials + plain skills. OK to name **ElevAItion** and **PlanMaker** as in-house tools you built/use. Same bio across drafts.
 - Hand-measured drawing stays on the CV; emails say “dessin à la main” without naming ateliers.
 - **No PDF by default:** email = lettre; link https://cv.apps.grok.bot for the CV. Attachments only if an office explicitly asks (or a real portfolio PDF later).
 - **Never** name Arcas project/client specifics in outreach or CV.
@@ -71,4 +71,4 @@ Architectural assistant at Studios Arcas Paris (William Pesson) - MPhil ethics, 
 **Disponible à partir de janvier 2027** (début d'année). State this in every outreach email.
 
 ## Standard email bio (reuse verbatim)
-Je suis Suisse. Je suis actuellement assistant d'architecte chez Studios Arcas Paris (William Pesson). Formation : MPhil Applied Ethics, MBA Foresight Summa Cum Laude, et triple bachelor (neurosciences, biologie, anthropologie). En pratique : recherche et documentation, production visuelle (Photoshop, outillage logiciel, IA appliquée), plans d'élévation, cadastre et dessin à la main.
+Je suis Suisse. Je suis actuellement assistant d'architecte chez Studios Arcas Paris (William Pesson). Formation : MPhil Applied Ethics, MBA Foresight Summa Cum Laude, et triple bachelor (neurosciences, biologie, anthropologie). En pratique : études historiques et archives, élévations et plans (outils maison ElevAItion et PlanMaker, Photoshop, IA appliquée), cadastre et dessin à la main.
