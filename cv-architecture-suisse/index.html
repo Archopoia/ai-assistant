@@ -8,7 +8,7 @@
   <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600;6..96,700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
       --swiss: #ff0000;
@@ -114,13 +114,14 @@
       font-weight: 500; color: #ffb3b3; margin-bottom: 1.4rem;
     }
     .hero h1 {
-      font-family: "Bodoni Moda", serif;
+      font-family: "Bodoni Moda", "IBM Plex Sans", serif;
       font-weight: 600;
       font-size: clamp(2.6rem, 7vw, 5.4rem);
-      line-height: 0.92;
-      letter-spacing: -0.03em;
+      line-height: 1.08;
+      letter-spacing: -0.01em;
       margin-bottom: 1.1rem;
     }
+    .hero h1 br { display: block; content: ""; margin-top: 0.06em; }
     .hero-role {
       font-size: clamp(1rem, 2vw, 1.2rem);
       max-width: 28ch;
@@ -185,10 +186,20 @@
       height: fit-content;
     }
     .section-title {
-      font-family: "Bodoni Moda", serif;
+      font-family: "Bodoni Moda", "IBM Plex Sans", serif;
       font-size: clamp(1.8rem, 3.4vw, 2.7rem);
-      font-weight: 600; line-height: 1.05;
-      letter-spacing: -0.02em; margin-bottom: 0.85rem;
+      font-weight: 600; line-height: 1.15;
+      letter-spacing: -0.01em; margin-bottom: 0.85rem;
+      font-kerning: normal;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    /* Bodoni Moda subset often drops em/en dashes — paint punctuation in Plex */
+    .section-title .punct,
+    .hero-role .punct,
+    .hero-proof .punct {
+      font-family: "IBM Plex Sans", sans-serif;
+      font-weight: 400;
+      letter-spacing: 0;
     }
     .lede { max-width: 62ch; color: var(--ink-2); font-size: 1.02rem; }
     .arcas-meta {
@@ -403,15 +414,15 @@
         </div>
         <h1>Hugues<br />de Pingon</h1>
         <p class="hero-role lang-block fr">
-          Assistant d’architecte — formé au dessin d’histoire et au néo Art Déco chez Studios Arcas, Paris.
+          Assistant d’architecte <span class="punct">—</span> formé au dessin d’histoire et au néo Art Déco chez Studios Arcas, Paris.
         </p>
         <p class="hero-role lang-block en" hidden>
-          Architectural assistant — trained in historical drawing and neo–Art Deco at Studios Arcas, Paris.
+          Architectural assistant <span class="punct">—</span> trained in historical drawing and neo<span class="punct">–</span>Art Deco at Studios Arcas, Paris.
         </p>
         <div class="hero-proof">
           <strong>Studios Arcas · Paris</strong>
           <span class="lang-block fr">William Pesson · néo Art Déco, patrimoine XXe, recherche historique</span>
-          <span class="lang-block en" hidden>William Pesson · neo–Art Deco, 20th-c. heritage, historical research</span>
+          <span class="lang-block en" hidden>William Pesson · neo<span class="punct">–</span>Art Deco, 20th-c. heritage, historical research</span>
         </div>
         <div class="hero-ctas no-print">
           <a class="btn btn-red" href="#arcas">
@@ -436,8 +447,8 @@
       <div>
         <p class="lang-block fr" style="font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--swiss);font-weight:500;margin-bottom:0.6rem;">Expérience phare</p>
         <p class="lang-block en" hidden style="font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--swiss);font-weight:500;margin-bottom:0.6rem;">Flagship experience</p>
-        <h2 class="section-title lang-block fr">Un mois chez Arcas Paris — là où se construit le néo Art Déco contemporain.</h2>
-        <h2 class="section-title lang-block en" hidden>One month at Arcas Paris — where contemporary neo–Art Deco is built.</h2>
+        <h2 class="section-title lang-block fr">Un mois chez Arcas Paris <span class="punct">—</span> là où se construit le néo Art Déco contemporain.</h2>
+        <h2 class="section-title lang-block en" hidden>One month at Arcas Paris <span class="punct">—</span> where contemporary neo<span class="punct">–</span>Art Deco is built.</h2>
         <p class="lede lang-block fr">
           ARCAS (Knokke · Paris · Gdańsk) conçoit des quartiers et bâtiments en styles classique, Art Déco et moderniste — plus de 30 ans, 1000+ projets. À Paris, sous la direction de <strong>William Pesson</strong> (architecte-historien, prix VMF-ARCAS Patrimoine du XXe), j’ai assisté l’équipe sur recherche historique, élévations et archives. C’est mon ancrage le plus crédible pour un bureau suisse exigeant sur le détail et le contexte.
         </p>
@@ -495,8 +506,8 @@
       <div class="profile">
         <img class="portrait" src="assets/portrait.webp" alt="Hugues William Brenthone de Pingon" />
         <div>
-          <h2 class="section-title lang-block fr">Profil atypique — utile aux bureaux qui veulent une main précise et une tête cultivée.</h2>
-          <h2 class="section-title lang-block en" hidden>Atypical profile — useful to offices that want a precise hand and a cultivated mind.</h2>
+          <h2 class="section-title lang-block fr">Profil atypique <span class="punct">—</span> utile aux bureaux qui veulent une main précise et une tête cultivée.</h2>
+          <h2 class="section-title lang-block en" hidden>Atypical profile <span class="punct">—</span> useful to offices that want a precise hand and a cultivated mind.</h2>
           <p class="lede lang-block fr">
             Pas de diplôme d’architecture. En revanche&nbsp;: maturité suisse, un mois d’agence prestigieuse à Paris (Arcas), dessin mesuré, charpente traditionnelle, réseaux INTBAU / Table Ronde, et une ligne de recherche originale (architectonique évolutive) avec Sergei Gepshtein et Tiziana Proietti.
           </p>
@@ -679,13 +690,13 @@
             <span class="lang-block fr">Archives</span><span class="lang-block en" hidden>Archives</span>
             <span class="lang-block fr">Élévations</span><span class="lang-block en" hidden>Elevations</span>
             <span class="lang-block fr">Dessin mesuré</span><span class="lang-block en" hidden>Measured drawing</span>
-            <span class="lang-block fr">Néo Art Déco (Arcas)</span><span class="lang-block en" hidden>Neo–Art Deco (Arcas)</span>
+            <span class="lang-block fr">Néo Art Déco (Arcas)</span><span class="lang-block en" hidden>Neo<span class="punct">–</span>Art Deco (Arcas)</span>
           </div>
           <p class="skill-h">Tools</p>
           <div class="skill-row">
             <span>Photoshop</span><span>InDesign</span><span>HTML/CSS/JS</span><span>Python</span>
-            <span class="lang-block fr">CAD/BIM — apprentissage actif</span>
-            <span class="lang-block en" hidden>CAD/BIM — actively learning</span>
+            <span class="lang-block fr">CAD/BIM <span class="punct">—</span> apprentissage actif</span>
+            <span class="lang-block en" hidden>CAD/BIM <span class="punct">—</span> actively learning</span>
           </div>
           <p class="skill-h lang-block fr">Aussi</p>
           <p class="skill-h lang-block en" hidden>Also</p>
