@@ -1,4 +1,4 @@
-# Cognitive Evolutionary Architectonics — Abstract
+# Cognitive Evolutionary Architectonics - Abstract
 
 **Source:** Google Doc `1KSX66SI9jgffBmZbjePYuwq5FL5QL85tiRzk7Xqd0V8` · tab Abstract (`t.83c74dys11xb`)  
 **URL:** https://docs.google.com/document/d/1KSX66SI9jgffBmZbjePYuwq5FL5QL85tiRzk7Xqd0V8/edit?tab=t.83c74dys11xb
