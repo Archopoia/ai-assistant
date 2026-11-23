@@ -16,13 +16,13 @@
 **ASCII hyphen only (`-`).** Never em/en dashes in emails, CV, lettres, outreach.
 
 ## Headline
-Architecture & urbanisme · outils numériques / IA appliquée au projet
+Architecture & urbanisme · IA intégrée au projet
 
 ## One-liner (positioning)
-Architect / urbanist who builds **research -> evidence -> visual/product pipelines** (Python + HTML/JS + generative imaging) to ship études, monographies, façade elevations and plan demos without waiting on a traditional production chain.
+Architect / urbanist who ships études, monographies and elevations - and knows how to use AI and integrate AI solutions into urbanism, architecture and heritage.
 
 ## One-liner (FR outreach)
-Je suis Suisse, actuellement assistant d'architecte chez Studios Arcas Paris (William Pesson). Je construis des pipelines recherche -> preuves -> livrables (études urbaines, monographies, élévations mètre-vraies, viewers plan, exports HTML/PDF). MPhil Applied Ethics, MBA Foresight Summa Cum Laude, triple bachelor. Disponible à partir de janvier 2027.
+Je suis Suisse, actuellement assistant d'architecte chez Studios Arcas Paris (William Pesson). Études urbaines, monographies, élévations - et intégration de solutions IA dans l'urbanisme, l'architecture et le patrimoine. MPhil Applied Ethics, MBA Foresight Summa Cum Laude, triple bachelor. Disponible à partir de janvier 2027.
 
 ## Credential stack
 1. **Studios Arcas, Paris** - assistant **now** under William Pesson (no start date in emails; no planned end date). Capacity spine: urban historical studies · meter-true elevations · sourced monographs · plan viewers · agency/client HTML sites.
@@ -42,7 +42,7 @@ Je suis Suisse, actuellement assistant d'architecte chez Studios Arcas Paris (Wi
 ## Strong vs weak wording
 | Weak | Strong |
 |---|---|
-| Used AI | AI pipelines under project constraints (gabarit réglementaire, meter-true, QC) |
+| Used AI | Know how to use AI and integrate AI solutions into urbanism, architecture, heritage |
 | Web research | Archival method + auditable evidence graph |
 | Makes websites | Client HTML/PDF from a canonical source + ship gate |
 | Prospecting | Discovery -> sample -> human approval -> product demo |
@@ -65,4 +65,4 @@ Je suis Suisse, actuellement assistant d'architecte chez Studios Arcas Paris (Wi
 **Disponible à partir de janvier 2027.**
 
 ## Standard email bio (reuse verbatim)
-Je suis Suisse. Je suis actuellement assistant d'architecte chez Studios Arcas Paris (William Pesson). Je construis des pipelines recherche -> preuves -> livrables : études urbaines historiques, monographies patrimoniales sourcées, élévations mètre-vraies, viewers plan, exports HTML/PDF - sous contraintes projet, avec QC. Formation : MPhil Applied Ethics, MBA Foresight Summa Cum Laude, triple bachelor (neurosciences, biologie, anthropologie).
+Je suis Suisse. Je suis actuellement assistant d'architecte chez Studios Arcas Paris (William Pesson). Études urbaines historiques, monographies patrimoniales, élévations - et j'intègre des solutions IA dans l'urbanisme, l'architecture et le patrimoine. Formation : MPhil Applied Ethics, MBA Foresight Summa Cum Laude, triple bachelor (neurosciences, biologie, anthropologie).
