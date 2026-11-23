@@ -22,7 +22,6 @@ Architectural assistant at Studios Arcas Paris (William Pesson) — MPhil ethics
 4. **B.S. Neuroscience · B.S. Biology · B.A. Anthropology**, University of Montana
 5. **Full Stack Software Development, AI Specialization** — **kood/Jõhvi**, Estonia (MTÜ Tuleviku Tehnoloogiaharidus), May 2024–March 2026 — https://kood.tech/en/locations/kood-johvi/
 6. **Diploma in Traditional Alpine Pasturing**, Agrilogie Grange-Verney, Moudon (May–Aug 2020)
-7. **Maturité**, ENSR Chailly, Switzerland
 
 ## Architecture practice
 - La Table Ronde de l’Architecture (Alsace, 2 weeks, 2026) — Journey to Alsatian architecture: measured drawings; standout: Château du Haut-Koenigsbourg; also Turckheim Hôtel des Deux Clefs, Riquewihr portal, Kaysersberg, Eguisheim, Koïfhus
