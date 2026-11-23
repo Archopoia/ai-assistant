@@ -17,10 +17,10 @@
 Architecture & urbanisme · outils numériques / IA appliquée au projet
 
 ## One-liner (positioning)
-Architect / urbanist who builds **research → evidence → visual/product pipelines** (Python + HTML/JS + generative imaging) to ship études, monographies, façade elevations and plan-sale demos without waiting on a traditional production chain.
+Architect / urbanist who builds **research -> evidence -> visual/product pipelines** (Python + HTML/JS + generative imaging) to ship études, monographies, façade elevations and plan-sale demos without waiting on a traditional production chain.
 
 ## One-liner (FR outreach)
-Je suis Suisse, actuellement assistant d'architecte chez Studios Arcas Paris (William Pesson). Je construis des pipelines recherche → preuves → livrables (études urbaines, monographies, élévations mètre-vraies, outils ElevAItion / PlanMaker). MPhil Applied Ethics, MBA Foresight Summa Cum Laude, triple bachelor. Disponible à partir de janvier 2027.
+Je suis Suisse, actuellement assistant d'architecte chez Studios Arcas Paris (William Pesson). Je construis des pipelines recherche -> preuves -> livrables (études urbaines, monographies, élévations mètre-vraies, outils ElevAItion / PlanMaker). MPhil Applied Ethics, MBA Foresight Summa Cum Laude, triple bachelor. Disponible à partir de janvier 2027.
 
 ## Credential stack
 1. **Studios Arcas, Paris** - assistant **now** under William Pesson (no start date in emails; no planned end date). Portfolio spine: Bondy Gallieni · ElevAItion · Villa Caroline · PlanMaker (side) · site ARCAS prototype.
@@ -33,8 +33,8 @@ Je suis Suisse, actuellement assistant d'architecte chez Studios Arcas Paris (Wi
 ## Portfolio bullets (results)
 - **Bondy - Av. Gallieni (ARCAS):** full urban-history pack in ~1 week - cadastres/archives/aerials, color elevations, plan-guide intentions, design hypothesis, HTML album + PDF/PPTX/DOCX, scripted rebuild.
 - **ElevAItion:** local meter-true street-elevation app (locked OAP envelope, SVG/raster, local server); optional AI façades under project constraints; versioned, `python serve.py`.
-- **Villa Caroline:** sourced building monograph (chronology, actors, iconography, Source → Claim → Conclusion graph); HTML + archives pack; editorial QC; GitHub Pages; live review API.
-- **PlanMaker (side venture):** discovery → samples → human gate → trial 3D plan viewer (surface overlay / rooms / options). Do **not** claim sent emails, closed deals, or paid client 3D tours.
+- **Villa Caroline:** sourced building monograph (chronology, actors, iconography, Source -> Claim -> Conclusion graph); HTML + archives pack; editorial QC; GitHub Pages; live review API.
+- **PlanMaker (side venture):** discovery -> samples -> human gate -> trial 3D plan viewer (surface overlay / rooms / options). Do **not** claim sent emails, closed deals, or paid client 3D tours.
 - **Site ARCAS Paris:** agency site prototype (home / projects / agency / contact).
 
 ## Strong vs weak wording
@@ -43,7 +43,7 @@ Je suis Suisse, actuellement assistant d'architecte chez Studios Arcas Paris (Wi
 | Used AI | AI pipelines under project constraints (OAP gabarit, meter-true, QC) |
 | Web research | Archival method + auditable evidence graph |
 | Makes websites | Client HTML/PDF from a canonical source + ship gate |
-| Prospecting | Discovery → sample → human approval → product demo |
+| Prospecting | Discovery -> sample -> human approval -> product demo |
 
 ## Do not claim
 - Expert Three.js / Blender at production scale
@@ -61,4 +61,4 @@ Je suis Suisse, actuellement assistant d'architecte chez Studios Arcas Paris (Wi
 **Disponible à partir de janvier 2027.**
 
 ## Standard email bio (reuse verbatim)
-Je suis Suisse. Je suis actuellement assistant d'architecte chez Studios Arcas Paris (William Pesson). Je construis des pipelines recherche → preuves → livrables : études urbaines historiques, monographies patrimoniales sourcées, élévations mètre-vraies (ElevAItion), plans et demos (PlanMaker), exports HTML/PDF - sous contraintes projet, avec QC. Formation : MPhil Applied Ethics, MBA Foresight Summa Cum Laude, triple bachelor (neurosciences, biologie, anthropologie).
+Je suis Suisse. Je suis actuellement assistant d'architecte chez Studios Arcas Paris (William Pesson). Je construis des pipelines recherche -> preuves -> livrables : études urbaines historiques, monographies patrimoniales sourcées, élévations mètre-vraies (ElevAItion), plans et demos (PlanMaker), exports HTML/PDF - sous contraintes projet, avec QC. Formation : MPhil Applied Ethics, MBA Foresight Summa Cum Laude, triple bachelor (neurosciences, biologie, anthropologie).
