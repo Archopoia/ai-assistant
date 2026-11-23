@@ -41,8 +41,8 @@ Architectural assistant at Studios Arcas Paris (William Pesson) — MPhil ethics
 - Dossier: https://archopoia.github.io/Hugues.W.B.dePingon/dossier/
 
 ## Production / systems (asset, not apology) — with URLs
-- OnceLost Games: https://www.oncelostgames.com/ — Lead Game Designer, *The Wayward Realms* (https://store.steampowered.com/app/1685310/The_Wayward_Realms/ · https://www.waywardrealms.com/)
-- The Discording Tales / Archopoia: https://www.thediscordingtales.com/ · https://the-discording-tales.itch.io/
+- OnceLost Games: https://www.oncelostgames.com/ — Lead Game Designer, *The Wayward Realms* (Steam)
+- The Discording Tales / Archopoia: https://www.thediscordingtales.com/
 - UNESCO Chair chapter: *Towards Principles for Responsible Futures* (Routledge) — buy https://www.routledge.com/Towards-Principles-for-Responsible-Futures/Fuller-Roubelat-Marchais-Roubelat-Ward-Heraclide/p/book/9781032732411 — Ch.3 Moral Conflicts…
 - PsychoStratégie SA: https://psychostrategie.ch/
 - kood/Jõhvi full-stack / AI: https://kood.tech/en/locations/kood-johvi/ (source of truth: https://archopoia.github.io/Hugues.W.B.dePingon/#education)
