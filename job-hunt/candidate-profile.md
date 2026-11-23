@@ -63,6 +63,7 @@ Architectural assistant at Studios Arcas Paris (William Pesson) - MPhil ethics, 
 - **Ask:** research, documentation, archives, coordination, heritage assistance, visual/production support - not a pure draftsman seat.
 - **Write for strangers:** they do not know your workshops or obscure labels. In emails: no Table Ronde, no Ideal Spaces, no kood/Jõhvi, no BIOCRACY, no research paper titles. Keep **Studios Arcas Paris (William Pesson)** + plain credentials (MPhil, MBA Summa Cum Laude, triple bachelor) + plain skills (Photoshop, tooling, IA appliquée, élévations, cadastre, dessin à la main). Same experience block across all drafts.
 - Hand-measured drawing stays on the CV; emails say “dessin à la main” without naming ateliers.
+- **No PDF by default:** email = lettre; link https://cv.apps.grok.bot for the CV. Attachments only if an office explicitly asks (or a real portfolio PDF later).
 - **Never** name Arcas project/client specifics in outreach or CV.
 - Typography: ASCII hyphen `-` only.
 

@@ -10,16 +10,13 @@ Updated: 2026-11-23 (Europe/Paris)
 ## Active leads (Gmail **drafts** - not sent)
 | Priority | Office | Contact | Why | Status |
 |---|---|---|---|---|
-| 1 | **ATHP** (Genève) | `ml@athp.ch` (Matthias Lecoq, fondateur) | Stage **60% remote** coordination & production visuelle - best match | Draft ready (+ lettre/CV PDF attached) |
-| 2 | **architecum** (Montreux) | `info@architecum.ch` → Zahnd & Furrer (associés) | Patrimoine / Capitole; offre architecte 80-100% + stage | Draft ready |
-| 3 | **Stoa** (Neuchâtel) | `pascal@stoa-arch.ch` Cc `jobs@` | Spontaneous welcome; partner competitions; FR ok | Draft ready - **attach PDFs before send** (no download links) |
+| 1 | **ATHP** (Genève) | `ml@athp.ch` (Matthias Lecoq, fondateur) | Stage **60% remote** coordination & production visuelle - best match | Draft ready (email + CV link only) |
+| 2 | **architecum** (Montreux) | `info@architecum.ch` -> Zahnd & Furrer (associés) | Patrimoine / Capitole; offre architecte 80-100% + stage | Draft ready |
+| 3 | **Stoa** (Neuchâtel) | `pascal@stoa-arch.ch` Cc `jobs@` | Spontaneous welcome; partner competitions; FR ok | Draft ready |
 | 4 | **Omarini Micello** (Carouge) | `m.chevalley@` Cc `info@` | Directeur; patrimoine posts; propose 50-60% | Draft ready |
 
-## PDFs to attach (before you send)
-Folder: `job-hunt/outreach/`
-- `lettre-athp.pdf` / `lettre-architecum.pdf` / `lettre-stoa.pdf` / `lettre-omarini.pdf`
-- `CV-Hugues-de-Pingon.pdf`
-- `Portfolio-extrait.pdf` (Ideal City · Cattle Bridge · Haut-Koenigsbourg)
+## Attachments
+**Default: none.** The email body is the lettre; CV is https://cv.apps.grok.bot. Do not attach stub lettre/CV PDFs. Optional later: a real portfolio PDF only if an office asks.
 
 ## Skipped this round
 - KONKURADO / Stiftung Forschung Planungswettbewerbe - remote 30% but **DE required**
