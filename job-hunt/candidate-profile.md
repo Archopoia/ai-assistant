@@ -25,7 +25,7 @@ Architectural assistant at Studios Arcas Paris (William Pesson) — MPhil ethics
 7. **Maturité**, ENSR Chailly, Switzerland
 
 ## Architecture practice
-- La Table Ronde de l’Architecture (Alsace, 2 weeks, 2026) — Journey to Alsatian architecture: measured drawings, vernacular colombage (Turckheim Hôtel des Deux Clefs, Riquewihr portal, Kaysersberg, Eguisheim, Koïfhus, Haut-Koenigsbourg)
+- La Table Ronde de l’Architecture (Alsace, 2 weeks, 2026) — Journey to Alsatian architecture: measured drawings; standout: Château du Haut-Koenigsbourg; also Turckheim Hôtel des Deux Clefs, Riquewihr portal, Kaysersberg, Eguisheim, Koïfhus
 - Dirk Mortier timber workshop — hand-drawn measured design (Cattle Bridge Fantaisie)
 - Ideal Spaces / Ettore Mazzola (Sep 2026) — Ideal City ink drawing
 - INTBAU networks

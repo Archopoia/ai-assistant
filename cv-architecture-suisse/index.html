@@ -294,18 +294,22 @@
     .ltra-feature {
       display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-top: 1.25rem;
     }
+    .ltra-feature.ltra-hero {
+      grid-template-columns: 1fr;
+      max-width: 520px;
+    }
     .ltra-feature figure {
       margin: 0; display: flex; flex-direction: column; gap: 0.35rem;
     }
     .ltra-feature .feat img {
-      width: 100%; height: auto; min-height: 320px; max-height: 440px;
+      width: 100%; height: auto; min-height: 320px; max-height: 520px;
       object-fit: contain; display: block; background: #111;
     }
     .ltra-feature figcaption {
       font-size: 0.7rem; color: var(--ink-2); letter-spacing: 0.04em;
     }
     .strip {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-top: 0.65rem;
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; margin-top: 0.65rem;
     }
     .strip figure { margin: 0; display: flex; flex-direction: column; gap: 0.3rem; }
     .strip img {
@@ -654,17 +658,21 @@
               <li>Vernakulare Fachwerkarchitektur (colombage), Ornament, Fenster, Portale.</li>
               <li>Eguisheim, Kaysersberg, Turckheim, Riquewihr, Colmar (Koifhus), Haut-Koenigsbourg.</li>
             </ul>
-            <div class="ltra-feature">
+            <div class="ltra-feature ltra-hero">
               <figure class="feat">
-                <img src="assets/ltra-turckheim.webp" alt="Turckheim — Hôtel des Deux Clefs, dessin à colombage" />
-                <figcaption>Turckheim · Hôtel des Deux Clefs · colombage</figcaption>
-              </figure>
-              <figure class="feat">
-                <img src="assets/ltra-riquewihr.webp" alt="Riquewihr — portail mesuré" />
-                <figcaption>Riquewihr · 12 rue du Général de Gaulle · portail</figcaption>
+                <img src="assets/ltra-koenigsbourg.webp" alt="Château du Haut-Koenigsbourg — dessin mesuré" />
+                <figcaption>Château du Haut-Koenigsbourg</figcaption>
               </figure>
             </div>
             <div class="strip">
+              <figure>
+                <img src="assets/ltra-turckheim.webp" alt="Turckheim — Hôtel des Deux Clefs, dessin à colombage" />
+                <figcaption>Turckheim · Hôtel des Deux Clefs</figcaption>
+              </figure>
+              <figure>
+                <img src="assets/ltra-riquewihr.webp" alt="Riquewihr — portail mesuré" />
+                <figcaption>Riquewihr · portail</figcaption>
+              </figure>
               <figure>
                 <img src="assets/ltra-kaysersberg.webp" alt="Kaysersberg — fenêtre mesurée" />
                 <figcaption>Kaysersberg · fenêtre</figcaption>
@@ -676,10 +684,6 @@
               <figure>
                 <img src="assets/ltra-eguisheim.webp" alt="Eguisheim — croquis de rue" />
                 <figcaption>Eguisheim</figcaption>
-              </figure>
-              <figure>
-                <img src="assets/ltra-koenigsbourg.webp" alt="Haut-Koenigsbourg" />
-                <figcaption>Haut-Koenigsbourg</figcaption>
               </figure>
             </div>
           </div>
