@@ -33,11 +33,11 @@ Je suis Suisse, actuellement assistant d'architecte chez Studios Arcas Paris (Wi
 6. **Diploma alpine pasturing**, Agrilogie Grange-Verney
 
 ## Capacity bullets (results, unnamed)
-- Historical urban studies: cadastres/archives/aerials, color elevations, plan-guide intentions, design hypotheses, HTML album + PDF/PPTX/DOCX, scripted rebuild.
-- Meter-true street elevations: locked regulatory envelope, SVG/raster, local server; optional AI façades under project constraints.
-- Sourced building monographs: chronology, actors, iconography, Source -> Claim -> Conclusion graph; HTML + archives pack; editorial QC; publish.
-- Plan viewers / product demos: discovery -> samples -> human gate -> trial 3D plan viewer (surface overlay / rooms / options). Do **not** claim sent emails, closed deals, or paid client 3D tours.
-- Client / agency HTML sites and longreads from existing identity and corpus.
+- Historical urban studies: cadastres/archives/aerials, elevations, plan-guide intentions, design hypotheses, HTML album + document exports.
+- Meter-true street elevations under locked regulatory envelope; optional AI façades under project constraints.
+- Heritage monographs: chronology, actors, iconography; HTML + archives pack.
+- Agency / monograph HTML sites from existing identity and corpus.
+
 
 ## Strong vs weak wording
 | Weak | Strong |
