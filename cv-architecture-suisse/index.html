@@ -196,6 +196,10 @@
       font-weight: 400;
       letter-spacing: 0;
     }
+    .section-title a { color: inherit; text-decoration: none; }
+    .section-title a:hover { color: var(--swiss-deep); }
+    .edu .school a { color: var(--swiss-deep); }
+    .job .org a { color: inherit; }
     .lede { max-width: 62ch; color: var(--ink-2); font-size: 1.02rem; }
     .arcas-meta {
       display: grid; grid-template-columns: repeat(4, 1fr);
@@ -330,17 +334,25 @@
     .transfer-grid {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: 1.5rem;
     }
-    .t-card {
+    a.t-card {
+      display: block; text-decoration: none; color: inherit;
       background: var(--white);
       border: 1px solid var(--mist);
       padding: 1.15rem 1rem;
       border-top: 3px solid var(--ink);
+      transition: border-color 0.15s ease, transform 0.15s ease;
     }
-    .t-card h3 {
+    a.t-card:hover { border-top-color: var(--swiss); transform: translateY(-1px); }
+    a.t-card h3 {
       font-family: "Bodoni Moda", serif;
-      font-size: 1.1rem; margin-bottom: 0.45rem;
+      font-size: 1.1rem; margin-bottom: 0.45rem; color: var(--ink);
     }
-    .t-card p { font-size: 0.9rem; color: var(--ink-2); }
+    a.t-card p { font-size: 0.9rem; color: var(--ink-2); }
+    a.t-card .t-url {
+      display: block; margin-top: 0.55rem;
+      font-size: 0.68rem; letter-spacing: 0.04em; color: var(--swiss-deep);
+      word-break: break-all;
+    }
 
     .split { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 2.4rem; }
     .edu { padding: 0.95rem 0; border-top: 1px solid var(--mist); }
@@ -475,7 +487,7 @@
     <div class="wrap arcas-inner reveal">
       <div class="arcas-rail">Studios Arcas · 8 rue Boissonade · Paris 14e</div>
       <div>
-        <h2 class="section-title">Studios Arcas · Paris</h2>
+        <h2 class="section-title"><a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas · Paris</a></h2>
         <p class="lede lang-block fr">
           Sous <strong>William Pesson</strong> (architecte-historien)&nbsp;: agence classique / Art Déco / moderniste (Knokke · Paris · Gdańsk). Livrables&nbsp;:
         </p>
@@ -547,13 +559,64 @@
         <h2 class="section-title lang-block en" hidden>Production <span class="punct">—</span> spaces, projects, systems</h2>
         <h2 class="section-title lang-block de" hidden>Produktion <span class="punct">—</span> Räume, Projekte, Systeme</h2>
         <p class="lede lang-block fr">
-          OnceLost Games · Archopoia&nbsp;: direction de production — art, technique, business sous deadline. Espaces 3D conçus pour le corps et l’attention. Foresight UNESCO · stratégie PsychoStratégie SA (Lausanne). Même exigence qu’un bâtiment&nbsp;: ce que l’environnement fait à l’humain.
+          Direction de production, foresight, stratégie&nbsp;: même exigence qu’un bâtiment&nbsp;— ce que l’environnement fait à l’humain.
         </p>
         <p class="lede lang-block en" hidden>
-          OnceLost Games · Archopoia: production leadership — art, tech, business under deadline. 3D spaces designed for body and attention. UNESCO foresight · strategy at PsychoStratégie SA (Lausanne). Same demand as a building: what the environment does to the human.
+          Production leadership, foresight, strategy&nbsp;: the same demand as a building&nbsp;— what the environment does to the human.
         </p>
         <p class="lede lang-block de" hidden>
-          OnceLost Games · Archopoia: Produktionsleitung — Kunst, Technik, Business unter Deadline. 3D-Räume für Körper und Aufmerksamkeit. UNESCO-Foresight · Strategie bei PsychoStratégie SA (Lausanne). Dieselbe Anforderung wie ein Bauwerk: was die Umgebung dem Menschen antut.
+          Produktionsleitung, Foresight, Strategie&nbsp;: dieselbe Anforderung wie ein Bauwerk&nbsp;— was die Umgebung dem Menschen antut.
+        </p>
+        <div class="transfer-grid">
+          <a class="t-card" href="https://www.oncelostgames.com/" target="_blank" rel="noopener">
+            <h3>OnceLost Games</h3>
+            <p class="lang-block fr">Lead Game Designer&nbsp;— <em>The Wayward Realms</em> (Steam).</p>
+            <p class="lang-block en" hidden>Lead Game Designer&nbsp;— <em>The Wayward Realms</em> (Steam).</p>
+            <p class="lang-block de" hidden>Lead Game Designer&nbsp;— <em>The Wayward Realms</em> (Steam).</p>
+            <span class="t-url">oncelostgames.com</span>
+          </a>
+          <a class="t-card" href="https://store.steampowered.com/app/1685310/The_Wayward_Realms/" target="_blank" rel="noopener">
+            <h3>The Wayward Realms</h3>
+            <p class="lang-block fr">RPG&nbsp;— mécanique, UX, worldbuilding sous deadline de production.</p>
+            <p class="lang-block en" hidden>RPG&nbsp;— systems, UX, worldbuilding under production deadline.</p>
+            <p class="lang-block de" hidden>RPG&nbsp;— Systeme, UX, Worldbuilding unter Produktionsdeadline.</p>
+            <span class="t-url">Steam</span>
+          </a>
+          <a class="t-card" href="https://www.thediscordingtales.com/" target="_blank" rel="noopener">
+            <h3>The Discording Tales</h3>
+            <p class="lang-block fr">Creative Director · Archopoia&nbsp;— fiction philosophique, monde, équipe.</p>
+            <p class="lang-block en" hidden>Creative Director · Archopoia&nbsp;— philosophical fiction, world, team.</p>
+            <p class="lang-block de" hidden>Creative Director · Archopoia&nbsp;— philosophische Fiction, Welt, Team.</p>
+            <span class="t-url">thediscordingtales.com</span>
+          </a>
+          <a class="t-card" href="https://www.routledge.com/Towards-Principles-for-Responsible-Futures/Fuller-Roubelat-Marchais-Roubelat-Ward-Heraclide/p/book/9781032732411" target="_blank" rel="noopener">
+            <h3>UNESCO · Responsible Futures</h3>
+            <p class="lang-block fr">Chap.&nbsp;3&nbsp;— <em>Moral Conflicts, Hindrances &amp; Benefits…</em> (Routledge).</p>
+            <p class="lang-block en" hidden>Ch.&nbsp;3&nbsp;— <em>Moral Conflicts, Hindrances &amp; Benefits…</em> (Routledge).</p>
+            <p class="lang-block de" hidden>Kap.&nbsp;3&nbsp;— <em>Moral Conflicts, Hindrances &amp; Benefits…</em> (Routledge).</p>
+            <span class="t-url">routledge.com · buy</span>
+          </a>
+          <a class="t-card" href="https://psychostrategie.ch/" target="_blank" rel="noopener">
+            <h3>PsychoStratégie SA</h3>
+            <p class="lang-block fr">Product / game design &amp; management&nbsp;— Lausanne.</p>
+            <p class="lang-block en" hidden>Product / game design &amp; management&nbsp;— Lausanne.</p>
+            <p class="lang-block de" hidden>Product / Game Design &amp; Management&nbsp;— Lausanne.</p>
+            <span class="t-url">psychostrategie.ch</span>
+          </a>
+          <a class="t-card" href="https://kood.tech/en/" target="_blank" rel="noopener">
+            <h3>//kood · Full-stack / IA</h3>
+            <p class="lang-block fr">Diplôme AI-Ready Product Engineer&nbsp;— systèmes, produit, IA.</p>
+            <p class="lang-block en" hidden>AI-Ready Product Engineer diploma&nbsp;— systems, product, AI.</p>
+            <p class="lang-block de" hidden>Diplom AI-Ready Product Engineer&nbsp;— Systeme, Produkt, KI.</p>
+            <span class="t-url">kood.tech</span>
+          </a>
+        </div>
+        <p class="lede" style="margin-top:1rem;font-size:0.9rem;">
+          <a href="https://the-discording-tales.itch.io/" target="_blank" rel="noopener">itch.io</a>
+          <span class="punct"> · </span>
+          <a href="https://archopoia.github.io/Hugues.W.B.dePingon/" target="_blank" rel="noopener">Archopoia portfolio</a>
+          <span class="punct"> · </span>
+          <a href="https://www.waywardrealms.com/" target="_blank" rel="noopener">waywardrealms.com</a>
         </p>
       </div>
     </section>
@@ -573,7 +636,7 @@
             <h3 class="lang-block fr">Atelier historique <span class="punct">—</span> voyage en architecture alsacienne</h3>
             <h3 class="lang-block en" hidden>Historical workshop <span class="punct">—</span> journey through Alsatian architecture</h3>
             <h3 class="lang-block de" hidden>Historischer Workshop <span class="punct">—</span> Reise durch die elsässische Architektur</h3>
-            <p class="org">La Table Ronde de l’Architecture · Alsace · Nadia &amp; Noé Morin</p>
+            <p class="org"><a href="https://archopoia.github.io/Hugues.W.B.dePingon/#workshop" target="_blank" rel="noopener">La Table Ronde de l’Architecture</a> · Alsace · Nadia &amp; Noé Morin</p>
             <ul class="lang-block fr">
               <li>Deux semaines de dessin mesuré et de recherche historique sur le terrain.</li>
               <li>Architecture vernaculaire à colombage, ornements, fenêtres, portails.</li>
@@ -758,37 +821,43 @@
             <h3 class="lang-block fr">Parcours architectural</h3>
             <h3 class="lang-block en" hidden>Architectural path</h3>
             <h3 class="lang-block de" hidden>Architekturischer Weg</h3>
-            <p class="school">Studios Arcas Paris · Table Ronde · INTBAU · 2025–</p>
+            <p class="school"><a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas Paris</a> · Table Ronde · <a href="https://www.intbau.org/" target="_blank" rel="noopener">INTBAU</a> · 2025–</p>
           </div>
           <div class="edu">
             <h3>MPhil Applied Ethics</h3>
-            <p class="school lang-block fr">Linköping · 2023–2025 · thèse <em>BIOCRACY</em> · DiVA</p>
-            <p class="school lang-block en" hidden>Linköping · 2023–2025 · thesis <em>BIOCRACY</em> · DiVA</p>
-            <p class="school lang-block de" hidden>Linköping · 2023–2025 · These <em>BIOCRACY</em> · DiVA</p>
+            <p class="school lang-block fr"><a href="https://liu.se/" target="_blank" rel="noopener">Linköping</a> · 2023–2025 · thèse <a href="https://liu.diva-portal.org/smash/record.jsf?pid=diva2:2034306" target="_blank" rel="noopener"><em>BIOCRACY</em> · DiVA</a></p>
+            <p class="school lang-block en" hidden><a href="https://liu.se/" target="_blank" rel="noopener">Linköping</a> · 2023–2025 · thesis <a href="https://liu.diva-portal.org/smash/record.jsf?pid=diva2:2034306" target="_blank" rel="noopener"><em>BIOCRACY</em> · DiVA</a></p>
+            <p class="school lang-block de" hidden><a href="https://liu.se/" target="_blank" rel="noopener">Linköping</a> · 2023–2025 · These <a href="https://liu.diva-portal.org/smash/record.jsf?pid=diva2:2034306" target="_blank" rel="noopener"><em>BIOCRACY</em> · DiVA</a></p>
           </div>
           <div class="edu">
             <h3>MBA Foresight &amp; Strategic Governance</h3>
             <p class="school">KSU Vilnius · 9.73/10 · Summa Cum Laude · thèse</p>
           </div>
           <div class="edu">
+            <h3 class="lang-block fr">UNESCO Chair · chapitre Routledge</h3>
+            <h3 class="lang-block en" hidden>UNESCO Chair · Routledge chapter</h3>
+            <h3 class="lang-block de" hidden>UNESCO Chair · Routledge-Kapitel</h3>
+            <p class="school"><a href="https://www.routledge.com/Towards-Principles-for-Responsible-Futures/Fuller-Roubelat-Marchais-Roubelat-Ward-Heraclide/p/book/9781032732411" target="_blank" rel="noopener"><em>Towards Principles for Responsible Futures</em></a> · ch.&nbsp;3 Moral Conflicts…</p>
+          </div>
+          <div class="edu">
             <h3>B.S. Neuroscience · B.S. Biology · B.A. Anthropology</h3>
-            <p class="school">University of Montana · 2015–2019</p>
+            <p class="school"><a href="https://www.umt.edu/" target="_blank" rel="noopener">University of Montana</a> · 2015–2019</p>
           </div>
           <div class="edu">
             <h3 class="lang-block fr">Développement full-stack <span class="punct">—</span> spécialisation IA</h3>
             <h3 class="lang-block en" hidden>Full-stack development <span class="punct">—</span> AI specialisation</h3>
             <h3 class="lang-block de" hidden>Full-Stack-Entwicklung <span class="punct">—</span> KI-Spezialisierung</h3>
-            <p class="school">Diplôme · HTML/CSS/JS · Python · systèmes</p>
+            <p class="school"><a href="https://kood.tech/en/" target="_blank" rel="noopener">//kood</a> · AI-Ready Product Engineer</p>
           </div>
           <div class="edu">
             <h3 class="lang-block fr">Formation alpage / bâtiments ruraux</h3>
             <h3 class="lang-block en" hidden>Alpine pasturing / rural buildings</h3>
             <h3 class="lang-block de" hidden>Alpwirtschaft / ländliche Bauten</h3>
-            <p class="school">Agrilogie Granges-Verney · Moudon · 2020</p>
+            <p class="school"><a href="https://www.vd.ch/economie/agriculture-et-viticulture/agrilogie/agrilogie-grange-verney-1" target="_blank" rel="noopener">Agrilogie Grange-Verney</a> · Moudon · 2020</p>
           </div>
           <div class="edu">
             <h3>Maturité / Matura</h3>
-            <p class="school">ENSR · Chailly, Suisse · 2012–2014</p>
+            <p class="school"><a href="https://www.ensr.ch/" target="_blank" rel="noopener">ENSR</a> · Chailly, Suisse · 2012–2014</p>
           </div>
         </div>
         <div>

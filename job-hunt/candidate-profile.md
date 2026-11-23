@@ -40,9 +40,12 @@ Architectural assistant at Studios Arcas Paris (William Pesson) — MPhil ethics
 - Abstract: https://docs.google.com/document/d/1KSX66SI9jgffBmZbjePYuwq5FL5QL85tiRzk7Xqd0V8/edit?tab=t.83c74dys11xb
 - Dossier: https://archopoia.github.io/Hugues.W.B.dePingon/dossier/
 
-## Production / systems (asset, not apology)
-- OnceLost Games / Archopoia: production leadership — art, tech, business under deadline; 3D lived spaces
-- UNESCO Chair Responsible Foresight; PsychoStratégie SA (Lausanne)
+## Production / systems (asset, not apology) — with URLs
+- OnceLost Games: https://www.oncelostgames.com/ — Lead Game Designer, *The Wayward Realms* (https://store.steampowered.com/app/1685310/The_Wayward_Realms/ · https://www.waywardrealms.com/)
+- The Discording Tales / Archopoia: https://www.thediscordingtales.com/ · https://the-discording-tales.itch.io/
+- UNESCO Chair chapter: *Towards Principles for Responsible Futures* (Routledge) — buy https://www.routledge.com/Towards-Principles-for-Responsible-Futures/Fuller-Roubelat-Marchais-Roubelat-Ward-Heraclide/p/book/9781032732411 — Ch.3 Moral Conflicts…
+- PsychoStratégie SA: https://psychostrategie.ch/
+- //kood full-stack / AI: https://kood.tech/en/
 - In architecture outreach, frame as spatial production + coordination capacity
 
 ## Outreach tone
