@@ -67,5 +67,8 @@ Architectural assistant at Studios Arcas Paris (William Pesson) - MPhil ethics, 
 - **Never** name Arcas project/client specifics in outreach or CV.
 - Typography: ASCII hyphen `-` only.
 
+## Availability
+**Disponible à partir de janvier 2027** (début d'année). State this in every outreach email.
+
 ## Standard email bio (reuse verbatim)
 Je suis Suisse. Je suis actuellement assistant d'architecte chez Studios Arcas Paris (William Pesson). Formation : MPhil Applied Ethics, MBA Foresight Summa Cum Laude, et triple bachelor (neurosciences, biologie, anthropologie). En pratique : recherche et documentation, production visuelle (Photoshop, outillage logiciel, IA appliquée), plans d'élévation, cadastre et dessin à la main.

@@ -18,6 +18,7 @@
 - **Never lead with gaps.** Do not volunteer missing architecture diploma / CFC. If asked directly, answer briefly and pivot to credentials + studio deliverables.
 - **Banned phrasing:** “apprentissage (rapide) CAD/BIM”, “actively learning CAD/BIM”, or any self-discounting tool disclaimer. Don’t put CAD/BIM on the CV until it’s proven deliverable.
 - **Citizenship:** Swiss - no work permit required
+- **Availability:** from **January 2027** (state in every outreach email)
 - **Languages:** FR native, EN fluent, IT basic. **No German** (do not claim DE; skip DE-required roles such as KONKURADO Zürich).
 
 ## Outreach mode
