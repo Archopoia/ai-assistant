@@ -20,8 +20,8 @@ Architectural assistant at Studios Arcas Paris (William Pesson) — MPhil ethics
 2. **MPhil Applied Ethics**, Linköping (2023–2025) — thesis *BIOCRACY* (DiVA)
 3. **MBA Foresight & Strategic Governance**, KSU Vilnius — 9.73/10, Summa Cum Laude, thesis
 4. **B.S. Neuroscience · B.S. Biology · B.A. Anthropology**, University of Montana
-5. **Full-stack development — AI specialisation**
-6. **Alpine pasturing / rural buildings**, Agrilogie Granges-Verney (2020)
+5. **Full Stack Software Development, AI Specialization** — **kood/Jõhvi**, Estonia (MTÜ Tuleviku Tehnoloogiaharidus), May 2024–March 2026 — https://kood.tech/en/locations/kood-johvi/
+6. **Diploma in Traditional Alpine Pasturing**, Agrilogie Grange-Verney, Moudon (May–Aug 2020)
 7. **Maturité**, ENSR Chailly, Switzerland
 
 ## Architecture practice
@@ -45,7 +45,7 @@ Architectural assistant at Studios Arcas Paris (William Pesson) — MPhil ethics
 - The Discording Tales / Archopoia: https://www.thediscordingtales.com/ · https://the-discording-tales.itch.io/
 - UNESCO Chair chapter: *Towards Principles for Responsible Futures* (Routledge) — buy https://www.routledge.com/Towards-Principles-for-Responsible-Futures/Fuller-Roubelat-Marchais-Roubelat-Ward-Heraclide/p/book/9781032732411 — Ch.3 Moral Conflicts…
 - PsychoStratégie SA: https://psychostrategie.ch/
-- //kood full-stack / AI: https://kood.tech/en/
+- kood/Jõhvi full-stack / AI: https://kood.tech/en/locations/kood-johvi/ (source of truth: https://archopoia.github.io/Hugues.W.B.dePingon/#education)
 - In architecture outreach, frame as spatial production + coordination capacity
 
 ## Outreach tone
