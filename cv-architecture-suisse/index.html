@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hugues de Pingon — CV Architecture · Suisse</title>
-  <meta name="description" content="CV architecture — Hugues de Pingon. Assistant chez Studios Arcas Paris (William Pesson) : étude Gallieni, élévations, archives Villa Caroline. Candidature Suisse." />
+  <meta name="description" content="CV architecture — Hugues de Pingon. Assistant chez Studios Arcas Paris (William Pesson) depuis le 5 nov. 2026 : étude Gallieni, élévations, archives Villa Caroline. Candidature Suisse." />
   <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,7 +38,6 @@
     a { color: inherit; text-underline-offset: 3px; }
     a:hover { color: var(--swiss-deep); }
 
-    /* —— chrome —— */
     .bar {
       position: sticky; top: 0; z-index: 50;
       display: flex; align-items: center; justify-content: space-between;
@@ -79,7 +78,6 @@
 
     .wrap { width: min(100% - 2.4rem, var(--max)); margin: 0 auto; }
 
-    /* —— hero: Swiss + Deco —— */
     .hero {
       position: relative;
       background: var(--ink);
@@ -101,7 +99,6 @@
       border-right: 1px solid rgba(255,255,255,0.12);
     }
     .hero-copy::before {
-      /* deco stepped corner */
       content: ""; position: absolute; top: 0; left: 0;
       width: 72px; height: 72px;
       background:
@@ -121,10 +118,9 @@
       letter-spacing: -0.01em;
       margin-bottom: 1.1rem;
     }
-    .hero h1 br { display: block; content: ""; margin-top: 0.06em; }
     .hero-role {
       font-size: clamp(1rem, 2vw, 1.2rem);
-      max-width: 28ch;
+      max-width: 30ch;
       color: #dcdcdc;
       margin-bottom: 1.6rem;
     }
@@ -132,7 +128,7 @@
       display: grid; gap: 0.35rem;
       padding: 1rem 0 0;
       border-top: 1px solid rgba(255,255,255,0.18);
-      max-width: 36ch;
+      max-width: 38ch;
     }
     .hero-proof strong {
       font-family: "Bodoni Moda", serif;
@@ -168,7 +164,6 @@
     .hero .btn:hover { background: #fff; color: var(--ink); }
     .hero .btn-red:hover { background: #fff; color: var(--swiss); border-color: #fff; }
 
-    /* —— Arcas case —— */
     .arcas {
       background: var(--snow);
       border-bottom: 1px solid var(--mist);
@@ -193,7 +188,6 @@
       font-kerning: normal;
       font-feature-settings: "kern" 1, "liga" 1;
     }
-    /* Bodoni Moda subset often drops em/en dashes — paint punctuation in Plex */
     .section-title .punct,
     .hero-role .punct,
     .hero-proof .punct {
@@ -233,7 +227,6 @@
     }
     .deliv p { font-size: 0.9rem; color: var(--ink-2); }
 
-    /* —— profile —— */
     section { padding: 4rem 0; }
     .profile {
       display: grid; grid-template-columns: 150px 1fr; gap: 2rem; align-items: start;
@@ -257,7 +250,6 @@
     }
     .chip-red { border-color: var(--swiss); color: var(--swiss); }
 
-    /* —— timeline —— */
     .job {
       display: grid; grid-template-columns: 130px 1fr; gap: 1.4rem;
       padding: 1.4rem 0; border-top: 1px solid var(--mist);
@@ -271,7 +263,6 @@
     .job ul { padding-left: 1.05rem; color: var(--ink-2); }
     .job li { margin: 0.25rem 0; }
 
-    /* —— work —— */
     .work-grid {
       display: grid; grid-template-columns: 1.3fr 1fr; gap: 0.65rem; margin-top: 1.75rem;
     }
@@ -302,7 +293,6 @@
     .strip img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(20%); }
     .strip figcaption { font-size: 0.65rem; color: var(--steel); margin-top: 0.3rem; letter-spacing: 0.04em; }
 
-    /* —— research —— */
     .research {
       background: var(--ink); color: #eee; padding: 4rem 0;
     }
@@ -316,7 +306,26 @@
     .r-card p { color: #c4c4c4; font-size: 0.94rem; }
     .r-card a { color: #fff; }
 
-    /* —— edu / skills —— */
+    .transfer {
+      background: var(--snow);
+      border-top: 1px solid var(--mist);
+      border-bottom: 1px solid var(--mist);
+    }
+    .transfer-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: 1.5rem;
+    }
+    .t-card {
+      background: var(--white);
+      border: 1px solid var(--mist);
+      padding: 1.15rem 1rem;
+      border-top: 3px solid var(--ink);
+    }
+    .t-card h3 {
+      font-family: "Bodoni Moda", serif;
+      font-size: 1.1rem; margin-bottom: 0.45rem;
+    }
+    .t-card p { font-size: 0.9rem; color: var(--ink-2); }
+
     .split { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 2.4rem; }
     .edu { padding: 0.95rem 0; border-top: 1px solid var(--mist); }
     .edu:last-child { border-bottom: 1px solid var(--mist); }
@@ -333,7 +342,6 @@
       padding: 0.35rem 0.55rem; font-size: 0.8rem; color: var(--ink-2);
     }
 
-    /* —— contact —— */
     .contact {
       display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
       padding: 3rem 0 4.5rem; border-top: 1px solid var(--mist);
@@ -358,11 +366,12 @@
 
     .lang-block { display: none; }
     html[lang="fr"] .lang-block.fr,
-    html[lang="en"] .lang-block.en { display: revert; }
+    html[lang="en"] .lang-block.en,
+    html[lang="de"] .lang-block.de { display: revert; }
     .lang-block[hidden] { display: none !important; }
 
     @media (max-width: 900px) {
-      .hero-grid, .arcas-inner, .profile, .job, .work-grid, .research-grid, .split, .contact, .deliverables, .arcas-meta, .strip {
+      .hero-grid, .arcas-inner, .profile, .job, .work-grid, .research-grid, .split, .contact, .deliverables, .arcas-meta, .strip, .transfer-grid {
         grid-template-columns: 1fr;
       }
       .arcas-rail { writing-mode: horizontal-tb; transform: none; border-right: 0; border-bottom: 3px solid var(--swiss); padding: 0 0 0.5rem; margin-bottom: 0.5rem; }
@@ -398,6 +407,7 @@
       <div class="lang" role="group" aria-label="Language">
         <button class="btn active" type="button" data-set-lang="fr">FR</button>
         <button class="btn" type="button" data-set-lang="en">EN</button>
+        <button class="btn" type="button" data-set-lang="de">DE</button>
       </div>
       <button class="btn" type="button" onclick="window.print()">PDF</button>
       <a class="btn btn-red" href="#contact">Contact</a>
@@ -411,23 +421,29 @@
           <span class="cross" aria-hidden="true"></span>
           <span class="lang-block fr">Ressortissant suisse · Disponible en Suisse</span>
           <span class="lang-block en" hidden>Swiss national · Available in Switzerland</span>
+          <span class="lang-block de" hidden>Schweizer Staatsangehöriger · Verfügbar in der Schweiz</span>
         </div>
         <h1>Hugues<br />de Pingon</h1>
         <p class="hero-role lang-block fr">
-          Assistant d’architecte <span class="punct">—</span> formé au dessin d’histoire et au néo Art Déco chez Studios Arcas, Paris.
+          Assistant d’architecte <span class="punct">—</span> dessin d’histoire et néo Art Déco chez Studios Arcas, Paris.
         </p>
         <p class="hero-role lang-block en" hidden>
-          Architectural assistant <span class="punct">—</span> trained in historical drawing and neo<span class="punct">–</span>Art Deco at Studios Arcas, Paris.
+          Architectural assistant <span class="punct">—</span> historical drawing and neo<span class="punct">–</span>Art Deco at Studios Arcas, Paris.
+        </p>
+        <p class="hero-role lang-block de" hidden>
+          Architekturassistent <span class="punct">—</span> historisches Zeichnen und Neo<span class="punct">-</span>Art-déco bei Studios Arcas, Paris.
         </p>
         <div class="hero-proof">
           <strong>Studios Arcas · Paris</strong>
-          <span class="lang-block fr">William Pesson · néo Art Déco, patrimoine XXe, recherche historique</span>
-          <span class="lang-block en" hidden>William Pesson · neo<span class="punct">–</span>Art Deco, 20th-c. heritage, historical research</span>
+          <span class="lang-block fr">William Pesson · depuis le 5&nbsp;nov.&nbsp;2026 · néo Art Déco, patrimoine XXe</span>
+          <span class="lang-block en" hidden>William Pesson · since 5&nbsp;Nov&nbsp;2026 · neo<span class="punct">–</span>Art Deco, 20th-c. heritage</span>
+          <span class="lang-block de" hidden>William Pesson · seit 5.&nbsp;Nov.&nbsp;2026 · Neo-Art-déco, Erbe des 20.&nbsp;Jh.</span>
         </div>
         <div class="hero-ctas no-print">
           <a class="btn btn-red" href="#arcas">
             <span class="lang-block fr">Voir Arcas</span>
             <span class="lang-block en" hidden>See Arcas</span>
+            <span class="lang-block de" hidden>Arcas ansehen</span>
           </a>
           <a class="btn" href="https://archopoia.github.io/Hugues.W.B.dePingon/" target="_blank" rel="noopener">Portfolio</a>
           <a class="btn" href="mailto:hugues.ii.w.b.depingon@gmail.com">Email</a>
@@ -437,6 +453,7 @@
         <img src="assets/ideal-city.webp" alt="Ideal City — dessin à l’encre, vernaculaire suisse" />
         <div class="hero-badge lang-block fr">Preuve principale · agence Arcas Paris</div>
         <div class="hero-badge lang-block en" hidden>Lead proof · Arcas Paris studio</div>
+        <div class="hero-badge lang-block de" hidden>Hauptbeleg · Büro Arcas Paris</div>
       </div>
     </div>
   </header>
@@ -447,21 +464,28 @@
       <div>
         <p class="lang-block fr" style="font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--swiss);font-weight:500;margin-bottom:0.6rem;">Expérience phare</p>
         <p class="lang-block en" hidden style="font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--swiss);font-weight:500;margin-bottom:0.6rem;">Flagship experience</p>
-        <h2 class="section-title lang-block fr">Un mois chez Arcas Paris <span class="punct">—</span> là où se construit le néo Art Déco contemporain.</h2>
-        <h2 class="section-title lang-block en" hidden>One month at Arcas Paris <span class="punct">—</span> where contemporary neo<span class="punct">–</span>Art Deco is built.</h2>
+        <p class="lang-block de" hidden style="font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--swiss);font-weight:500;margin-bottom:0.6rem;">Schlüsselstation</p>
+        <h2 class="section-title lang-block fr">Chez Arcas Paris <span class="punct">—</span> là où se construit le néo Art Déco contemporain.</h2>
+        <h2 class="section-title lang-block en" hidden>At Arcas Paris <span class="punct">—</span> where contemporary neo<span class="punct">–</span>Art Deco is built.</h2>
+        <h2 class="section-title lang-block de" hidden>Bei Arcas Paris <span class="punct">—</span> wo zeitgenössisches Neo-Art-déco entsteht.</h2>
         <p class="lede lang-block fr">
-          ARCAS (Knokke · Paris · Gdańsk) conçoit des quartiers et bâtiments en styles classique, Art Déco et moderniste — plus de 30 ans, 1000+ projets. À Paris, sous la direction de <strong>William Pesson</strong> (architecte-historien, prix VMF-ARCAS Patrimoine du XXe), j’ai assisté l’équipe sur recherche historique, élévations et archives. C’est mon ancrage le plus crédible pour un bureau suisse exigeant sur le détail et le contexte.
+          ARCAS (Knokke · Paris · Gdańsk) conçoit des quartiers et bâtiments en styles classique, Art Déco et moderniste. À Paris, sous <strong>William Pesson</strong> (architecte-historien), j’assiste l’équipe depuis le <strong>5&nbsp;novembre&nbsp;2026</strong> sur recherche historique, élévations et archives. C’est mon ancrage le plus crédible pour un bureau suisse exigeant sur le détail et le contexte.
         </p>
         <p class="lede lang-block en" hidden>
-          ARCAS (Knokke · Paris · Gdańsk) designs neighbourhoods and buildings in classical, Art Deco and modernist styles — 30+ years, 1000+ projects. In Paris, under <strong>William Pesson</strong> (architect-historian, VMF-ARCAS 20th-c. Heritage Prize), I assisted on historical research, elevations and archives. This is my strongest credential for a Swiss office that cares about detail and context.
+          ARCAS (Knokke · Paris · Gdańsk) designs neighbourhoods and buildings in classical, Art Deco and modernist styles. In Paris, under <strong>William Pesson</strong> (architect-historian), I have been assisting the team since <strong>5&nbsp;November&nbsp;2026</strong> on historical research, elevations and archives. This is my strongest credential for a Swiss office that cares about detail and context.
+        </p>
+        <p class="lede lang-block de" hidden>
+          ARCAS (Knokke · Paris · Gdańsk) entwirft Quartiere und Bauten in klassischem, Art-déco- und modernistischem Stil. In Paris unterstütze ich unter <strong>William Pesson</strong> (Architekt-Historiker) das Team seit dem <strong>5.&nbsp;November&nbsp;2026</strong> bei historischer Recherche, Aufrissen und Archiven. Das ist mein stärkstes Argument für ein Schweizer Büro, dem Detail und Kontext wichtig sind.
         </p>
 
         <div class="arcas-meta">
           <div>
             <strong class="lang-block fr">Rôle</strong>
             <strong class="lang-block en" hidden>Role</strong>
+            <strong class="lang-block de" hidden>Rolle</strong>
             <span class="lang-block fr">Assistant architecte</span>
             <span class="lang-block en" hidden>Architectural assistant</span>
+            <span class="lang-block de" hidden>Architekturassistent</span>
           </div>
           <div>
             <strong>Studio</strong>
@@ -470,12 +494,16 @@
           <div>
             <strong class="lang-block fr">Direction</strong>
             <strong class="lang-block en" hidden>Lead</strong>
+            <strong class="lang-block de" hidden>Leitung</strong>
             <span>William Pesson</span>
           </div>
           <div>
-            <strong class="lang-block fr">Période</strong>
-            <strong class="lang-block en" hidden>Period</strong>
-            <span>2026 · ~1 mois</span>
+            <strong class="lang-block fr">Depuis</strong>
+            <strong class="lang-block en" hidden>Since</strong>
+            <strong class="lang-block de" hidden>Seit</strong>
+            <span class="lang-block fr">5&nbsp;nov.&nbsp;2026</span>
+            <span class="lang-block en" hidden>5&nbsp;Nov&nbsp;2026</span>
+            <span class="lang-block de" hidden>5.&nbsp;Nov.&nbsp;2026</span>
           </div>
         </div>
 
@@ -484,17 +512,21 @@
             <h3>Gallieni</h3>
             <p class="lang-block fr">Étude historique — documentation, analyse, synthèse pour le projet.</p>
             <p class="lang-block en" hidden>Historical study — documentation, analysis, synthesis for the project.</p>
+            <p class="lang-block de" hidden>Historische Studie — Dokumentation, Analyse, Synthese für das Projekt.</p>
           </article>
           <article class="deliv">
             <h3 class="lang-block fr">Élévations</h3>
             <h3 class="lang-block en" hidden>Elevations</h3>
+            <h3 class="lang-block de" hidden>Aufrisse</h3>
             <p class="lang-block fr">Pièces graphiques de support — précision, hiérarchie du dessin d’agence.</p>
             <p class="lang-block en" hidden>Supporting drawings — studio precision and drawing hierarchy.</p>
+            <p class="lang-block de" hidden>Zeichnerische Unterstützung — Präzision und Hierarchie der Bürozeichnung.</p>
           </article>
           <article class="deliv">
             <h3>Villa Caroline</h3>
             <p class="lang-block fr">Recherche archivistique — sources, contexte, matériaux de mémoire.</p>
             <p class="lang-block en" hidden>Archival research — sources, context, materials of memory.</p>
+            <p class="lang-block de" hidden>Archivforschung — Quellen, Kontext, Erinnerungsmaterialien.</p>
           </article>
         </div>
       </div>
@@ -508,40 +540,100 @@
         <div>
           <h2 class="section-title lang-block fr">Profil atypique <span class="punct">—</span> utile aux bureaux qui veulent une main précise et une tête cultivée.</h2>
           <h2 class="section-title lang-block en" hidden>Atypical profile <span class="punct">—</span> useful to offices that want a precise hand and a cultivated mind.</h2>
+          <h2 class="section-title lang-block de" hidden>Atypisches Profil <span class="punct">—</span> nützlich für Büros, die präzise Hand und gebildeten Kopf wollen.</h2>
           <p class="lede lang-block fr">
-            Pas de diplôme d’architecture. En revanche&nbsp;: maturité suisse, un mois d’agence prestigieuse à Paris (Arcas), dessin mesuré, charpente traditionnelle, réseaux INTBAU / Table Ronde, et une ligne de recherche originale (architectonique évolutive) avec Sergei Gepshtein et Tiziana Proietti.
+            Pas de diplôme d’architecture. En revanche&nbsp;: maturité suisse, expérience en agence à Paris (Arcas, depuis nov.&nbsp;2026), dessin mesuré, charpente traditionnelle, réseaux INTBAU / Table Ronde, recherche avec Sergei Gepshtein et Tiziana Proietti — et une pratique de production d’espaces vécus (jeux) qui nourrit la même question qu’en architecture.
           </p>
           <p class="lede lang-block en" hidden>
-            No architecture diploma. Instead: Swiss Matura, one month in a prestigious Paris studio (Arcas), measured drawing, traditional timber, INTBAU / Table Ronde networks, and an original research line (evolutionary architectonics) with Sergei Gepshtein and Tiziana Proietti.
+            No architecture diploma. Instead: Swiss Matura, Paris studio experience (Arcas, since Nov&nbsp;2026), measured drawing, traditional timber, INTBAU / Table Ronde, research with Sergei Gepshtein and Tiziana Proietti — plus a practice of producing lived spaces (games) that asks the same question architecture does.
+          </p>
+          <p class="lede lang-block de" hidden>
+            Kein Architekturdiplom. Dafür: Schweizer Matura, Büroerfahrung in Paris (Arcas, seit Nov.&nbsp;2026), Aufmasszeichnung, traditionelle Zimmerei, INTBAU / Table Ronde, Forschung mit Sergei Gepshtein und Tiziana Proietti — sowie Praxis in der Produktion gelebter Räume (Games), die dieselbe Frage stellt wie die Architektur.
           </p>
           <div class="chips">
             <span class="chip chip-red lang-block fr">Poste · Assistant / Dessinateur / Patrimoine</span>
             <span class="chip chip-red lang-block en" hidden>Role · Assistant / Draftsperson / Heritage</span>
+            <span class="chip chip-red lang-block de" hidden>Stelle · Assistent / Zeichner / Denkmalpflege</span>
             <span class="chip lang-block fr">Suisse · permis non requis</span>
             <span class="chip lang-block en" hidden>Swiss · no permit needed</span>
-            <span class="chip">FR natif · EN courant · DE bases</span>
+            <span class="chip lang-block de" hidden>Schweiz · keine Bewilligung nötig</span>
+            <span class="chip">FR · EN · DE (Grundlagen)</span>
             <span class="chip lang-block fr">Romandie prioritaire · ouvert CH</span>
             <span class="chip lang-block en" hidden>Romandie preferred · open CH-wide</span>
+            <span class="chip lang-block de" hidden>Romandie bevorzugt · CH offen</span>
           </div>
           <div class="honesty lang-block fr">
-            Transparence&nbsp;: pas de diplôme d’architecture ni de CFC dessinateur. La valeur que je vends aux bureaux suisses, c’est Arcas + relevé + culture historique + nationalité suisse + capacité d’apprentissage rapide (CAD/BIM inclus).
+            Transparence&nbsp;: pas de diplôme d’architecture ni de CFC dessinateur. Ce que je vends&nbsp;: Arcas + relevé + culture historique + nationalité suisse + production sous contrainte (équipes, délais, disciplines croisées) + apprentissage rapide CAD/BIM.
           </div>
           <div class="honesty lang-block en" hidden>
-            Transparency: no architecture degree and no Swiss draughtsperson CFC. What I sell to Swiss offices is Arcas + survey craft + historical culture + Swiss nationality + fast learning (CAD/BIM included).
+            Transparency: no architecture degree and no Swiss draughtsperson CFC. What I sell: Arcas + survey + historical culture + Swiss nationality + production under constraint (teams, deadlines, cross-discipline) + fast CAD/BIM learning.
+          </div>
+          <div class="honesty lang-block de" hidden>
+            Transparenz: kein Architekturdiplom, kein Zeichner-EFZ. Was ich verkaufe: Arcas + Aufmass + historische Kultur + Schweizer Pass + Produktion unter Druck (Teams, Fristen, Disziplinen) + schnelles CAD/BIM-Lernen.
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="transfer reveal" id="transfert">
+      <div class="wrap">
+        <h2 class="section-title lang-block fr">Ce que le game design apporte à l’architecture</h2>
+        <h2 class="section-title lang-block en" hidden>What game design brings to architecture</h2>
+        <h2 class="section-title lang-block de" hidden>Was Game Design der Architektur bringt</h2>
+        <p class="lede lang-block fr">
+          Chez OnceLost Games et Archopoia, le métier n’était pas un titre — c’était faire tenir ensemble art, technique et business sous deadline, et construire des espaces 3D que des humains habitent par le corps et l’attention. Même problème qu’un bâtiment&nbsp;: quelle expérience un environnement produit-il&nbsp;? Neurosciences, anthropologie et éthique (ma formation) alimentent cette question des deux côtés.
+        </p>
+        <p class="lede lang-block en" hidden>
+          At OnceLost Games and Archopoia, the work was not a title — it was holding art, tech and business together under deadline, and building 3D spaces humans inhabit with body and attention. Same problem as a building: what experience does an environment produce? Neuroscience, anthropology and ethics (my academic base) feed that question on both sides.
+        </p>
+        <p class="lede lang-block de" hidden>
+          Bei OnceLost Games und Archopoia ging es nicht um Titel — sondern darum, Kunst, Technik und Business unter Deadline zusammenzuhalten und 3D-Räume zu bauen, die Menschen mit Körper und Aufmerksamkeit bewohnen. Dieselbe Frage wie beim Bauwerk: welche Erfahrung erzeugt eine Umgebung? Neurowissenschaft, Anthropologie und Ethik (mein Studium) speisen diese Frage auf beiden Seiten.
+        </p>
+        <div class="transfer-grid">
+          <article class="t-card">
+            <h3 class="lang-block fr">Production &amp; coordination</h3>
+            <h3 class="lang-block en" hidden>Production &amp; coordination</h3>
+            <h3 class="lang-block de" hidden>Produktion &amp; Koordination</h3>
+            <p class="lang-block fr">Gestion de projet, alignement artistique / technique / business, deadlines, leadership d’équipes pluridisciplinaires.</p>
+            <p class="lang-block en" hidden>Project management, art / tech / business alignment, deadlines, leadership of multidisciplinary teams.</p>
+            <p class="lang-block de" hidden>Projektleitung, Abstimmung Kunst / Technik / Business, Deadlines, Führung multidisziplinärer Teams.</p>
+          </article>
+          <article class="t-card">
+            <h3 class="lang-block fr">Espace 3D vécu</h3>
+            <h3 class="lang-block en" hidden>Lived 3D space</h3>
+            <h3 class="lang-block de" hidden>Gelebter 3D-Raum</h3>
+            <p class="lang-block fr">Capacités spatiales, locomotion, atmosphère, parcours — concevoir une expérience habitée, pas seulement une image.</p>
+            <p class="lang-block en" hidden>Spatial ability, locomotion, atmosphere, path — designing an inhabited experience, not just an image.</p>
+            <p class="lang-block de" hidden>Räumliches Denken, Bewegung, Atmosphäre, Weg — bewohnte Erfahrung gestalten, nicht nur ein Bild.</p>
+          </article>
+          <article class="t-card">
+            <h3 class="lang-block fr">Socle académique</h3>
+            <h3 class="lang-block en" hidden>Academic hinge</h3>
+            <h3 class="lang-block de" hidden>Akademische Brücke</h3>
+            <p class="lang-block fr">Neurosciences, biologie, anthropologie, éthique — comment l’environnement façonne perception, comportement et culture.</p>
+            <p class="lang-block en" hidden>Neuroscience, biology, anthropology, ethics — how environment shapes perception, behaviour and culture.</p>
+            <p class="lang-block de" hidden>Neurowissenschaft, Biologie, Anthropologie, Ethik — wie Umwelt Wahrnehmung, Verhalten und Kultur formt.</p>
+          </article>
+        </div>
+        <p class="lede" style="margin-top:1.25rem;font-size:0.9rem">
+          <span class="lang-block fr">Contextes&nbsp;: OnceLost Games (The Wayward Realms) · Archopoia / The Discording Tales · UNESCO Chair foresight · PsychoStratégie SA, Lausanne.</span>
+          <span class="lang-block en" hidden>Contexts: OnceLost Games (The Wayward Realms) · Archopoia / The Discording Tales · UNESCO Chair foresight · PsychoStratégie SA, Lausanne.</span>
+          <span class="lang-block de" hidden>Kontexte: OnceLost Games (The Wayward Realms) · Archopoia / The Discording Tales · UNESCO Chair Foresight · PsychoStratégie SA, Lausanne.</span>
+        </p>
       </div>
     </section>
 
     <section class="wrap reveal" id="experience">
       <h2 class="section-title lang-block fr">Autres expériences architecture</h2>
       <h2 class="section-title lang-block en" hidden>Other architecture experience</h2>
+      <h2 class="section-title lang-block de" hidden>Weitere Architekturerfahrung</h2>
       <div class="timeline">
         <article class="job">
-          <div class="job-when">Été 2026</div>
+          <div class="job-when">Été / Sommer 2026</div>
           <div>
             <h3 class="lang-block fr">Dessin mesuré</h3>
             <h3 class="lang-block en" hidden>Measured drawing</h3>
+            <h3 class="lang-block de" hidden>Aufmasszeichnung</h3>
             <p class="org">La Table Ronde de l’Architecture · Alsace · Nadia &amp; Noé Morin</p>
             <ul class="lang-block fr">
               <li>Plans, coupes, élévations et recherche historique sur le terrain.</li>
@@ -551,13 +643,18 @@
               <li>Plans, sections, elevations and on-site historical research.</li>
               <li>Eguisheim, Kaysersberg, Colmar (Koifhus), Haut-Koenigsbourg.</li>
             </ul>
+            <ul class="lang-block de" hidden>
+              <li>Grundrisse, Schnitte, Aufrisse und historische Forschung vor Ort.</li>
+              <li>Eguisheim, Kaysersberg, Colmar (Koifhus), Haut-Koenigsbourg.</li>
+            </ul>
           </div>
         </article>
         <article class="job">
-          <div class="job-when">2025 – présent</div>
+          <div class="job-when">2025 – </div>
           <div>
             <h3 class="lang-block fr">Étude — architecture traditionnelle</h3>
             <h3 class="lang-block en" hidden>Study — traditional architecture</h3>
+            <h3 class="lang-block de" hidden>Studium — traditionelle Architektur</h3>
             <p class="org">INTBAU · Dirk Mortier · Ideal Spaces</p>
             <ul class="lang-block fr">
               <li>Atelier charpente Mortier — premier design architectural mesuré à la main.</li>
@@ -567,6 +664,10 @@
               <li>Mortier timber workshop — first hand-drawn measured architectural design.</li>
               <li>Ideal Spaces · Loss of Cultural Heritage (Sep 2026) with Ettore Mazzola — <em>Ideal City</em>.</li>
             </ul>
+            <ul class="lang-block de" hidden>
+              <li>Zimmerei-Workshop Mortier — erster handgezeichneter architektonischer Entwurf.</li>
+              <li>Ideal Spaces · Loss of Cultural Heritage (Sept.&nbsp;2026) mit Ettore Mazzola — <em>Ideal City</em>.</li>
+            </ul>
           </div>
         </article>
         <article class="job">
@@ -574,13 +675,18 @@
           <div>
             <h3 class="lang-block fr">Alpage — bâtiments ruraux</h3>
             <h3 class="lang-block en" hidden>Alpine pasturing — rural buildings</h3>
+            <h3 class="lang-block de" hidden>Alpwirtschaft — ländliche Bauten</h3>
             <p class="org lang-block fr">Agrilogie Granges-Verney · Moudon, Suisse</p>
             <p class="org lang-block en" hidden>Agrilogie Granges-Verney · Moudon, Switzerland</p>
+            <p class="org lang-block de" hidden>Agrilogie Granges-Verney · Moudon, Schweiz</p>
             <ul class="lang-block fr">
               <li>Entretien de bâtiments ruraux&nbsp;; vernaculaire alpin.</li>
             </ul>
             <ul class="lang-block en" hidden>
               <li>Rural building maintenance; alpine vernacular.</li>
+            </ul>
+            <ul class="lang-block de" hidden>
+              <li>Unterhalt ländlicher Bauten; alpine Vernakulararchitektur.</li>
             </ul>
           </div>
         </article>
@@ -590,6 +696,7 @@
     <section class="wrap reveal" id="projets">
       <h2 class="section-title lang-block fr">Dessins</h2>
       <h2 class="section-title lang-block en" hidden>Drawings</h2>
+      <h2 class="section-title lang-block de" hidden>Zeichnungen</h2>
       <div class="work-grid">
         <a class="tile tall" href="https://www.idealspaces.org/projects/loss-of-cultural-heritage/" target="_blank" rel="noopener">
           <img src="assets/ideal-city.webp" alt="Ideal City" />
@@ -597,6 +704,7 @@
             <h3>Ideal City</h3>
             <p class="lang-block fr">Encre, A3 — vernaculaire suisse. Ideal Spaces, sept.&nbsp;2026.</p>
             <p class="lang-block en" hidden>Ink, A3 — Swiss vernacular. Ideal Spaces, Sep 2026.</p>
+            <p class="lang-block de" hidden>Tusche, A3 — schweizerische Vernakular. Ideal Spaces, Sept.&nbsp;2026.</p>
           </div>
         </a>
         <a class="tile" href="https://www.instagram.com/p/Da57dqbIlpz/" target="_blank" rel="noopener">
@@ -605,6 +713,7 @@
             <h3>Cattle Bridge Fantaisie</h3>
             <p class="lang-block fr">Premier design mesuré, à la main — atelier Mortier.</p>
             <p class="lang-block en" hidden>First measured design, hand-drawn — Mortier workshop.</p>
+            <p class="lang-block de" hidden>Erster Aufmass-Entwurf, Handzeichnung — Workshop Mortier.</p>
           </div>
         </a>
         <a class="tile" href="https://archopoia.github.io/Hugues.W.B.dePingon/" target="_blank" rel="noopener">
@@ -612,8 +721,10 @@
           <div class="tile-body">
             <h3 class="lang-block fr">Élévation latérale</h3>
             <h3 class="lang-block en" hidden>Side elevation</h3>
+            <h3 class="lang-block de" hidden>Seitenaufriss</h3>
             <p class="lang-block fr">Portée, membres, chemin de charge.</p>
             <p class="lang-block en" hidden>Span, members, load path.</p>
+            <p class="lang-block de" hidden>Spannweite, Stäbe, Lastpfad.</p>
           </div>
         </a>
       </div>
@@ -629,22 +740,23 @@
       <div class="wrap">
         <h2 class="section-title lang-block fr">Architectonique évolutive</h2>
         <h2 class="section-title lang-block en" hidden>Evolutionary architectonics</h2>
+        <h2 class="section-title lang-block de" hidden>Evolutionäre Architektonik</h2>
         <p class="lede lang-block fr">Quel type d’humain un environnement construit produit-il&nbsp;? Article en cours avec <strong>Sergei Gepshtein</strong> (neurosciences) et <strong>Tiziana Proietti</strong> (architecture, PhD) — voie possible vers un doctorat.</p>
         <p class="lede lang-block en" hidden>What kind of human does a built environment produce? Article in progress with <strong>Sergei Gepshtein</strong> (neuroscience) and <strong>Tiziana Proietti</strong> (architecture, PhD) — potential PhD path.</p>
+        <p class="lede lang-block de" hidden>Welchen Menschen erzeugt eine gebaute Umwelt? Artikel in Arbeit mit <strong>Sergei Gepshtein</strong> (Neurowissenschaft) und <strong>Tiziana Proietti</strong> (Architektur, PhD) — möglicher Weg zur Promotion.</p>
         <div class="research-grid">
           <div class="r-card">
             <h3 class="lang-block fr">Pourquoi ça intéresse un bureau</h3>
             <h3 class="lang-block en" hidden>Why an office should care</h3>
-            <p class="lede lang-block fr" style="color:#c4c4c4;font-size:0.94rem;max-width:none">
-              Culture de projet + capacité à argumenter le détail historique — utile en concours, patrimoine XXe, communication client.
-            </p>
-            <p class="lede lang-block en" hidden style="color:#c4c4c4;font-size:0.94rem;max-width:none">
-              Project culture + ability to argue historical detail — useful in competitions, 20th-c. heritage, client communication.
-            </p>
+            <h3 class="lang-block de" hidden>Warum das ein Büro interessiert</h3>
+            <p class="lang-block fr">Culture de projet + capacité à argumenter le détail historique — utile en concours, patrimoine XXe, communication client.</p>
+            <p class="lang-block en" hidden>Project culture + ability to argue historical detail — useful in competitions, 20th-c. heritage, client communication.</p>
+            <p class="lang-block de" hidden>Projektkultur + Fähigkeit, historisches Detail zu begründen — nützlich bei Wettbewerben, Erbe des 20.&nbsp;Jh., Kundenkommunikation.</p>
           </div>
           <div class="r-card">
             <h3 class="lang-block fr">Dossier</h3>
             <h3 class="lang-block en" hidden>Dossier</h3>
+            <h3 class="lang-block de" hidden>Dossier</h3>
             <p><a href="https://archopoia.github.io/Hugues.W.B.dePingon/dossier/" target="_blank" rel="noopener">archopoia.github.io/…/dossier →</a></p>
           </div>
         </div>
@@ -656,12 +768,15 @@
         <div>
           <h2 class="section-title lang-block fr">Formation</h2>
           <h2 class="section-title lang-block en" hidden>Education</h2>
+          <h2 class="section-title lang-block de" hidden>Ausbildung</h2>
           <div class="edu">
             <h3 class="lang-block fr">Architecture — étude indépendante</h3>
             <h3 class="lang-block en" hidden>Architecture — independent study</h3>
-            <p class="school">INTBAU · Table Ronde · Arcas · 2025–présent</p>
+            <h3 class="lang-block de" hidden>Architektur — unabhängiges Studium</h3>
+            <p class="school">INTBAU · Table Ronde · Arcas · 2025–</p>
             <p class="lang-block fr">Pas un diplôme — une pratique en construction.</p>
             <p class="lang-block en" hidden>Not a degree — a practice under construction.</p>
+            <p class="lang-block de" hidden>Kein Abschluss — eine Praxis im Aufbau.</p>
           </div>
           <div class="edu">
             <h3>MPhil Applied Ethics</h3>
@@ -676,62 +791,69 @@
             <p class="school">University of Montana · 2015–2019</p>
           </div>
           <div class="edu">
-            <h3>Maturité</h3>
+            <h3>Maturité / Matura</h3>
             <p class="school">ENSR · Chailly, Suisse · 2012–2014</p>
           </div>
         </div>
         <div>
           <h2 class="section-title lang-block fr">Compétences</h2>
           <h2 class="section-title lang-block en" hidden>Skills</h2>
-          <p class="skill-h lang-block fr">Architecture</p>
-          <p class="skill-h lang-block en" hidden>Architecture</p>
+          <h2 class="section-title lang-block de" hidden>Kompetenzen</h2>
+          <p class="skill-h">Architecture</p>
           <div class="skill-row">
-            <span class="lang-block fr">Recherche historique</span><span class="lang-block en" hidden>Historical research</span>
-            <span class="lang-block fr">Archives</span><span class="lang-block en" hidden>Archives</span>
-            <span class="lang-block fr">Élévations</span><span class="lang-block en" hidden>Elevations</span>
-            <span class="lang-block fr">Dessin mesuré</span><span class="lang-block en" hidden>Measured drawing</span>
-            <span class="lang-block fr">Néo Art Déco (Arcas)</span><span class="lang-block en" hidden>Neo<span class="punct">–</span>Art Deco (Arcas)</span>
+            <span class="lang-block fr">Recherche historique</span><span class="lang-block en" hidden>Historical research</span><span class="lang-block de" hidden>Historische Recherche</span>
+            <span class="lang-block fr">Archives</span><span class="lang-block en" hidden>Archives</span><span class="lang-block de" hidden>Archive</span>
+            <span class="lang-block fr">Élévations</span><span class="lang-block en" hidden>Elevations</span><span class="lang-block de" hidden>Aufrisse</span>
+            <span class="lang-block fr">Dessin mesuré</span><span class="lang-block en" hidden>Measured drawing</span><span class="lang-block de" hidden>Aufmass</span>
+            <span class="lang-block fr">Néo Art Déco (Arcas)</span><span class="lang-block en" hidden>Neo<span class="punct">–</span>Art Deco (Arcas)</span><span class="lang-block de" hidden>Neo-Art-déco (Arcas)</span>
           </div>
           <p class="skill-h">Tools</p>
           <div class="skill-row">
             <span>Photoshop</span><span>InDesign</span><span>HTML/CSS/JS</span><span>Python</span>
             <span class="lang-block fr">CAD/BIM <span class="punct">—</span> apprentissage actif</span>
             <span class="lang-block en" hidden>CAD/BIM <span class="punct">—</span> actively learning</span>
+            <span class="lang-block de" hidden>CAD/BIM <span class="punct">—</span> aktiv im Lernen</span>
           </div>
-          <p class="skill-h lang-block fr">Aussi</p>
-          <p class="skill-h lang-block en" hidden>Also</p>
-          <p class="lede" style="font-size:0.9rem">
-            <span class="lang-block fr">Lead Game Designer (OnceLost Games) · Creative Director (Archopoia) · UNESCO Chair foresight · stage PsychoStratégie SA, Lausanne.</span>
-            <span class="lang-block en" hidden>Lead Game Designer (OnceLost Games) · Creative Director (Archopoia) · UNESCO Chair foresight · PsychoStratégie SA internship, Lausanne.</span>
-          </p>
+          <p class="skill-h lang-block fr">Transfert spatial / production</p>
+          <p class="skill-h lang-block en" hidden>Spatial / production transfer</p>
+          <p class="skill-h lang-block de" hidden>Räumlicher / Produktions-Transfer</p>
+          <div class="skill-row">
+            <span class="lang-block fr">Coordination pluridisciplinaire</span><span class="lang-block en" hidden>Cross-discipline coordination</span><span class="lang-block de" hidden>Disziplinübergreifende Koordination</span>
+            <span class="lang-block fr">Espaces 3D vécus</span><span class="lang-block en" hidden>Lived 3D spaces</span><span class="lang-block de" hidden>Gelebte 3D-Räume</span>
+            <span class="lang-block fr">Deadlines &amp; production</span><span class="lang-block en" hidden>Deadlines &amp; production</span><span class="lang-block de" hidden>Deadlines &amp; Produktion</span>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="wrap contact reveal" id="contact">
       <div>
-        <h2 class="section-title lang-block fr">Contact</h2>
-        <h2 class="section-title lang-block en" hidden>Contact</h2>
+        <h2 class="section-title">Contact</h2>
         <ul class="contact-list">
           <li><a href="mailto:hugues.ii.w.b.depingon@gmail.com">hugues.ii.w.b.depingon@gmail.com</a></li>
           <li><a href="https://ch.linkedin.com/in/hugues-ii-w-b-de-pingon" target="_blank" rel="noopener">LinkedIn</a></li>
           <li><a href="https://archopoia.github.io/Hugues.W.B.dePingon/" target="_blank" rel="noopener">Portfolio</a></li>
-          <li><a href="https://arcas.be/about/" target="_blank" rel="noopener">arcas.be — bureau</a></li>
+          <li><a href="https://arcas.be/about/" target="_blank" rel="noopener">arcas.be</a></li>
         </ul>
       </div>
       <div class="pitch">
         <h3 class="lang-block fr">Pour le bureau suisse</h3>
         <h3 class="lang-block en" hidden>For the Swiss office</h3>
+        <h3 class="lang-block de" hidden>Für das Schweizer Büro</h3>
         <p class="lang-block fr">
-          Je vise des rôles d’assistance où la culture historique et le dessin comptent — patrimoine, concours, documentation, communication. Nationalité suisse. Sorti d’Arcas Paris (néo Art Déco / patrimoine XXe). Prêt à apprendre vos outils demain matin.
+          Rôles d’assistance où culture historique, dessin et production comptent. Nationalité suisse. Chez Arcas Paris depuis le 5&nbsp;nov.&nbsp;2026. Prêt à apprendre vos outils demain matin.
         </p>
         <p class="lang-block en" hidden>
-          I target assistant roles where historical culture and drawing matter — heritage, competitions, documentation, communication. Swiss national. Coming from Arcas Paris (neo–Art Deco / 20th-c. heritage). Ready to learn your tools tomorrow morning.
+          Assistant roles where historical culture, drawing and production matter. Swiss national. At Arcas Paris since 5&nbsp;Nov&nbsp;2026. Ready to learn your tools tomorrow morning.
+        </p>
+        <p class="lang-block de" hidden>
+          Assistenzrollen, in denen historische Kultur, Zeichnung und Produktion zählen. Schweizer. Seit 5.&nbsp;Nov.&nbsp;2026 bei Arcas Paris. Bereit, Ihre Tools morgen früh zu lernen.
         </p>
         <p style="margin-top:1rem">
           <a class="btn btn-red" href="mailto:hugues.ii.w.b.depingon@gmail.com?subject=Candidature%20architecture%20—%20Hugues%20de%20Pingon%20(Arcas%20Paris)">
             <span class="lang-block fr">Écrire</span>
             <span class="lang-block en" hidden>Write</span>
+            <span class="lang-block de" hidden>Schreiben</span>
           </a>
         </p>
       </div>
@@ -740,8 +862,9 @@
 
   <footer class="wrap">
     <span>Hugues William Brenthone de Pingon · CV Architecture · CH</span>
-    <span class="lang-block fr">Rouge / gris / blanc · nov.&nbsp;2026</span>
-    <span class="lang-block en" hidden>Red / gray / white · Nov 2026</span>
+    <span class="lang-block fr">Rouge / gris / blanc · FR · EN · DE</span>
+    <span class="lang-block en" hidden>Red / gray / white · FR · EN · DE</span>
+    <span class="lang-block de" hidden>Rot / Grau / Weiss · FR · EN · DE</span>
   </footer>
 
   <script>
@@ -762,7 +885,7 @@
       let initial = "fr";
       try {
         const saved = localStorage.getItem("cv-lang");
-        if (saved === "en" || saved === "fr") initial = saved;
+        if (saved === "en" || saved === "fr" || saved === "de") initial = saved;
       } catch (_) {}
       setLang(initial);
       const io = new IntersectionObserver((entries) => {

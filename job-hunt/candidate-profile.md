@@ -13,7 +13,7 @@ Assistant d’architecte formé chez Studios Arcas Paris (William Pesson) — re
 Architectural assistant trained at Studios Arcas Paris (William Pesson) — historical research, elevations, archives; measured drawing; Swiss national.
 
 ## Flagship
-- **Studios Arcas, Paris** (~1 month, 2026) under William Pesson  
+- **Studios Arcas, Paris** — since **5 November 2026** (do **not** advertise planned end date) under William Pesson  
   - Gallieni historical study  
   - Elevations / graphic support  
   - Villa Caroline archival research  
@@ -36,10 +36,12 @@ Architectural assistant trained at Studios Arcas Paris (William Pesson) — hist
 - B.S. Neuroscience, B.S. Biology, B.A. Anthropology — University of Montana
 - Maturité — ENSR Chailly, Switzerland
 
-## Other
-- Lead Game Designer, OnceLost Games; Creative Director, Archopoia
-- UNESCO Chair Responsible Foresight collaborator
-- PsychoStratégie SA internship (Lausanne)
+## Transfer from game production (frame as craft, not titles)
+- OnceLost Games / Archopoia: project management & production — coordinating art, tech, business under deadline
+- 3D spatial ability; designing lived experiences (same question as architecture: what does an environment do to a human?)
+- Academic hinge: neuroscience, anthropology, ethics
+- UNESCO Chair Responsible Foresight; PsychoStratégie SA (Lausanne)
+- Prefer not to lead with “Lead Game Designer / Creative Director” in architecture outreach
 
 ## Gaps to disclose carefully
 - No architecture diploma / no CFC
