@@ -2,39 +2,29 @@
 
 Updated: 2026-11-23 (Europe/Paris)
 
-## Skills installed (skills.sh)
-| Skill | Source | Use |
-|---|---|---|
-| kelly-jobhunt | mr-kelly/skills | research → draft → approve → send loop |
-| cold-email-writer | paramchoudhary/resumeskills | tailored outreach copy |
-| resume-tailor | paramchoudhary/resumeskills | per-job CV variants |
-| job-description-analyzer | paramchoudhary/resumeskills | fit scoring |
-| creative-portfolio-resume | paramchoudhary/resumeskills | designed vs ATS versions |
-| job-apply-agent | esshuwu/job-apply-agent | continuous hunt agent |
-| frontend-design | anthropics/skills | CV UX |
-| design-taste-frontend | leonxlnx/taste-skill | CV UX |
-| emil-design-eng | emilkowalski/skills | motion/polish |
-| web-design-guidelines | vercel-labs/agent-skills | a11y/UX audit |
-
-Path: `.agents/skills/`
-
 ## Fit filter
-- **Skip / low fit:** dessinateur roles requiring CFC + 2–5 years CH + ArchiCAD autonomy (Michael Page Genève, Intermédiaire, PEMSA, CCHE, Manpower Lausanne)
-- **High fit:** heritage / renovation passion, spontaneous applications, stage with patrimoine interest, classical / Art Deco culture
+- **Prefs:** remote best; else 50-60% (~4–5 h/day); FR/EN only; no German
+- **Skip / low fit:** DE-required roles; dessinateur CFC + years CH + ArchiCAD autonomy; full-time EPFL stage only if negotiating PT
+- **High fit:** patrimoine / documentation / remote coordination; spontaneous apps; classical / Art Déco culture
 
-## Active leads
-| Office | City | Why | Contact | Status |
+## Active leads (Gmail **drafts** — not sent)
+| Priority | Office | Contact | Why | Status |
 |---|---|---|---|---|
-| architecum | Montreux | Rénovation / patrimoine passion; Capitole Lausanne; stage + architecte posts | admin@architecum.ch | Gmail **draft** created |
-| Stoa architectes | Neuchâtel / Berne | Spontaneous welcome; patrimoine projects; bilingual | jobs@stoa-arch.ch (+ internship@) | Gmail **draft** created |
-| Omarini Micello | Carouge (GE) | Patrimoine + précision constructive; stage | info@omarini-micello.ch | Gmail **draft** created |
+| 1 | **ATHP** (Genève) | `ml@athp.ch` (Matthias Lecoq, fondateur) | Stage **60% remote** coordination & production visuelle — best match | Draft ready (+ lettre/CV PDF attached) |
+| 2 | **architecum** (Montreux) | `info@architecum.ch` → Zahnd & Furrer (associés) | Patrimoine / Capitole; offre architecte 80-100% + stage | Draft ready |
+| 3 | **Stoa** (Neuchâtel) | `pascal@stoa-arch.ch` Cc `jobs@` | Spontaneous welcome; partner competitions; FR ok | Draft ready — **attach PDFs before send** (no download links) |
+| 4 | **Omarini Micello** (Carouge) | `m.chevalley@` Cc `info@` | Directeur; patrimoine posts; propose 50-60% | Draft ready |
 
-## Next targets (research pending)
-- INTBAU CH network offices
-- Traditional / classical practices in Vaud & Genève
-- Offices linked to Arcas / Culot / Pesson network in CH
-- Bauart Neuchâtel (stage été 2027 — later)
-- Ruffieux-Chehab Fribourg (stage EPF/HES)
+## PDFs to attach (before you send)
+Folder: `job-hunt/outreach/`
+- `lettre-athp.pdf` / `lettre-architecum.pdf` / `lettre-stoa.pdf` / `lettre-omarini.pdf`
+- `CV-Hugues-de-Pingon.pdf`
+- `Portfolio-extrait.pdf` (Ideal City · Cattle Bridge · Haut-Koenigsbourg)
+
+## Skipped this round
+- KONKURADO / Stiftung Forschung Planungswettbewerbe — remote 30% but **DE required**
+- 2x22 Studio remote Archicad — CAD not claimed
+- Itten+Brechbühl Lausanne stage — online form only, 100%, DE plus
 
 ## Outreach rule
-Drafts only until Hugues approves send (kelly-jobhunt). Reply in chat: `send architecum` / `send all` to fire.
+**Drafts only until you send.** Nothing was sent this turn.
