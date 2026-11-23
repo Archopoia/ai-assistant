@@ -12,6 +12,7 @@
 - **Themes that fit:** patrimoine / restauration, Art Déco / classicisme / traditionalisme, dessin mesuré, documentation historique, concours, architecture contextuelle, research-adjacent offices
 - **Sell stack:** Arcas Paris (William Pesson) + MPhil/MBA/triple bachelor + measured drawing (Table Ronde) + Cognitive Evolutionary Architectonics
 - **Never lead with gaps.** Do not volunteer missing architecture diploma / CFC. If asked directly, answer briefly and pivot to credentials + studio deliverables.
+- **Banned phrasing:** “apprentissage (rapide) CAD/BIM”, “actively learning CAD/BIM”, or any self-discounting tool disclaimer. Don’t put CAD/BIM on the CV until it’s proven deliverable.
 - **Citizenship:** Swiss — no work permit required
 - **Languages:** FR native, EN fluent, DE basic (willing to improve), IT basic
 
