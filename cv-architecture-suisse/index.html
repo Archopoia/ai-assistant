@@ -190,7 +190,8 @@
     }
     .section-title .punct,
     .hero-role .punct,
-    .hero-proof .punct {
+    .hero-proof .punct,
+    h3 .punct {
       font-family: "IBM Plex Sans", sans-serif;
       font-weight: 400;
       letter-spacing: 0;
@@ -290,20 +291,23 @@
       display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-top: 1.25rem;
     }
     .ltra-feature figure {
-      margin: 0; background: #111; overflow: hidden;
+      margin: 0; display: flex; flex-direction: column; gap: 0.35rem;
     }
     .ltra-feature .feat img {
-      width: 100%; height: auto; min-height: 320px; max-height: 440px; object-fit: contain; display: block;
+      width: 100%; height: auto; min-height: 320px; max-height: 440px;
+      object-fit: contain; display: block; background: #111;
     }
     .ltra-feature figcaption {
-      font-size: 0.65rem; color: var(--steel); margin-top: 0.35rem; letter-spacing: 0.04em;
+      font-size: 0.7rem; color: var(--ink-2); letter-spacing: 0.04em;
     }
     .strip {
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-top: 0.65rem;
     }
-    .strip figure { margin: 0; background: #111; aspect-ratio: 3/4; overflow: hidden; }
-    .strip img { width: 100%; height: 100%; object-fit: contain; }
-    .strip figcaption { font-size: 0.65rem; color: var(--steel); margin-top: 0.3rem; letter-spacing: 0.04em; }
+    .strip figure { margin: 0; display: flex; flex-direction: column; gap: 0.3rem; }
+    .strip img {
+      width: 100%; aspect-ratio: 3/4; object-fit: contain; background: #111; display: block;
+    }
+    .strip figcaption { font-size: 0.7rem; color: var(--ink-2); letter-spacing: 0.04em; }
 
     .research {
       background: var(--ink); color: #eee; padding: 4rem 0;
