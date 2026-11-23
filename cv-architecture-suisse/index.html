@@ -218,8 +218,11 @@
     }
     .arcas-meta span { font-size: 0.92rem; color: var(--ink); font-weight: 400; }
     .deliverables {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;
       margin-top: 1.25rem;
+    }
+    @media (max-width: 700px) {
+      .deliverables { grid-template-columns: 1fr; }
     }
     .deliv {
       background: var(--white);
@@ -465,12 +468,15 @@
         </div>
         <h1>Hugues<br />de Pingon</h1>
         <p class="hero-role lang-block fr">
+          Architecture &amp; urbanisme · outils numériques / IA appliquée au projet<br />
           Assistant d’architecte · <a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas</a>, Paris
         </p>
         <p class="hero-role lang-block en" hidden>
+          Architecture &amp; urbanism · digital tools / applied AI for project work<br />
           Architectural assistant · <a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas</a>, Paris
         </p>
         <p class="hero-role lang-block de" hidden>
+          Architektur &amp; Städtebau · digitale Tools / angewandte KI am Projekt<br />
           Architekturassistent · <a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas</a>, Paris
         </p>
         <p class="hero-proof lang-block fr">
@@ -499,44 +505,41 @@
       <div>
         <h2 class="section-title"><a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas · Paris</a></h2>
         <p class="lede lang-block fr">
-          Sous <a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener"><strong>William Pesson</strong></a> (architecte-historien)&nbsp;: agence classique / Art Déco / moderniste (Knokke · Paris · Gdańsk). Assistant d’architecte&nbsp;- étude historique, archives, élévations, outillage.
+          Sous <a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener"><strong>William Pesson</strong></a>&nbsp;: pipelines recherche → preuves → livrables (études, monographies, élévations, plans) - Python / HTML-JS / image gen, sans attendre une chaîne de production classique.
         </p>
         <p class="lede lang-block en" hidden>
-          Under <a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener"><strong>William Pesson</strong></a> (architect-historian)&nbsp;: classical / Art Deco / modernist office (Knokke · Paris · Gdańsk). Architectural assistant&nbsp;- historical study, archives, elevations, tooling.
+          Under <a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener"><strong>William Pesson</strong></a>&nbsp;: research → evidence → deliverable pipelines (studies, monographs, elevations, plans) - Python / HTML-JS / image gen, without waiting on a classic production chain.
         </p>
         <p class="lede lang-block de" hidden>
-          Unter <a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener"><strong>William Pesson</strong></a> (Architekt-Historiker)&nbsp;: klassisch / Art déco / modernistisch (Knokke · Paris · Gdańsk). Architekturassistent&nbsp;- historische Studie, Archive, Aufrisse, Tooling.
+          Unter <a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener"><strong>William Pesson</strong></a>&nbsp;: Pipelines Recherche → Belege → Lieferungen (Studien, Monografien, Aufrisse, Pläne) - Python / HTML-JS / Bildgen, ohne klassische Produktionskette.
         </p>
 
         <div class="deliverables">
           <article class="deliv">
-            <h3 class="lang-block fr">Étude historique urbaine</h3>
-            <h3 class="lang-block en" hidden>Urban historical study</h3>
-            <h3 class="lang-block de" hidden>Historische Stadtstudie</h3>
-            <p class="lang-block fr">Archives, documentation, analyse et synthèse pour dossiers d’agence.</p>
-            <p class="lang-block en" hidden>Archives, documentation, analysis and synthesis for studio dossiers.</p>
-            <p class="lang-block de" hidden>Archive, Dokumentation, Analyse und Synthese für Bürodossiers.</p>
+            <h3>Bondy - Av. Gallieni</h3>
+            <p class="lang-block fr">Étude urbaine complète (~1 semaine)&nbsp;: cadastres / archives / aériennes, élévations, intentions plan-guide, hypothèse d’aménagement, album HTML + exports PDF/PPTX/DOCX, rebuild scripté.</p>
+            <p class="lang-block en" hidden>Full urban study (~1 week)&nbsp;: cadastres / archives / aerials, elevations, plan-guide intentions, design hypothesis, HTML album + PDF/PPTX/DOCX exports, scripted rebuild.</p>
+            <p class="lang-block de" hidden>Vollständige Stadtstudie (~1 Woche)&nbsp;: Kataster / Archive / Luftbilder, Aufrisse, Plan-Guide, Entwurfshypothese, HTML-Album + PDF/PPTX/DOCX, skriptierter Rebuild.</p>
           </article>
           <article class="deliv">
             <h3>ElevAItion</h3>
-            <p class="lang-block fr">Outil maison&nbsp;- élévations assistées par IA (production rapide, contrôlée).</p>
-            <p class="lang-block en" hidden>In-house tool&nbsp;- AI-assisted elevations (fast, controlled production).</p>
-            <p class="lang-block de" hidden>Eigenes Tool&nbsp;- KI-gestützte Aufrisse (schnelle, kontrollierte Produktion).</p>
+            <p class="lang-block fr">App locale d’élévations de rue <strong>mètre-vraies</strong> (gabarit OAP verrouillé, SVG/raster, serveur local)&nbsp;; façades IA optionnelles sous contrainte projet.</p>
+            <p class="lang-block en" hidden>Local street-elevation app - <strong>meter-true</strong> (locked OAP envelope, SVG/raster, local server); optional AI façades under project constraints.</p>
+            <p class="lang-block de" hidden>Lokale Straßenaufriss-App - <strong>metergenau</strong> (gesperrtes OAP-Gabarit, SVG/Raster, lokaler Server); optionale KI-Fassaden unter Projektzwang.</p>
+          </article>
+          <article class="deliv">
+            <h3>Villa Caroline</h3>
+            <p class="lang-block fr">Monographie patrimoniale sourcée (chronologie, acteurs, iconographie, graphe Source → Claim → Conclusion)&nbsp;; livrable HTML + pack archives, QC éditorial, publication Pages.</p>
+            <p class="lang-block en" hidden>Sourced heritage monograph (chronology, actors, iconography, Source → Claim → Conclusion graph)&nbsp;; HTML delivery + archive pack, editorial QC, Pages publish.</p>
+            <p class="lang-block de" hidden>Quellenbasierte Baudenkmal-Monografie (Chronologie, Akteure, Ikonografie, Quelle → Claim → Schluss)&nbsp;; HTML + Archivpack, redaktionelles QC, Pages-Publish.</p>
           </article>
           <article class="deliv">
             <h3>PlanMaker</h3>
-            <p class="lang-block fr">Outil maison&nbsp;- plans et assemblages graphiques pour le dossier.</p>
-            <p class="lang-block en" hidden>In-house tool&nbsp;- plans and graphic assemblies for the dossier.</p>
-            <p class="lang-block de" hidden>Eigenes Tool&nbsp;- Pläne und grafische Assemblagen für das Dossier.</p>
+            <p class="lang-block fr">Pipeline commercial&nbsp;: shortlist, samples, trial viewer plan 3D (overlay surface / pièces / options)&nbsp;- gated humain avant envoi. Side venture produit.</p>
+            <p class="lang-block en" hidden>Commercial pipeline&nbsp;: shortlist, samples, trial 3D plan viewer (surface overlay / rooms / options)&nbsp;- human-gated before send. Product side venture.</p>
+            <p class="lang-block de" hidden>Verkaufspipeline&nbsp;: Shortlist, Samples, Trial-3D-Planviewer (Flächen-Overlay / Räume / Optionen)&nbsp;- human-gated vor Versand. Produkt-Side-Venture.</p>
           </article>
-          <article class="deliv">
-            <h3 class="lang-block fr">Élévations de façade</h3>
-            <h3 class="lang-block en" hidden>Façade elevations</h3>
-            <h3 class="lang-block de" hidden>Fassadenaufrisse</h3>
-            <p class="lang-block fr">Dossiers d’immeuble&nbsp;- lecture du bâti, rendu, mise en page.</p>
-            <p class="lang-block en" hidden>Building dossiers&nbsp;- fabric reading, rendering, layout.</p>
-            <p class="lang-block de" hidden>Gebäudedossiers&nbsp;- Baukörperlesen, Darstellung, Layout.</p>
-          </article>
+        </div>
         </div>
       </div>
     </div>
@@ -551,13 +554,13 @@
           <h2 class="section-title lang-block en" hidden>Profile</h2>
           <h2 class="section-title lang-block de" hidden>Profil</h2>
           <p class="lede lang-block fr">
-            Ressortissant suisse. Parcours dense&nbsp;: neurosciences, biologie et anthropologie (<a href="https://www.umt.edu/" target="_blank" rel="noopener">Montana</a>)&nbsp;; MBA Foresight (Summa Cum Laude)&nbsp;; MPhil Applied Ethics (thèse <a href="https://liu.diva-portal.org/smash/record.jsf?pid=diva2:2034306" target="_blank" rel="noopener"><em>BIOCRACY</em>, DiVA</a>)&nbsp;; diplôme alpage&nbsp;; <a href="https://kood.tech/en/locations/kood-johvi/" target="_blank" rel="noopener">kood/Jõhvi</a> Full Stack / IA. Aujourd’hui assistant d’architecte chez <a href="https://arcas.be/about/" target="_blank" rel="noopener"><strong>Studios Arcas Paris</strong></a> (<a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener">William Pesson</a>)&nbsp;: étude historique, archives, élévations, outils maison (ElevAItion, PlanMaker). Dessin mesuré et vernaculaire (<a href="https://www.latablerondearchitecture.com/" target="_blank" rel="noopener">Table Ronde</a>, Alsace). Candidature architecture / patrimoine / assistance en Suisse.
+            Architecte / urbaniste qui construit des pipelines <strong>recherche → preuves → livrables</strong> (Python, HTML/JS, image gen)&nbsp;: études, monographies, élévations mètre-vraies, demos plan - sans attendre une chaîne classique. Aujourd’hui chez <a href="https://arcas.be/about/" target="_blank" rel="noopener"><strong>Studios Arcas Paris</strong></a> (<a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener">William Pesson</a>). MPhil éthique · MBA Foresight Summa Cum Laude · triple bachelor (Montana) · Full Stack / IA. Suisse - candidature architecture / patrimoine / outils métier en Suisse.
           </p>
           <p class="lede lang-block en" hidden>
-            Swiss national. Dense credential stack: neuroscience, biology and anthropology (<a href="https://www.umt.edu/" target="_blank" rel="noopener">Montana</a>); MBA Foresight (Summa Cum Laude); MPhil Applied Ethics (thesis <a href="https://liu.diva-portal.org/smash/record.jsf?pid=diva2:2034306" target="_blank" rel="noopener"><em>BIOCRACY</em>, DiVA</a>); alpine pasturing diploma; <a href="https://kood.tech/en/locations/kood-johvi/" target="_blank" rel="noopener">kood/Jõhvi</a> Full Stack / AI. Now architectural assistant at <a href="https://arcas.be/about/" target="_blank" rel="noopener"><strong>Studios Arcas Paris</strong></a> (<a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener">William Pesson</a>): historical study, archives, elevations, in-house tools (ElevAItion, PlanMaker). Measured drawing and vernacular (<a href="https://www.latablerondearchitecture.com/" target="_blank" rel="noopener">Table Ronde</a>, Alsace). Targeting architecture / heritage / assistant roles in Switzerland.
+            Architect / urbanist who builds <strong>research → evidence → deliverable</strong> pipelines (Python, HTML/JS, image gen)&nbsp;: studies, monographs, meter-true elevations, plan demos - without waiting on a classic chain. Now at <a href="https://arcas.be/about/" target="_blank" rel="noopener"><strong>Studios Arcas Paris</strong></a> (<a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener">William Pesson</a>). MPhil ethics · MBA Foresight Summa Cum Laude · triple bachelor (Montana) · Full Stack / AI. Swiss - targeting architecture / heritage / project tools in Switzerland.
           </p>
           <p class="lede lang-block de" hidden>
-            Schweizer Staatsangehöriger. Dichtes Profil: Neurowissenschaft, Biologie und Anthropologie (<a href="https://www.umt.edu/" target="_blank" rel="noopener">Montana</a>); MBA Foresight (Summa Cum Laude); MPhil Applied Ethics (These <a href="https://liu.diva-portal.org/smash/record.jsf?pid=diva2:2034306" target="_blank" rel="noopener"><em>BIOCRACY</em>, DiVA</a>); Alpwirtschaft-Diplom; <a href="https://kood.tech/en/locations/kood-johvi/" target="_blank" rel="noopener">kood/Jõhvi</a> Full Stack / KI. Heute Architekturassistent bei <a href="https://arcas.be/about/" target="_blank" rel="noopener"><strong>Studios Arcas Paris</strong></a> (<a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener">William Pesson</a>): historische Studie, Archive, Aufrisse, eigene Tools (ElevAItion, PlanMaker). Aufmasszeichnung und Vernakular (<a href="https://www.latablerondearchitecture.com/" target="_blank" rel="noopener">Table Ronde</a>, Elsass). Ziel: Architektur / Denkmalpflege / Assistenz in der Schweiz.
+            Architekt / Städtebauer, der Pipelines <strong>Recherche → Belege → Lieferungen</strong> baut (Python, HTML/JS, Bildgen)&nbsp;: Studien, Monografien, metergenaue Aufrisse, Plan-Demos - ohne klassische Kette. Heute bei <a href="https://arcas.be/about/" target="_blank" rel="noopener"><strong>Studios Arcas Paris</strong></a> (<a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener">William Pesson</a>). MPhil Ethik · MBA Foresight Summa Cum Laude · Triple Bachelor (Montana) · Full Stack / KI. Schweizer - Ziel: Architektur / Denkmalpflege / Projekt-Tools in der Schweiz.
           </p>
           <div class="chips">
             <span class="chip chip-red">FR · EN · DE</span>
@@ -870,60 +873,61 @@
           <h2 class="section-title lang-block fr">Compétences</h2>
           <h2 class="section-title lang-block en" hidden>Skills</h2>
           <h2 class="section-title lang-block de" hidden>Kompetenzen</h2>
-          <p class="skill-h">Architecture</p>
+
+          <p class="skill-h lang-block fr">Tranche courte</p>
+          <p class="skill-h lang-block en" hidden>Short cut</p>
+          <p class="skill-h lang-block de" hidden>Kurzfassung</p>
           <div class="skill-row">
-            <span class="lang-block fr">Étude historique urbaine</span><span class="lang-block en" hidden>Urban historical study</span><span class="lang-block de" hidden>Historische Stadtstudie</span>
-            <span class="lang-block fr">Archives</span><span class="lang-block en" hidden>Archives</span><span class="lang-block de" hidden>Archive</span>
-            <span class="lang-block fr">Élévations / façades</span><span class="lang-block en" hidden>Elevations / façades</span><span class="lang-block de" hidden>Aufrisse / Fassaden</span>
-            <span class="lang-block fr">Cadastre</span><span class="lang-block en" hidden>Cadastre</span><span class="lang-block de" hidden>Kataster</span>
-            <span class="lang-block fr">Dessin mesuré</span><span class="lang-block en" hidden>Measured drawing</span><span class="lang-block de" hidden>Aufmass</span>
-            <span class="lang-block fr">Néo Art Déco (Arcas)</span><span class="lang-block en" hidden>Neo-Art Deco (Arcas)</span><span class="lang-block de" hidden>Neo-Art-déco (Arcas)</span>
-            <span class="lang-block fr">Vernaculaire</span><span class="lang-block en" hidden>Vernacular</span><span class="lang-block de" hidden>Vernakular</span>
+            <span class="lang-block fr">Études urbaines &amp; historiques</span><span class="lang-block en" hidden>Urban &amp; historical studies</span><span class="lang-block de" hidden>Stadt- &amp; historische Studien</span>
+            <span class="lang-block fr">Élévations de rue réglementaires</span><span class="lang-block en" hidden>Code-locked street elevations</span><span class="lang-block de" hidden>Regelkonforme Straßenaufrisse</span>
+            <span class="lang-block fr">Monographies patrimoniales sourcées</span><span class="lang-block en" hidden>Sourced heritage monographs</span><span class="lang-block de" hidden>Quellenbasierte Monografien</span>
+            <span class="lang-block fr">Apps Python (façade / serveurs locaux)</span><span class="lang-block en" hidden>Python apps (façade / local servers)</span><span class="lang-block de" hidden>Python-Apps (Fassade / lokale Server)</span>
+            <span class="lang-block fr">Livrables HTML/PDF automatisés</span><span class="lang-block en" hidden>Automated HTML/PDF deliverables</span><span class="lang-block de" hidden>Automatisierte HTML/PDF-Lieferungen</span>
+            <span class="lang-block fr">Viewers plan 3D (trial)</span><span class="lang-block en" hidden>3D plan viewers (trial)</span><span class="lang-block de" hidden>3D-Planviewer (Trial)</span>
+            <span class="lang-block fr">Agents IA + QC humain</span><span class="lang-block en" hidden>AI agents + human QC</span><span class="lang-block de" hidden>KI-Agents + Human-QC</span>
+            <span class="lang-block fr">Sites agence</span><span class="lang-block en" hidden>Agency sites</span><span class="lang-block de" hidden>Agentur-Sites</span>
           </div>
-          <p class="skill-h">Tools</p>
+
+          <p class="skill-h lang-block fr">Urbanisme &amp; analyse de secteur</p>
+          <p class="skill-h lang-block en" hidden>Urbanism &amp; sector analysis</p>
+          <p class="skill-h lang-block de" hidden>Städtebau &amp; Sektoranalyse</p>
           <div class="skill-row">
-            <span>Photoshop</span><span>InDesign</span>
+            <span class="lang-block fr">Cadastres / cartes / archives photo / aériennes</span><span class="lang-block en" hidden>Cadastres / maps / photo &amp; aerial archives</span><span class="lang-block de" hidden>Kataster / Karten / Foto- &amp; Luftarchive</span>
+            <span class="lang-block fr">Lecture PLU / OAP / plan-guide</span><span class="lang-block en" hidden>PLU / OAP / plan-guide reading</span><span class="lang-block de" hidden>PLU / OAP / Plan-Guide</span>
+            <span class="lang-block fr">Hypothèses d’aménagement + planches</span><span class="lang-block en" hidden>Design hypotheses + boards</span><span class="lang-block de" hidden>Entwurfshypothesen + Tafeln</span>
+            <span class="lang-block fr">Élévations existant / couleur / graphite</span><span class="lang-block en" hidden>Existing / color / graphite elevations</span><span class="lang-block de" hidden>Bestand / Farbe / Graphit-Aufrisse</span>
+            <span class="lang-block fr">Exports PDF / PPTX / DOCX</span><span class="lang-block en" hidden>PDF / PPTX / DOCX exports</span><span class="lang-block de" hidden>PDF / PPTX / DOCX-Exports</span>
+          </div>
+
+          <p class="skill-h lang-block fr">Recherche historique &amp; patrimoine</p>
+          <p class="skill-h lang-block en" hidden>Historical research &amp; heritage</p>
+          <p class="skill-h lang-block de" hidden>Historische Forschung &amp; Erbe</p>
+          <div class="skill-row">
+            <span class="lang-block fr">Monographie de bâtiment</span><span class="lang-block en" hidden>Building monograph</span><span class="lang-block de" hidden>Gebäude-Monografie</span>
+            <span class="lang-block fr">Archives (AD, Gallica, IGN, cadastre, DVF)</span><span class="lang-block en" hidden>Archives (AD, Gallica, IGN, cadastre, DVF)</span><span class="lang-block de" hidden>Archive (AD, Gallica, IGN, Kataster, DVF)</span>
+            <span class="lang-block fr">Graphe Source → Claim → Conclusion</span><span class="lang-block en" hidden>Source → Claim → Conclusion graph</span><span class="lang-block de" hidden>Quelle → Claim → Schluss-Graph</span>
+            <span class="lang-block fr">QC éditorial avant livraison</span><span class="lang-block en" hidden>Editorial QC before delivery</span><span class="lang-block de" hidden>Redaktionelles QC vor Lieferung</span>
+            <span class="lang-block fr">Longread HTML + GitHub Pages</span><span class="lang-block en" hidden>HTML longread + GitHub Pages</span><span class="lang-block de" hidden>HTML-Longread + GitHub Pages</span>
+          </div>
+
+          <p class="skill-h lang-block fr">Product / outils métier</p>
+          <p class="skill-h lang-block en" hidden>Product / project tools</p>
+          <p class="skill-h lang-block de" hidden>Product / Projekt-Tools</p>
+          <div class="skill-row">
             <span>ElevAItion</span><span>PlanMaker</span>
-            <span class="lang-block fr">IA image gen</span><span class="lang-block en" hidden>AI image gen</span><span class="lang-block de" hidden>KI-Bildgen</span>
-            <span class="lang-block fr">Apps maison / outillage</span><span class="lang-block en" hidden>In-house apps / tooling</span><span class="lang-block de" hidden>Eigene Apps / Tooling</span>
-            <span>HTML/CSS/JS</span><span>Python</span>
-            <span>kood/Jõhvi · Full Stack / IA</span>
+            <span class="lang-block fr">Pipelines IA sous contraintes (OAP, mètre-vrai)</span><span class="lang-block en" hidden>AI pipelines under constraints (OAP, meter-true)</span><span class="lang-block de" hidden>KI-Pipelines unter Zwang (OAP, metergenau)</span>
+            <span class="lang-block fr">HTML → PDF / PPTX / DOCX</span><span class="lang-block en" hidden>HTML → PDF / PPTX / DOCX</span><span class="lang-block de" hidden>HTML → PDF / PPTX / DOCX</span>
+            <span class="lang-block fr">Viewer plan 3D (trial, non contractuel)</span><span class="lang-block en" hidden>3D plan viewer (trial, non-contractual)</span><span class="lang-block de" hidden>3D-Planviewer (Trial, nicht vertraglich)</span>
+            <span class="lang-block fr">Sites HTML/CSS/JS (agence / monographie)</span><span class="lang-block en" hidden>HTML/CSS/JS sites (agency / monograph)</span><span class="lang-block de" hidden>HTML/CSS/JS-Sites (Agentur / Monografie)</span>
           </div>
-          <p class="skill-h lang-block fr">Design numérique</p>
-          <p class="skill-h lang-block en" hidden>Digital design</p>
-          <p class="skill-h lang-block de" hidden>Digitales Design</p>
+
+          <p class="skill-h">Stack</p>
           <div class="skill-row">
-            <span class="lang-block fr">Web design</span><span class="lang-block en" hidden>Web design</span><span class="lang-block de" hidden>Webdesign</span>
-            <span>UX / UI</span>
-            <span class="lang-block fr">Production visuelle</span><span class="lang-block en" hidden>Visual production</span><span class="lang-block de" hidden>Visuelle Produktion</span>
-            <span class="lang-block fr">IA appliquée (outil)</span><span class="lang-block en" hidden>Applied AI (tooling)</span><span class="lang-block de" hidden>Angewandte KI (Tooling)</span>
-            <span class="lang-block fr">Narration spatiale (jeux)</span><span class="lang-block en" hidden>Spatial narrative (games)</span><span class="lang-block de" hidden>Räumliche Narration (Games)</span>
-          </div>
-          <p class="skill-h lang-block fr">Recherche</p>
-          <p class="skill-h lang-block en" hidden>Research</p>
-          <p class="skill-h lang-block de" hidden>Forschung</p>
-          <div class="skill-row">
-            <span class="lang-block fr">Recherche académique</span><span class="lang-block en" hidden>Academic research</span><span class="lang-block de" hidden>Akademische Forschung</span>
-            <span class="lang-block fr">Écriture / publication</span><span class="lang-block en" hidden>Writing / publication</span><span class="lang-block de" hidden>Schreiben / Publikation</span>
-          </div>
-          <p class="skill-h lang-block fr">Sciences humaines &amp; du vivant</p>
-          <p class="skill-h lang-block en" hidden>Human &amp; life sciences</p>
-          <p class="skill-h lang-block de" hidden>Human- &amp; Lebenswissenschaften</p>
-          <div class="skill-row">
-            <span class="lang-block fr">Neurosciences</span><span class="lang-block en" hidden>Neuroscience</span><span class="lang-block de" hidden>Neurowissenschaft</span>
-            <span class="lang-block fr">Anthropologie</span><span class="lang-block en" hidden>Anthropology</span><span class="lang-block de" hidden>Anthropologie</span>
-            <span class="lang-block fr">Biologie</span><span class="lang-block en" hidden>Biology</span><span class="lang-block de" hidden>Biologie</span>
-            <span class="lang-block fr">Éthique appliquée</span><span class="lang-block en" hidden>Applied ethics</span><span class="lang-block de" hidden>Angewandte Ethik</span>
-            <span class="lang-block fr">Foresight &amp; gouvernance</span><span class="lang-block en" hidden>Foresight &amp; governance</span><span class="lang-block de" hidden>Foresight &amp; Governance</span>
-          </div>
-          <p class="skill-h lang-block fr">Territoire &amp; localismes</p>
-          <p class="skill-h lang-block en" hidden>Territory &amp; localisms</p>
-          <p class="skill-h lang-block de" hidden>Territorium &amp; Lokalismen</p>
-          <div class="skill-row">
-            <span class="lang-block fr">Patrimoine culturel</span><span class="lang-block en" hidden>Cultural heritage</span><span class="lang-block de" hidden>Kulturerbe</span>
-            <span class="lang-block fr">Bâtiments ruraux / alpage</span><span class="lang-block en" hidden>Rural / alpine buildings</span><span class="lang-block de" hidden>Ländliche / Alpgebäude</span>
-            <span class="lang-block fr">Savoirs locaux</span><span class="lang-block en" hidden>Local knowledge</span><span class="lang-block de" hidden>Lokales Wissen</span>
-            <span class="lang-block fr">Perte du patrimoine</span><span class="lang-block en" hidden>Loss of cultural heritage</span><span class="lang-block de" hidden>Verlust des Kulturerbes</span>
+            <span>Python</span><span>HTML/CSS/JS</span><span>SVG</span><span>Pillow</span>
+            <span>Photoshop</span><span>InDesign</span>
+            <span class="lang-block fr">Image gen / ControlNet (option)</span><span class="lang-block en" hidden>Image gen / ControlNet (optional)</span><span class="lang-block de" hidden>Bildgen / ControlNet (optional)</span>
+            <span>GitHub Pages</span>
+            <span class="lang-block fr">Cursor agents + QC humain</span><span class="lang-block en" hidden>Cursor agents + human QC</span><span class="lang-block de" hidden>Cursor-Agents + Human-QC</span>
           </div>
         </div>
       </div>

@@ -7,68 +7,58 @@
 **Email:** hugues.ii.w.b.depingon@gmail.com  
 
 ## Positioning rule
-**Sell strength. Never lead with what is missing.** Do not mention absence of an architecture diploma / CFC in outreach, CV, or drafts unless a form field forces a yes/no - then answer factually without apology and pivot to Arcas + credential stack.
+**Sell strength. Never lead with what is missing.** Do not mention absence of an architecture diploma / CFC unless forced.  
+**Sell systems that produce client deliverables**, not "used AI."
 
 ## Typography rule (standing)
-**ASCII hyphen only (`-`).** Never use em dashes, en dashes, or other typographic dashes in emails, CV copy, lettres, or outreach. Ranges and breaks use `-` (e.g. `50-60%`, `May 2024-March 2026`).
+**ASCII hyphen only (`-`).** Never em/en dashes in emails, CV, lettres, outreach.
 
+## Headline
+Architecture & urbanisme · outils numériques / IA appliquée au projet
 
-## One-liner (FR)
-Assistant d’architecte chez Studios Arcas Paris (William Pesson) - MPhil éthique, MBA Foresight Summa Cum Laude, triple bachelor (neurosciences / biologie / anthropologie), dessin mesuré, recherche historique ; nationalité suisse.
+## One-liner (positioning)
+Architect / urbanist who builds **research → evidence → visual/product pipelines** (Python + HTML/JS + generative imaging) to ship études, monographies, façade elevations and plan-sale demos without waiting on a traditional production chain.
 
-## One-liner (EN)
-Architectural assistant at Studios Arcas Paris (William Pesson) - MPhil ethics, MBA Foresight Summa Cum Laude, triple bachelor (neuroscience / biology / anthropology), measured drawing, historical research; Swiss national.
+## One-liner (FR outreach)
+Je suis Suisse, actuellement assistant d'architecte chez Studios Arcas Paris (William Pesson). Je construis des pipelines recherche → preuves → livrables (études urbaines, monographies, élévations mètre-vraies, outils ElevAItion / PlanMaker). MPhil Applied Ethics, MBA Foresight Summa Cum Laude, triple bachelor. Disponible à partir de janvier 2027.
 
-## Credential stack (lead with these)
-1. **Studios Arcas, Paris** - architectural assistant **now** under William Pesson; neo-Art Deco / classical / modernist heritage culture. **Do not put start date in emails.** Do **not** advertise planned end date. **Capabilities (from studio week):** étude historique urbaine + archives; **ElevAItion** (in-house AI elevation tool); **PlanMaker** (in-house plans tool); façade elevation dossiers. **Never name client codes / sites** (no Bondy, Gallieni, Villa Caroline, Argenson street address) in CV, site, or outreach - sell the capability, not the client folder.
-2. **MPhil Applied Ethics**, Linköping (2023-2025) - thesis *BIOCRACY* (DiVA)
-3. **MBA Foresight & Strategic Governance**, KSU Vilnius - 9.73/10, Summa Cum Laude, thesis
+## Credential stack
+1. **Studios Arcas, Paris** - assistant **now** under William Pesson (no start date in emails; no planned end date). Portfolio spine: Bondy Gallieni · ElevAItion · Villa Caroline · PlanMaker (side) · site ARCAS prototype.
+2. **MPhil Applied Ethics**, Linköping (2023-2025) - thesis *BIOCRACY* (DiVA) - keep off cold emails
+3. **MBA Foresight & Strategic Governance**, KSU Vilnius - Summa Cum Laude
 4. **B.S. Neuroscience · B.S. Biology · B.A. Anthropology**, University of Montana
-5. **Full Stack Software Development, AI Specialization** - **kood/Jõhvi**, Estonia (MTÜ Tuleviku Tehnoloogiaharidus), May 2024-March 2026 - https://kood.tech/en/locations/kood-johvi/
-6. **Diploma in Traditional Alpine Pasturing**, Agrilogie Grange-Verney, Moudon (May-Aug 2020)
+5. **Full Stack / AI** - kood/Jõhvi (CV ok; skip in cold email)
+6. **Diploma alpine pasturing**, Agrilogie Grange-Verney
 
-## Architecture practice
-- La Table Ronde de l’Architecture (Alsace, 2 weeks, 2026) - Journey to Alsatian architecture: measured drawings; standout: Château du Haut-Koenigsbourg; also Turckheim Hôtel des Deux Clefs, Riquewihr portal, Kaysersberg, Eguisheim, Koïfhus
-- Dirk Mortier timber workshop - hand-drawn measured design (Cattle Bridge Fantaisie)
-- Ideal Spaces / Ettore Mazzola (Sep 2026) - Ideal City ink drawing
-- INTBAU networks
+## Portfolio bullets (results)
+- **Bondy - Av. Gallieni (ARCAS):** full urban-history pack in ~1 week - cadastres/archives/aerials, color elevations, plan-guide intentions, design hypothesis, HTML album + PDF/PPTX/DOCX, scripted rebuild.
+- **ElevAItion:** local meter-true street-elevation app (locked OAP envelope, SVG/raster, local server); optional AI façades under project constraints; versioned, `python serve.py`.
+- **Villa Caroline:** sourced building monograph (chronology, actors, iconography, Source → Claim → Conclusion graph); HTML + archives pack; editorial QC; GitHub Pages; live review API.
+- **PlanMaker (side venture):** discovery → samples → human gate → trial 3D plan viewer (surface overlay / rooms / options). Do **not** claim sent emails, closed deals, or paid client 3D tours.
+- **Site ARCAS Paris:** agency site prototype (home / projects / agency / contact).
 
-## Research - Cognitive Evolutionary Architectonics
-- Paper in progress: *Architecture as a Cognitive and Selective Niche: Toward an Evolutionary Architectonics*
-- Full abstract: `job-hunt/research-abstract.md` (synced from Google Doc Abstract tab)
-- Built environments structure development/adaptation; organise perceptual, cognitive, behavioural demands (attention, memory, navigation, social interaction…)
-- Chain: architecture → perception → behaviour → repeated interaction → development and selection
-- Collaboration with **Sergei Gepshtein** & **Tiziana Proietti**
-- Extends BIOCRACY: technologies (and buildings) as selective environments on human capacities
-- Abstract: https://docs.google.com/document/d/1KSX66SI9jgffBmZbjePYuwq5FL5QL85tiRzk7Xqd0V8/edit?tab=t.83c74dys11xb
-- Dossier: https://archopoia.github.io/Hugues.W.B.dePingon/dossier/
+## Strong vs weak wording
+| Weak | Strong |
+|---|---|
+| Used AI | AI pipelines under project constraints (OAP gabarit, meter-true, QC) |
+| Web research | Archival method + auditable evidence graph |
+| Makes websites | Client HTML/PDF from a canonical source + ship gate |
+| Prospecting | Discovery → sample → human approval → product demo |
 
-## Production / systems (asset, not apology) - with URLs
-- OnceLost Games: https://www.oncelostgames.com/ - Lead Game Designer, *The Wayward Realms* (Steam)
-- The Discording Tales / Archopoia: https://www.thediscordingtales.com/
-- UNESCO Chair chapter: *Towards Principles for Responsible Futures* (Routledge) - buy https://www.routledge.com/Towards-Principles-for-Responsible-Futures/Fuller-Roubelat-Marchais-Roubelat-Ward-Heraclide/p/book/9781032732411 - Ch.3 Moral Conflicts…
-- PsychoStratégie SA: https://psychostrategie.ch/
-- kood/Jõhvi full-stack / AI: https://kood.tech/en/locations/kood-johvi/ (source of truth: https://archopoia.github.io/Hugues.W.B.dePingon/#education)
-- In architecture outreach, frame as spatial production + coordination capacity
-
-## Tooling posture (true)
-- Photoshop, AI image gen; **ElevAItion** (custom AI-assisted elevations); **PlanMaker** (custom plans); étude historique / archives; façade elevations; cadastre; visual production.
-- **Not** an AI researcher / ML specialist. **Not** claiming Revit / ArchiCAD / BIM autonomy.
-- Frame as: **I build and use tooling (incl. AI) to ship** documentation, elevations, plans, coordination - fast. Adapt to the office stack.
+## Do not claim
+- Expert Three.js / Blender at production scale
+- Paid client 3D tours delivered
+- Emails sent / deals closed (PlanMaker gated - say in interview if asked)
 
 ## Outreach tone
-- Confidence, specificity, Arcas prestige, research seriousness
-- Never apologise; never volunteer “I don’t have an architecture diploma”
-- **Never** write soft tool-gap lines: “apprentissage CAD/BIM”, “apprentissage rapide”, “actively learning CAD/BIM”, etc. Do not name BIM packages you do not own.
-- **Ask:** research, documentation, archives, coordination, heritage assistance, visual/production support - not a pure draftsman seat.
-- **Write for strangers:** no Table Ronde, Ideal Spaces, kood, BIOCRACY, paper titles, or client folder names. Keep **Studios Arcas Paris (William Pesson)** + credentials + plain skills. OK to name **ElevAItion** and **PlanMaker** as in-house tools you built/use. Same bio across drafts.
-- Hand-measured drawing stays on the CV; emails say “dessin à la main” without naming ateliers.
-- **No PDF by default:** email = lettre; link https://cv.apps.grok.bot for the CV. Attachments only if an office explicitly asks (or a real portfolio PDF later).
-- **Never** name Arcas project/client specifics in outreach or CV.
-- Typography: ASCII hyphen `-` only.
+- Confidence; Arcas; systems that ship
+- No CAD/BIM soft-gap lines; no BIM package names you don't own
+- No Table Ronde / Ideal Spaces / kood / BIOCRACY / paper titles in cold email
+- **No PDF by default** - email = lettre; CV = https://cv.apps.grok.bot
+- Typography: ASCII `-` only
 
 ## Availability
-**Disponible à partir de janvier 2027** (début d'année). State this in every outreach email.
+**Disponible à partir de janvier 2027.**
 
 ## Standard email bio (reuse verbatim)
-Je suis Suisse. Je suis actuellement assistant d'architecte chez Studios Arcas Paris (William Pesson). Formation : MPhil Applied Ethics, MBA Foresight Summa Cum Laude, et triple bachelor (neurosciences, biologie, anthropologie). En pratique : études historiques et archives, élévations et plans (outils maison ElevAItion et PlanMaker, Photoshop, IA appliquée), cadastre et dessin à la main.
+Je suis Suisse. Je suis actuellement assistant d'architecte chez Studios Arcas Paris (William Pesson). Je construis des pipelines recherche → preuves → livrables : études urbaines historiques, monographies patrimoniales sourcées, élévations mètre-vraies (ElevAItion), plans et demos (PlanMaker), exports HTML/PDF - sous contraintes projet, avec QC. Formation : MPhil Applied Ethics, MBA Foresight Summa Cum Laude, triple bachelor (neurosciences, biologie, anthropologie).
