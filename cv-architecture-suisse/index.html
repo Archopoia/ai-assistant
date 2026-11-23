@@ -124,6 +124,15 @@
       color: #dcdcdc;
       margin-bottom: 1.6rem;
     }
+    .hero-role a,
+    .arcas-rail a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 0.18em;
+      text-decoration-thickness: 1px;
+    }
+    .hero-role a:hover,
+    .arcas-rail a:hover { color: #fff; }
     .hero-proof {
       display: grid; gap: 0.35rem;
       padding: 1rem 0 0;
@@ -243,7 +252,9 @@
       font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase;
       border: 1px solid var(--mist); padding: 0.3rem 0.55rem; color: var(--steel);
       background: var(--white);
+      text-decoration: none;
     }
+    a.chip:hover { color: var(--swiss); border-color: var(--swiss); }
     .chip-red { border-color: var(--swiss); color: var(--swiss); }
 
     .job {
@@ -451,13 +462,13 @@
         </div>
         <h1>Hugues<br />de Pingon</h1>
         <p class="hero-role lang-block fr">
-          Assistant d’architecte · Studios Arcas, Paris · depuis le 5&nbsp;nov.&nbsp;2026
+          Assistant d’architecte · <a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas</a>, Paris · depuis le 5&nbsp;nov.&nbsp;2026
         </p>
         <p class="hero-role lang-block en" hidden>
-          Architectural assistant · Studios Arcas, Paris · since 5&nbsp;Nov&nbsp;2026
+          Architectural assistant · <a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas</a>, Paris · since 5&nbsp;Nov&nbsp;2026
         </p>
         <p class="hero-role lang-block de" hidden>
-          Architekturassistent · Studios Arcas, Paris · seit 5.&nbsp;Nov.&nbsp;2026
+          Architekturassistent · <a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas</a>, Paris · seit 5.&nbsp;Nov.&nbsp;2026
         </p>
         <p class="hero-proof lang-block fr">
           <strong>MPhil</strong> éthique · <strong>MBA</strong> foresight · <strong>B.S./B.A.</strong> neurosciences, biologie, anthropologie
@@ -482,7 +493,7 @@
 
   <section class="arcas" id="arcas">
     <div class="wrap arcas-inner reveal">
-      <div class="arcas-rail">Studios Arcas · 8 rue Boissonade · Paris 14e</div>
+      <div class="arcas-rail"><a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas</a> · 8 rue Boissonade · Paris 14e</div>
       <div>
         <h2 class="section-title"><a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas · Paris</a></h2>
         <p class="lede lang-block fr">
@@ -530,17 +541,17 @@
           <h2 class="section-title lang-block en" hidden>Profile</h2>
           <h2 class="section-title lang-block de" hidden>Profil</h2>
           <p class="lede lang-block fr">
-            Ressortissant suisse (Maturité ENSR). Parcours dense&nbsp;: neurosciences, biologie et anthropologie (Montana)&nbsp;; MBA Foresight (Summa Cum Laude)&nbsp;; MPhil Applied Ethics (thèse <em>BIOCRACY</em>, DiVA)&nbsp;; diplôme alpage&nbsp;; <a href="https://kood.tech/en/locations/kood-johvi/" target="_blank" rel="noopener">kood/Jõhvi</a> Full Stack / IA. Aujourd’hui chez <strong>Studios Arcas Paris</strong> (<a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener">William Pesson</a>)&nbsp;: recherche historique, élévations, archives. Dessin mesuré et vernaculaire à colombage (Table Ronde, Alsace). Candidature architecture / patrimoine / assistance en Suisse.
+            Ressortissant suisse (<a href="https://www.ensr.ch/" target="_blank" rel="noopener">Maturité ENSR</a>). Parcours dense&nbsp;: neurosciences, biologie et anthropologie (<a href="https://www.umt.edu/" target="_blank" rel="noopener">Montana</a>)&nbsp;; MBA Foresight (Summa Cum Laude)&nbsp;; MPhil Applied Ethics (thèse <a href="https://liu.diva-portal.org/smash/record.jsf?pid=diva2:2034306" target="_blank" rel="noopener"><em>BIOCRACY</em>, DiVA</a>)&nbsp;; diplôme alpage&nbsp;; <a href="https://kood.tech/en/locations/kood-johvi/" target="_blank" rel="noopener">kood/Jõhvi</a> Full Stack / IA. Aujourd’hui chez <a href="https://arcas.be/about/" target="_blank" rel="noopener"><strong>Studios Arcas Paris</strong></a> (<a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener">William Pesson</a>)&nbsp;: recherche historique, élévations, archives. Dessin mesuré et vernaculaire à colombage (<a href="https://www.latablerondearchitecture.com/" target="_blank" rel="noopener">Table Ronde</a>, Alsace). Candidature architecture / patrimoine / assistance en Suisse.
           </p>
           <p class="lede lang-block en" hidden>
-            Swiss national (ENSR Matura). Dense credential stack: neuroscience, biology and anthropology (Montana); MBA Foresight (Summa Cum Laude); MPhil Applied Ethics (thesis <em>BIOCRACY</em>, DiVA); alpine pasturing diploma; <a href="https://kood.tech/en/locations/kood-johvi/" target="_blank" rel="noopener">kood/Jõhvi</a> Full Stack / AI. Now at <strong>Studios Arcas Paris</strong> (<a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener">William Pesson</a>): historical research, elevations, archives. Measured drawing and half-timbered vernacular (Table Ronde, Alsace). Targeting architecture / heritage / assistant roles in Switzerland.
+            Swiss national (<a href="https://www.ensr.ch/" target="_blank" rel="noopener">ENSR Matura</a>). Dense credential stack: neuroscience, biology and anthropology (<a href="https://www.umt.edu/" target="_blank" rel="noopener">Montana</a>); MBA Foresight (Summa Cum Laude); MPhil Applied Ethics (thesis <a href="https://liu.diva-portal.org/smash/record.jsf?pid=diva2:2034306" target="_blank" rel="noopener"><em>BIOCRACY</em>, DiVA</a>); alpine pasturing diploma; <a href="https://kood.tech/en/locations/kood-johvi/" target="_blank" rel="noopener">kood/Jõhvi</a> Full Stack / AI. Now at <a href="https://arcas.be/about/" target="_blank" rel="noopener"><strong>Studios Arcas Paris</strong></a> (<a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener">William Pesson</a>): historical research, elevations, archives. Measured drawing and half-timbered vernacular (<a href="https://www.latablerondearchitecture.com/" target="_blank" rel="noopener">Table Ronde</a>, Alsace). Targeting architecture / heritage / assistant roles in Switzerland.
           </p>
           <p class="lede lang-block de" hidden>
-            Schweizer Staatsangehöriger (Matura ENSR). Dichtes Profil: Neurowissenschaft, Biologie und Anthropologie (Montana); MBA Foresight (Summa Cum Laude); MPhil Applied Ethics (These <em>BIOCRACY</em>, DiVA); Alpwirtschaft-Diplom; <a href="https://kood.tech/en/locations/kood-johvi/" target="_blank" rel="noopener">kood/Jõhvi</a> Full Stack / KI. Heute bei <strong>Studios Arcas Paris</strong> (<a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener">William Pesson</a>): historische Recherche, Aufrisse, Archive. Aufmasszeichnung und Fachwerk-Vernakular (Table Ronde, Elsass). Ziel: Architektur / Denkmalpflege / Assistenz in der Schweiz.
+            Schweizer Staatsangehöriger (<a href="https://www.ensr.ch/" target="_blank" rel="noopener">Matura ENSR</a>). Dichtes Profil: Neurowissenschaft, Biologie und Anthropologie (<a href="https://www.umt.edu/" target="_blank" rel="noopener">Montana</a>); MBA Foresight (Summa Cum Laude); MPhil Applied Ethics (These <a href="https://liu.diva-portal.org/smash/record.jsf?pid=diva2:2034306" target="_blank" rel="noopener"><em>BIOCRACY</em>, DiVA</a>); Alpwirtschaft-Diplom; <a href="https://kood.tech/en/locations/kood-johvi/" target="_blank" rel="noopener">kood/Jõhvi</a> Full Stack / KI. Heute bei <a href="https://arcas.be/about/" target="_blank" rel="noopener"><strong>Studios Arcas Paris</strong></a> (<a href="https://fr.wikipedia.org/wiki/William_Pesson" target="_blank" rel="noopener">William Pesson</a>): historische Recherche, Aufrisse, Archive. Aufmasszeichnung und Fachwerk-Vernakular (<a href="https://www.latablerondearchitecture.com/" target="_blank" rel="noopener">Table Ronde</a>, Elsass). Ziel: Architektur / Denkmalpflege / Assistenz in der Schweiz.
           </p>
           <div class="chips">
             <span class="chip chip-red">FR · EN · DE</span>
-            <span class="chip">Arcas Paris</span>
+            <a class="chip" href="https://arcas.be/about/" target="_blank" rel="noopener">Arcas Paris</a>
             <span class="chip">Summa Cum Laude</span>
             <span class="chip lang-block fr">Permis non requis</span>
             <span class="chip lang-block en" hidden>No work permit needed</span>
@@ -633,7 +644,7 @@
             <h3 class="lang-block fr">Atelier historique - voyage en architecture alsacienne</h3>
             <h3 class="lang-block en" hidden>Historical workshop - journey through Alsatian architecture</h3>
             <h3 class="lang-block de" hidden>Historischer Workshop - Reise durch die elsässische Architektur</h3>
-            <p class="org"><a href="https://archopoia.github.io/Hugues.W.B.dePingon/#workshop" target="_blank" rel="noopener">La Table Ronde de l’Architecture</a> · Alsace · Nadia &amp; Noé Morin</p>
+            <p class="org"><a href="https://www.latablerondearchitecture.com/" target="_blank" rel="noopener">La Table Ronde de l’Architecture</a> · Alsace · Nadia &amp; Noé Morin</p>
             <ul class="lang-block fr">
               <li>Deux semaines de dessin mesuré et de recherche historique sur le terrain.</li>
               <li>Architecture vernaculaire à colombage, ornements, fenêtres, portails.</li>
@@ -685,18 +696,22 @@
             <h3 class="lang-block fr">Étude - architecture traditionnelle</h3>
             <h3 class="lang-block en" hidden>Study - traditional architecture</h3>
             <h3 class="lang-block de" hidden>Studium - traditionelle Architektur</h3>
-            <p class="org">INTBAU · Dirk Mortier · Ideal Spaces</p>
+            <p class="org">
+              <a href="https://www.intbau.org/" target="_blank" rel="noopener">INTBAU</a>
+              · <a href="https://www.mortier.eu/" target="_blank" rel="noopener">Dirk Mortier</a>
+              · <a href="https://www.idealspaces.org/" target="_blank" rel="noopener">Ideal Spaces</a>
+            </p>
             <ul class="lang-block fr">
-              <li>Atelier charpente Mortier - premier design architectural mesuré à la main.</li>
-              <li>Ideal Spaces · Loss of Cultural Heritage (sept.&nbsp;2026) avec Ettore Mazzola - <em>Ideal City</em>.</li>
+              <li><a href="https://www.latablerondearchitecture.com/en/charpenterie-dirk-mortier" target="_blank" rel="noopener">Atelier charpente Mortier</a> - premier design architectural mesuré à la main (<a href="https://www.instagram.com/p/Da57dqbIlpz/" target="_blank" rel="noopener">Cattle Bridge</a>).</li>
+              <li><a href="https://www.idealspaces.org/projects/loss-of-cultural-heritage/" target="_blank" rel="noopener">Ideal Spaces · Loss of Cultural Heritage</a> (sept.&nbsp;2026) avec <a href="https://architecture.nd.edu/about/directory/ettore-mazzola/" target="_blank" rel="noopener">Ettore Mazzola</a> - <em>Ideal City</em>.</li>
             </ul>
             <ul class="lang-block en" hidden>
-              <li>Mortier timber workshop - first hand-drawn measured architectural design.</li>
-              <li>Ideal Spaces · Loss of Cultural Heritage (Sep 2026) with Ettore Mazzola - <em>Ideal City</em>.</li>
+              <li><a href="https://www.latablerondearchitecture.com/en/charpenterie-dirk-mortier" target="_blank" rel="noopener">Mortier timber workshop</a> - first hand-drawn measured architectural design (<a href="https://www.instagram.com/p/Da57dqbIlpz/" target="_blank" rel="noopener">Cattle Bridge</a>).</li>
+              <li><a href="https://www.idealspaces.org/projects/loss-of-cultural-heritage/" target="_blank" rel="noopener">Ideal Spaces · Loss of Cultural Heritage</a> (Sep 2026) with <a href="https://architecture.nd.edu/about/directory/ettore-mazzola/" target="_blank" rel="noopener">Ettore Mazzola</a> - <em>Ideal City</em>.</li>
             </ul>
             <ul class="lang-block de" hidden>
-              <li>Zimmerei-Workshop Mortier - erster handgezeichneter architektonischer Entwurf.</li>
-              <li>Ideal Spaces · Loss of Cultural Heritage (Sept.&nbsp;2026) mit Ettore Mazzola - <em>Ideal City</em>.</li>
+              <li><a href="https://www.latablerondearchitecture.com/en/charpenterie-dirk-mortier" target="_blank" rel="noopener">Zimmerei-Workshop Mortier</a> - erster handgezeichneter architektonischer Entwurf (<a href="https://www.instagram.com/p/Da57dqbIlpz/" target="_blank" rel="noopener">Cattle Bridge</a>).</li>
+              <li><a href="https://www.idealspaces.org/projects/loss-of-cultural-heritage/" target="_blank" rel="noopener">Ideal Spaces · Loss of Cultural Heritage</a> (Sept.&nbsp;2026) mit <a href="https://architecture.nd.edu/about/directory/ettore-mazzola/" target="_blank" rel="noopener">Ettore Mazzola</a> - <em>Ideal City</em>.</li>
             </ul>
           </div>
         </article>
@@ -706,9 +721,9 @@
             <h3 class="lang-block fr">Alpage - bâtiments ruraux</h3>
             <h3 class="lang-block en" hidden>Alpine pasturing - rural buildings</h3>
             <h3 class="lang-block de" hidden>Alpwirtschaft - ländliche Bauten</h3>
-            <p class="org lang-block fr">Agrilogie Granges-Verney · Moudon, Suisse</p>
-            <p class="org lang-block en" hidden>Agrilogie Granges-Verney · Moudon, Switzerland</p>
-            <p class="org lang-block de" hidden>Agrilogie Granges-Verney · Moudon, Schweiz</p>
+            <p class="org lang-block fr"><a href="https://www.vd.ch/economie/agriculture-et-viticulture/agrilogie/agrilogie-grange-verney-1" target="_blank" rel="noopener">Agrilogie Grange-Verney</a> · Moudon, Suisse</p>
+            <p class="org lang-block en" hidden><a href="https://www.vd.ch/economie/agriculture-et-viticulture/agrilogie/agrilogie-grange-verney-1" target="_blank" rel="noopener">Agrilogie Grange-Verney</a> · Moudon, Switzerland</p>
+            <p class="org lang-block de" hidden><a href="https://www.vd.ch/economie/agriculture-et-viticulture/agrilogie/agrilogie-grange-verney-1" target="_blank" rel="noopener">Agrilogie Grange-Verney</a> · Moudon, Schweiz</p>
             <ul class="lang-block fr">
               <li>Entretien de bâtiments ruraux&nbsp;; vernaculaire alpin.</li>
             </ul>
@@ -732,18 +747,18 @@
           <img src="assets/ideal-city.webp" alt="Ideal City" />
           <div class="tile-body">
             <h3>Ideal City</h3>
-            <p class="lang-block fr">Encre, A3 - vernaculaire suisse. Ideal Spaces, sept.&nbsp;2026.</p>
-            <p class="lang-block en" hidden>Ink, A3 - Swiss vernacular. Ideal Spaces, Sep 2026.</p>
-            <p class="lang-block de" hidden>Tusche, A3 - schweizerische Vernakular. Ideal Spaces, Sept.&nbsp;2026.</p>
+            <p class="lang-block fr">Encre, A3 - vernaculaire suisse. Ideal Spaces · Loss of Cultural Heritage, sept.&nbsp;2026.</p>
+            <p class="lang-block en" hidden>Ink, A3 - Swiss vernacular. Ideal Spaces · Loss of Cultural Heritage, Sep 2026.</p>
+            <p class="lang-block de" hidden>Tusche, A3 - schweizerische Vernakular. Ideal Spaces · Loss of Cultural Heritage, Sept.&nbsp;2026.</p>
           </div>
         </a>
         <a class="tile" href="https://www.instagram.com/p/Da57dqbIlpz/" target="_blank" rel="noopener">
           <img src="assets/bridge1.webp" alt="Cattle Bridge" />
           <div class="tile-body">
             <h3>Cattle Bridge Fantaisie</h3>
-            <p class="lang-block fr">Premier design mesuré, à la main - atelier Mortier.</p>
-            <p class="lang-block en" hidden>First measured design, hand-drawn - Mortier workshop.</p>
-            <p class="lang-block de" hidden>Erster Aufmass-Entwurf, Handzeichnung - Workshop Mortier.</p>
+            <p class="lang-block fr">Premier design mesuré, à la main - atelier Dirk Mortier.</p>
+            <p class="lang-block en" hidden>First measured design, hand-drawn - Dirk Mortier workshop.</p>
+            <p class="lang-block de" hidden>Erster Aufmass-Entwurf, Handzeichnung - Workshop Dirk Mortier.</p>
           </div>
         </a>
         <a class="tile" href="https://archopoia.github.io/Hugues.W.B.dePingon/" target="_blank" rel="noopener">
@@ -818,7 +833,7 @@
             <h3 class="lang-block fr">Parcours architectural</h3>
             <h3 class="lang-block en" hidden>Architectural path</h3>
             <h3 class="lang-block de" hidden>Architekturischer Weg</h3>
-            <p class="school"><a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas Paris</a> · Table Ronde · <a href="https://www.intbau.org/" target="_blank" rel="noopener">INTBAU</a> · 2025-</p>
+            <p class="school"><a href="https://arcas.be/about/" target="_blank" rel="noopener">Studios Arcas Paris</a> · <a href="https://www.latablerondearchitecture.com/" target="_blank" rel="noopener">Table Ronde</a> · <a href="https://www.intbau.org/" target="_blank" rel="noopener">INTBAU</a> · 2025-</p>
           </div>
           <div class="edu">
             <h3>MPhil Applied Ethics</h3>
@@ -828,12 +843,12 @@
           </div>
           <div class="edu">
             <h3>MBA Foresight &amp; Strategic Governance</h3>
-            <p class="school">KSU Vilnius · 9.73/10 · Summa Cum Laude · thèse 10/10&nbsp;: <em>Evaluation of morality as a factor of creativity in foresight</em></p>
+            <p class="school"><a href="https://ksu.lt/en/" target="_blank" rel="noopener">KSU Vilnius</a> · 9.73/10 · Summa Cum Laude · thèse 10/10&nbsp;: <em>Evaluation of morality as a factor of creativity in foresight</em></p>
           </div>
           <div class="edu">
-            <h3 class="lang-block fr">UNESCO Chair · chapitre Routledge</h3>
-            <h3 class="lang-block en" hidden>UNESCO Chair · Routledge chapter</h3>
-            <h3 class="lang-block de" hidden>UNESCO Chair · Routledge-Kapitel</h3>
+            <h3 class="lang-block fr"><a href="https://www.lincoln.ac.uk/chair-in-responsible-foresight/" target="_blank" rel="noopener">UNESCO Chair</a> · chapitre Routledge</h3>
+            <h3 class="lang-block en" hidden><a href="https://www.lincoln.ac.uk/chair-in-responsible-foresight/" target="_blank" rel="noopener">UNESCO Chair</a> · Routledge chapter</h3>
+            <h3 class="lang-block de" hidden><a href="https://www.lincoln.ac.uk/chair-in-responsible-foresight/" target="_blank" rel="noopener">UNESCO Chair</a> · Routledge-Kapitel</h3>
             <p class="school"><a href="https://www.routledge.com/Towards-Principles-for-Responsible-Futures/Fuller-Roubelat-Marchais-Roubelat-Ward-Heraclide/p/book/9781032732411" target="_blank" rel="noopener"><em>Towards Principles for Responsible Futures</em></a> · ch.&nbsp;3 Moral Conflicts…</p>
           </div>
           <div class="edu">
