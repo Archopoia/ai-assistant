@@ -54,5 +54,7 @@ Architectural assistant at Studios Arcas Paris (William Pesson) - MPhil ethics, 
 ## Outreach tone
 - Confidence, specificity, Arcas prestige, research seriousness
 - Never apologise; never volunteer “I don’t have an architecture diploma”
-- **Never** write soft tool-gap lines: “apprentissage CAD/BIM”, “apprentissage rapide”, “actively learning CAD/BIM”, etc. Omit CAD/BIM until it’s a real deliverable; lead with measured drawing and research at a general level.
+- **Never** write soft tool-gap lines: “apprentissage CAD/BIM”, “apprentissage rapide”, “actively learning CAD/BIM”, etc. Omit CAD/BIM until it’s a real deliverable.
+- **Never** pitch a drawing / draftsman seat in emails. Hand-measured drawing stays on the CV and as proof of eye; the ask is research, documentation, archives, coordination, heritage assistance - not production dessin without CAD.
 - **Never** name Arcas project/client specifics in outreach or CV.
+- Typography: ASCII hyphen `-` only.
